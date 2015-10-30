@@ -1,0 +1,957 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.LandDTO;
+import com.bayer.efm.hsp.database.dto.LandSoilDTO;
+
+public class LandDAO implements DAO
+{
+
+	private static LandDAO landDAO;
+
+	private LandDAO() {
+
+	}
+
+	public static LandDAO getInstance() 
+	{
+		if (landDAO == null)
+			landDAO = new LandDAO();
+
+		return landDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Land(idLand, surveyNo,latLong,code,calculatedArea,manualArea,landFlag,neighbouringInfo,createdTime,modifiedTime,idsoilType,idGrower,idIrrigationSource,lotNo,status)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+			
+	
+			for (DTO items : list) 
+			{
+
+				LandDTO dto = (LandDTO) items;
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getSurveyNo());
+				stmt.bindString(count++, dto.getLatLong());
+				stmt.bindString(count++, dto.getCode());
+				stmt.bindString(count++, dto.getCalculatedArea());
+				stmt.bindString(count++, dto.getManualArea());
+				stmt.bindString(count++, dto.getLandFlag());
+				stmt.bindString(count++, dto.getNeighbouringInfo());
+				stmt.bindString(count++, dto.getCreatedTime());
+				stmt.bindString(count++, dto.getModifiedTime());
+				stmt.bindString(count++, dto.getIdsoilType());
+				stmt.bindString(count++, dto.getIdGrower());
+				stmt.bindString(count++, dto.getIdIrrigationSource());
+				stmt.bindString(count++, dto.getLotNo());
+				stmt.bindLong(count++, dto.getStatus());
+
+				stmt.executeInsert();
+				count = 1;
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("LandDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		LandDTO dtoObj = (LandDTO) dto;
+		try
+		{
+			dbObject.compileStatement(
+					"DELETE FROM Land WHERE idLand = '" + dtoObj.getIdLand()
+							+ "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("LandDAO  -- delete", e.getMessage());
+		}
+
+		finally 
+		{
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try 
+		{
+			LandDTO dtoObj = (LandDTO) dto;
+			String whereCls = "idLand = '" + dtoObj.getIdLand() + "'";
+
+			ContentValues cValues = new ContentValues();
+			
+			cValues.put("surveyNo",dtoObj.getSurveyNo());
+			cValues.put("latLong",dtoObj.getLatLong());
+			//cValues.put("code",dtoObj.getCode());
+			cValues.put("calculatedArea",dtoObj.getCalculatedArea());
+			cValues.put("manualArea",dtoObj.getManualArea());
+			cValues.put("landFlag",dtoObj.getLandFlag());
+			cValues.put("neighbouringInfo",dtoObj.getNeighbouringInfo());
+			//cValues.put("createdTime",dtoObj.getCreatedTime());
+			cValues.put("modifiedTime",dtoObj.getModifiedTime());
+			cValues.put("idsoilType",dtoObj.getIdsoilType());
+			//cValues.put("idGrower",dtoObj.getIdGrower());
+			cValues.put("idIrrigationSource",dtoObj.getIdIrrigationSource());
+			cValues.put("lotNo",dtoObj.getLotNo());
+			cValues.put("status",dtoObj.getStatus());
+			
+			dbObject.update("Land", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("LandDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Land", null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue)
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Land WHERE " + columnName
+					+ " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public List<DTO> getLandSoilIrrigation(SQLiteDatabase dbObject,String columnValue)
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry = "SELECT l.idLand, l.surveyNo, l.latlong, l.code, l.calculatedArea, l.manualArea, l.landFlag, l.neighbouringInfo, l.createdTime, l.modifiedTime,l.lotNo, s.type, i.sourceType FROM Land l LEFT JOIN  SoilType s ON l.idsoilType = s.idsoilType  LEFT JOIN IrrigationSource i ON l.idIrrigationSource = i.idIrrigationSource WHERE l.idLand='"+columnValue+"'";
+			//String qry = "SELECT l.idLand, l.surveyNo, l.latlong, l.code, l.calculatedArea, l.manualArea, l.landFlag, l.neighbouringInfo, l.createdTime, l.modifiedTime,l.lotNo, s.type, i.sourceType	FROM Land l, SoilType s, IrrigationSource i	WHERE l.idsoilType = s.idsoilType AND l.idIrrigationSource = i.idIrrigationSource AND l.idLand='"+columnValue+"'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					LandSoilDTO dto = new LandSoilDTO();
+					
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setLotno(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+					dto.setSourceType(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandSoilIrriga", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public List<DTO> getLandsByVillage(SQLiteDatabase dbObject, int villageId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry	= "select * from Land where idGrower IN (select idGrower from Grower where idVillage='"+villageId+"')";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandsByVillage", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getLandsByVillageAndFarmer(SQLiteDatabase dbObject, int villageId, int farmerId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry	= "select * from Land where idGrower IN (select idGrower from Grower where idVillage="+villageId+" and idGrower="+farmerId+")";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandsByVillageAndFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getLandsByFarmer(SQLiteDatabase dbObject, int farmerId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry	= "select * from Land where idGrower IN (select idGrower from Grower where idGrower='"+farmerId+"')";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandsByFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getLandsByFarmerAndHybrid(SQLiteDatabase dbObject, int farmerId, int hybridId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry	= "select * from Land where idGrower IN (select idGrower from FSReceviedbyFarmer where idGrower='"+farmerId+"' and idFSReceviedbyFPS IN (select idFSReceivedbyFPS from FSReceivedbyFPS where idHybrid='"+hybridId+"'))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandsByFarmerAndHybrid", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getLandsByHybrid(SQLiteDatabase dbObject, int hybridId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry	= "select * from Land where idGrower IN (select idGrower from FSReceviedbyFarmer where idFSReceviedbyFPS IN (select idFSReceivedbyFPS from FSReceivedbyFPS where idHybrid='"+hybridId+"'))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getLandsByHybrid", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	//*************************************************
+	public List<DTO> getFilteredLands(SQLiteDatabase dbObject, String villageId, String farmerId, String hybridId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+//			String qry	= "select distinct L.idLand, L.surveyNo, L.latLong, L.code, L.calculatedArea, L.manualArea, L.landFlag, L.neighbouringInfo, L.createdTime, L.modifiedTime, L.idsoilType, L.idGrower, L.idIrrigationSource, L.lotNo from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower and L.Status = 1 left join (select a.IDGrower,h.idHybrid,h.code [Hybrid] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower";
+			
+//			with status column
+			String qry	= "select distinct L.idLand, L.surveyNo, L.latLong, L.code, L.calculatedArea, L.manualArea, L.landFlag, L.neighbouringInfo, L.createdTime, L.modifiedTime, L.idsoilType, L.idGrower, L.idIrrigationSource, L.lotNo from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower and L.Status = 1 left join (select a.IDGrower,h.idHybrid,h.code [Hybrid] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower where G.Status = 1";
+			String where = "";
+			
+			if(!"0".equals(villageId) && !"".equals(villageId))
+				where += " and V.IDVillage in "+villageId;
+			
+			if(!"0".equals(hybridId))
+			{
+				if("".equals(where))
+					where += " and a.idHybrid='"+hybridId+"'";
+				else
+					where += " and a.idHybrid='"+hybridId+"'";
+			}
+			
+			if(farmerId != null && !"".equals(farmerId))
+			{
+				if("".equals(where))
+					where += " and G.IDGrower in "+farmerId;
+				else
+					where += " and G.IDGrower in "+farmerId;
+			}
+			
+			
+			System.out.println("Land Qry :"+qry+where);
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getFilteredLands", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<LandDTO> list,String tablename) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idLand, surveyNo,latLong,code,calculatedArea,manualArea,landFlag,neighbouringInfo,createdTime,modifiedTime,idsoilType,idGrower,idIrrigationSource,lotNo,status)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+			
+	
+			for (LandDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getSurveyNo()			== null ? "" :dto.getSurveyNo());
+				stmt.bindString(count++, dto.getLatLong()			== null ? "" :dto.getLatLong());
+				stmt.bindString(count++, dto.getCode()				== null ? "" :dto.getCode());
+				stmt.bindString(count++, dto.getCalculatedArea()	== null ? "" :dto.getCalculatedArea());
+				stmt.bindString(count++, dto.getManualArea()		== null ? "" :dto.getManualArea());
+				stmt.bindString(count++, dto.getLandFlag()			== null ? "2" :dto.getLandFlag()); //empty is nothing but the land info came from web-service:  dto.getLandFlag()
+				stmt.bindString(count++, dto.getNeighbouringInfo()	== null ? "" :dto.getNeighbouringInfo());
+				stmt.bindString(count++, dto.getCreatedTime()		== null ? "" :dto.getCreatedTime());
+				stmt.bindString(count++, dto.getModifiedTime()		== null ? "" :dto.getModifiedTime());
+				stmt.bindString(count++, dto.getIdsoilType()		== null ? "" :dto.getIdsoilType());
+				stmt.bindString(count++, dto.getIdGrower());
+				stmt.bindString(count++, dto.getIdIrrigationSource()== null ? "" :dto.getIdIrrigationSource());
+				stmt.bindString(count++, dto.getLotNo()				== null ? "" :dto.getLotNo());
+				stmt.bindLong(count++, dto.getStatus()				== null ? 1 :dto.getStatus());
+
+				stmt.executeInsert();
+				count = 1;
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("LandDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<LandDTO> getTransactionalData(SQLiteDatabase dbObject) 
+	{
+		List<LandDTO> instList = new ArrayList<LandDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Land where landFlag='0' or landFlag='1' ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			//idLand, surveyNo,latLong,code,calculatedArea,manualArea,landFlag,neighbouringInfo,createdTime,modifiedTime,idsoilType,idGrower,idIrrigationSource,lotNo
+			String query ="UPDATE  Land o set o.surveyNo=t.surveyNo,o.latLong=t.latLong,o.code=t.code,o.calculatedArea=t.calculatedArea,o.manualArea=t.manualArea,o.landFlag=t.landFlag,o.neighbouringInfo=t.neighbouringInfo,o.createdTime=t.createdTime"+
+			",o.modifiedTime=t.modifiedTime,o.idsoilType=t.idsoilType,o.idGrower=t.idGrower,o.idIrrigationSource=t.idIrrigationSource,o.lotNo=t.lotNo,o.status=t.status from Land_Temp t where o.idLand=t.idLand";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("MandalDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Land(idLand,surveyNo,latLong,code,calculatedArea,manualArea,landFlag,neighbouringInfo,createdTime,modifiedTime,idsoilType,idGrower,idIrrigationSource,lotNo,status) SELECT t.idLand,t.surveyNo,t.latLong,t.code,t.calculatedArea,t.manualArea,t.landFlag,t.neighbouringInfo,t.createdTime,t.modifiedTime,t.idsoilType,t.idGrower,t.idIrrigationSource,t.lotNo,t.status  FROM Land_Temp t left join Land o on o.idLand=t.idLand";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("LandDAO  -- insert", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Land_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("LandDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Land  set landFlag='2' where landFlag='0'";
+			dbObject.execSQL(query);
+			 query ="UPDATE  Land  set landFlag='11' where landFlag='1'";
+			dbObject.execSQL(query);
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("LandDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<LandDTO> getCompleteData(SQLiteDatabase dbObject) 
+	{
+		List<LandDTO> instList = new ArrayList<LandDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Land", null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	public List<String> getMaxLandCode(SQLiteDatabase dbObject,String idUser) 
+	{
+		List<String> list = new ArrayList<String>();
+		Cursor cursor = null;
+		try {
+			//String qry = "SELECT MAX(SUBSTR(code, INSTR(code,'_')+1, length(code))) from Land where code like '%"+idUser+"_"+"%'";
+			String qry = "Select code from Land where code like '%"+idUser+"_"+"%'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) 
+			{
+				do {
+					list.add(cursor.getString(0));
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getMaxLandCode", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return list;
+	}
+	
+	public List<DTO> getRecordsWithLotno1(SQLiteDatabase dbObject, String villagesIDs, String farmer, String hybridCode)
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry = "SELECT * FROM Land WHERE lotNo IS NOT NULL";
+			String where = "";
+			
+			if(villagesIDs != null && !"".equals(villagesIDs))
+				where += " and IDVillage in "+villagesIDs;
+			
+			if(farmer != null)
+					where += " and idGrower like '%"+farmer+"%'";
+			
+			if(hybridCode != null)
+					where += " and a.Hybrid='"+hybridCode+"'";
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsWithLotno(SQLiteDatabase dbObject, String villageId, String farmerId, String hybridId) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry	= "select  L.idLand, L.surveyNo, L.latLong, L.code, L.calculatedArea, L.manualArea, L.landFlag, L.neighbouringInfo, L.createdTime, L.modifiedTime, L.idsoilType, L.idGrower, L.idIrrigationSource, L.lotNo from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower  left join (select a.IDGrower,h.idHybrid,h.code [Hybrid] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower where G.Status = 1 ";
+			String where = "";
+			
+			if(!"0".equals(villageId) && !"".equals(villageId))
+				where += "and  V.IDVillage in "+villageId;
+			
+			if(!"0".equals(hybridId) && hybridId != null)
+					where += " and a.idHybrid='"+hybridId+"'";
+			
+			if(farmerId != null && !"".equals(farmerId))
+					where += " and G.farmerName like '%"+farmerId+"%'";
+			
+			where += " and (L.lotNo IS NOT NULL and L.lotNo <> '') and L.Status = 1 group by L.idLand";
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) {
+				do {
+					LandDTO dto = new LandDTO();
+					dto.setIdLand(cursor.getString(count++));
+					dto.setSurveyNo(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setLandFlag(cursor.getString(count++));
+					dto.setNeighbouringInfo(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setIdsoilType(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdIrrigationSource(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("LandDAO  -- getRecordsWithLotno", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+}

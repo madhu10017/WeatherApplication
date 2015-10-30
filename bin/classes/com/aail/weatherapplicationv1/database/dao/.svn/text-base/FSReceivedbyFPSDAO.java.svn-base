@@ -1,0 +1,685 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.AllocatedSeedDTO;
+import com.bayer.efm.hsp.database.dto.AllocatedSeedListDTO;
+import com.bayer.efm.hsp.database.dto.BatchDTO;
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FSReceivedbyFPSDTO;
+
+public class FSReceivedbyFPSDAO implements DAO {
+
+	private static FSReceivedbyFPSDAO fsreceivedbyfpsDAO;
+
+	private FSReceivedbyFPSDAO() {
+
+	}
+
+	public static FSReceivedbyFPSDAO getInstance() {
+		if (fsreceivedbyfpsDAO == null)
+			fsreceivedbyfpsDAO = new FSReceivedbyFPSDAO();
+
+		return fsreceivedbyfpsDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject.compileStatement("INSERT INTO FSReceivedbyFPS(idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied,syncFlag,issueQty,returnQty)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				FSReceivedbyFPSDTO dto = (FSReceivedbyFPSDTO) items;
+				stmt.bindString(count++, dto.getIdFSReceivedbyFPS());
+				stmt.bindString(count++, dto.getBatchNo());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getYieldperAcre());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getQtyToGrowers());
+				stmt.bindString(count++, dto.getQtyFromGrowers());
+				stmt.bindString(count++, dto.getDateRecevied());
+				stmt.bindString(count++, dto.getIdHybrid());
+				stmt.bindString(count++, dto.getIdFSRecevied());
+				stmt.bindString(count++, "1");
+				stmt.bindString(count++, dto.getIssueQty());
+				stmt.bindString(count++, dto.getReturnQty());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		FSReceivedbyFPSDTO dtoObj = (FSReceivedbyFPSDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM FSReceivedbyFPS WHERE idFSReceivedbyFPS = '"
+							+ dtoObj.getIdFSReceivedbyFPS() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			FSReceivedbyFPSDTO dtoObj = (FSReceivedbyFPSDTO) dto;
+			String whereCls = "idFSReceivedbyFPS = '"
+					+ dtoObj.getIdFSReceivedbyFPS() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("FSReceivedbyFPS", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("FSReceivedbyFPSDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updateQtyToGrower(SQLiteDatabase dbObject, String rowId, String qtyToGrower,String issueQty) 
+	{
+		
+		
+		try
+		{
+			String whereCls = "idFSReceivedbyFPS='"+rowId+"'";
+
+			ContentValues cValues = new ContentValues();
+			cValues.put("qtyToGrowers", qtyToGrower);
+			cValues.put("syncFlag", "0");
+			cValues.put("issueQty", issueQty);
+			
+			dbObject.update("FSReceivedbyFPS", cValues, whereCls, null);
+
+			return true;
+		} 
+		catch (SQLException e) 
+		{
+			Log.e("FSReceivedbyFPSDAO  -- updateQtyToGrower", e.getMessage());
+		}
+		finally 
+		{
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updateQtyFromGrower(SQLiteDatabase dbObject, String rowId, String qtyFromGrower,String returnQty) 
+	{
+		try
+		{
+			String whereCls = "idFSReceivedbyFPS='"+rowId+"'";
+
+			ContentValues cValues = new ContentValues();
+			cValues.put("qtyFromGrowers", qtyFromGrower);
+			cValues.put("syncFlag", "0");
+			cValues.put("returnQty", returnQty);
+			
+			
+			dbObject.update("FSReceivedbyFPS", cValues, whereCls, null);
+
+			return true;
+		} 
+		catch (SQLException e) 
+		{
+			Log.e("FSReceivedbyFPSDAO  -- updateQtyFromGrower", e.getMessage());
+		}
+		finally 
+		{
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReceivedbyFPS", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReceivedbyFPSDTO dto = new FSReceivedbyFPSDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setIdFSRecevied(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setIssueQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReceivedbyFPS WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReceivedbyFPSDTO dto = new FSReceivedbyFPSDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setIdFSRecevied(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setIssueQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+
+					instList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public List<DTO> getAvailableFS(SQLiteDatabase dbObject, String selectedHybrid) {
+		List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+//		String query		= "select f.idFSReceivedbyFPS, f.batchNo, f.qty, f.yieldperAcre, f.acerage, f.qtyToGrowers, f.qtyFromGrowers, f.dateRecevied, h.seedType from FSReceivedbyFPS f, Hybrid h where f.idHybrid='"+selectedHybrid+"' and h.idHybrid=f.idHybrid";
+//		String query		="select batchNo, AvailableQty, ( (AvailableQty*acerage)/qty) [acerage], seedType from( select batchNo, qty, acerage, ((qty + qtyFromGrowers) - qtyToGrowers) [AvailableQty], seedType from( select batchNo, sum(qty) [qty], sum(acerage) [acerage], sum(qtyToGrowers) [qtyToGrowers], sum(qtyFromGrowers) [qtyFromGrowers], seedType from(select f.idFSReceivedbyFPS, f.batchNo, f.qty, f.acerage, ifnull(f.qtyToGrowers,0) [qtyToGrowers], ifnull(f.qtyFromGrowers,0) [qtyFromGrowers], h.seedType from FSReceivedbyFPS f inner join Hybrid h  on h.idHybrid=f.idHybrid where f.idHybrid="+selectedHybrid+")a group by batchNo,seedType)b)c";
+		String query		="select batchNo, AvailableQty, ( (AvailableQty*acerage)/qty) [acerage], seedType, AllocatedQty, ( (AllocatedQty*acerage)/qty) [AllocatedAcerage] from(select b.batchNo, qty, acerage, (((qty + qtyFromGrowers) - qtyToGrowers)-ifnull(sownseedqty,0)) [AvailableQty], b.seedType, qty - (((qty + qtyFromGrowers) - qtyToGrowers)) [AllocatedQty] from(select batchNo, sum(qty) [qty], sum(acerage) [acerage], sum(qtyToGrowers) [qtyToGrowers], sum(qtyFromGrowers) [qtyFromGrowers], seedType from (select f.idFSReceivedbyFPS, f.batchNo, f.qty, f.acerage, ifnull(f.qtyToGrowers,0) [qtyToGrowers], ifnull(f.qtyFromGrowers,0) [qtyFromGrowers], h.seedType from FSReceivedbyFPS f inner join Hybrid h  on h.idHybrid=f.idHybrid where h.code='"+selectedHybrid+"')a group by batchNo,seedType)b left join (SELECT g.idGrower,h.idhybrid,h.seedType, r.batchNo, (sum(ifnull(sr.qty, 0)) -  sum(ifnull(si.qty, 0))) [sownseedqty], (sum(sr.acerage) - sum(ifnull(si.acerage, 0))) [SownReturnedAcres],sum(ifnull(si.qty, 0)) [TotalAllocatedQty], sum(ifnull(si.acerage, 0))[TotalAllocatedAcerage] FROM FSReceviedbyFarmer g inner join FSReceivedbyFPS r on g.idFSReceviedbyFPS = r.idFSReceivedbyFPS inner join Hybrid h on r.idHybrid = h.idHybrid inner join SownFSReturn sr on sr.idReceivedbyFarmer=g.idReceviedbyFarmer left join (select si.idSownFSReturn, sum(ifnull(si.qty, 0)) [qty], sum(ifnull(si.acerage, 0)) [acerage] from SownFSReturn sr inner join SownFSIssue si on si.idSownFSReturn = sr.idSownFSReturn group by si.idSownFSReturn)si on si.idSownFSReturn = sr.idSownFSReturn WHERE h.code ='"+selectedHybrid+"' and (sr.destroyDate is null or ltrim(rtrim(sr.destroyDate)) = '') group by h.code,h.seedType,r.batchNo )d on d.batchNo = b.batchNo and d.seedType=b.seedType)c order by c.seedType ";
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					
+					AllocatedSeedDTO dto	= new AllocatedSeedDTO();
+					
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					
+					dto.setAllocatedQty(cursor.getString(count++));
+					dto.setAllocatedAcerage(cursor.getString(count++));
+					
+					instList.add(dto);
+					count	= 0;
+					
+					/*FSAllocationDTO dto = new FSAllocationDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getInt(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));*/
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getAvailableFS", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getAvailableFSByBatches(SQLiteDatabase dbObject, String selectedHybrid) {
+		List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+		String query		="select idFSReceivedbyFPS, batchNo, AvailableQty, ( (AvailableQty*acerage)/qty) [acerage], seedType, qtyToGrowers from(select idFSReceivedbyFPS, qtyToGrowers, batchNo, qty, acerage, ((qty + qtyFromGrowers) - qtyToGrowers) [AvailableQty], seedType from(select idFSReceivedbyFPS ,batchNo, sum(qty) [qty], sum(acerage) [acerage], sum(qtyToGrowers) [qtyToGrowers], sum(qtyFromGrowers) [qtyFromGrowers], seedType from(select f.idFSReceivedbyFPS, f.batchNo, f.qty, f.acerage, ifnull(f.qtyToGrowers,0) [qtyToGrowers], ifnull(f.qtyFromGrowers,0) [qtyFromGrowers], h.seedType from FSReceivedbyFPS f inner join Hybrid h  on h.idHybrid=f.idHybrid where h.code='"+selectedHybrid+"' )a group by idFSReceivedbyFPS)b)c order by batchNo, idFSReceivedbyFPS";
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					
+					AllocatedSeedListDTO dto	= new AllocatedSeedListDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setAvailableQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					
+					instList.add(dto);
+					count	= 0;
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getAvailableFSByBatches", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public String getQtyFromFarmer(SQLiteDatabase dbObject, String idFsReceivedbyFPS) {
+		String qtyFromFarmer	= "";
+		Cursor cursor 			= null;
+		
+		try {
+			
+			String qry	= "SELECT ifnull(qtyFromGrowers,0) FROM FSReceivedbyFPS WHERE idFSReceivedbyFPS='"+idFsReceivedbyFPS+"'";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					qtyFromFarmer = cursor.getString(0);
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getQtyFromFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return qtyFromFarmer;
+	}
+	
+	public String getReturnQty(SQLiteDatabase dbObject, String idFsReceivedbyFPS) 
+	{
+		String qtyFromFarmer	= "";
+		Cursor cursor 			= null;
+		
+		try {
+			
+			String qry	= "SELECT ifnull(returnQty,0) FROM FSReceivedbyFPS WHERE idFSReceivedbyFPS='"+idFsReceivedbyFPS+"'";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					qtyFromFarmer = cursor.getString(0);
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getReturnQty", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return qtyFromFarmer;
+	}
+	
+	public String getQtyToFarmer(SQLiteDatabase dbObject, String idFsReceivedbyFPS) {
+		String qtyToGrowers	= "";
+		Cursor cursor 			= null;
+		
+		try {
+			
+			String qry	= "SELECT ifnull(qtyToGrowers,0) FROM FSReceivedbyFPS WHERE idFSReceivedbyFPS='"+idFsReceivedbyFPS+"'";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					qtyToGrowers = cursor.getString(0);
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getQtyToFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return qtyToGrowers;
+	}
+	
+	public String getIssueQty(SQLiteDatabase dbObject, String idFsReceivedbyFPS) {
+		String qtyToGrowers	= "";
+		Cursor cursor 			= null;
+		
+		try {
+			
+			String qry	= "SELECT ifnull(issueQty,0) FROM FSReceivedbyFPS WHERE idFSReceivedbyFPS='"+idFsReceivedbyFPS+"'";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					qtyToGrowers = cursor.getString(0);
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getIssueQty", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return qtyToGrowers;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<FSReceivedbyFPSDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied,syncFlag,issueQty,returnQty)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (FSReceivedbyFPSDTO dto : list) {
+
+				
+				stmt.bindString(count++, dto.getIdFSReceivedbyFPS());
+				stmt.bindString(count++, dto.getBatchNo()		== null ? "0" : dto.getBatchNo());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getYieldperAcre()  == null ? "0" : dto.getYieldperAcre());
+				stmt.bindString(count++, dto.getAcerage()		== null ? "0" : dto.getAcerage());
+				stmt.bindString(count++, dto.getQtyToGrowers() 	== null ? "0" : dto.getQtyToGrowers());
+				stmt.bindString(count++, dto.getQtyFromGrowers()== null ? "0" : dto.getQtyFromGrowers());
+				stmt.bindString(count++, dto.getDateRecevied()	== null ? ""  : dto.getDateRecevied());
+				stmt.bindString(count++, dto.getIdHybrid());
+				stmt.bindString(count++, dto.getIdFSRecevied()	== null ? ""  : dto.getIdFSRecevied());
+				stmt.bindString(count++, "1");
+				stmt.bindString(count++, dto.getIssueQty() == null ? "0" : dto.getIssueQty());
+				stmt.bindString(count++, dto.getReturnQty() == null ? "0" : dto.getReturnQty());
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			//idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied
+			String query ="UPDATE  FSReceivedbyFPS o set o.batchNo=t.batchNo,o.qty=t.qty,o.yieldperAcre=t.yieldperAcre,o.acerage=t.acerage,o.qtyToGrowers=t.qtyToGrowers,o.qtyFromGrowers=t.qtyFromGrowers,o.dateRecevied=t.dateRecevied,o.idHybrid=t.idHybrid,o.idFSRecevied=t.idFSRecevied,o.issueQty=t.issueQty,o.returnQty=t.returnQty from FSReceivedbyFPS_Temp t where o.idFSReceivedbyFPS=t.idFSReceivedbyFPS";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("FSReceivedbyFPSDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject, String userType) {
+		
+		String query	= "";
+	
+		
+		try {
+			
+				/*if(UserTypes.FIELD_PRODUCTION_SUPERWISER.code().equals(userType) || UserTypes.PROCESS_PLANT.code().equals(userType))
+					
+					query ="INSERT  INTO FSReceivedbyFPS(idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied) SELECT t.idFSReceivedbyFPS,t.batchNo,t.qty,t.yieldperAcre,t.acerage,t.qtyToGrowers,t.qtyFromGrowers,t.dateRecevied,t.idHybrid,t.idFSRecevied  FROM FSReceivedbyFPS_Temp t left join FSReceivedbyFPS o on o.idFSReceivedbyFPS=t.idFSReceivedbyFPS";
+				else*/
+					query= "INSERT OR REPLACE INTO FSReceivedbyFPS(idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied,issueQty,returnQty) SELECT t.idFSReceivedbyFPS,t.batchNo,t.qty,t.yieldperAcre,t.acerage,t.qtyToGrowers,t.qtyFromGrowers,t.dateRecevied,t.idHybrid,t.idFSRecevied,t.issueQty,t.returnQty  FROM FSReceivedbyFPS_Temp t left join FSReceivedbyFPS o on o.idFSReceivedbyFPS=t.idFSReceivedbyFPS";
+				
+				dbObject.execSQL(query);
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM FSReceivedbyFPS_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<FSReceivedbyFPSDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<FSReceivedbyFPSDTO> instList = new ArrayList<FSReceivedbyFPSDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReceivedbyFPS ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReceivedbyFPSDTO dto = new FSReceivedbyFPSDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setIdFSRecevied(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setIssueQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+				
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getCompleteData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public List<FSReceivedbyFPSDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<FSReceivedbyFPSDTO> instList = new ArrayList<FSReceivedbyFPSDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReceivedbyFPS where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReceivedbyFPSDTO dto = new FSReceivedbyFPSDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setIdFSRecevied(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setIssueQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  FSReceivedbyFPS  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("FSReceivedbyFPSDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	//SQLiteStatement stmt = dbObject.compileStatement("INSERT INTO FSReceivedbyFPS(idFSReceivedbyFPS,batchNo,qty,yieldperAcre,acerage,qtyToGrowers,qtyFromGrowers,dateRecevied,idHybrid,idFSRecevied,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+
+   public List<DTO> getBatchNumbers(SQLiteDatabase dbObject)
+   {
+	  
+	   List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+		String query		="select batchNo,idHybrid from FSReceivedbyFPS group by  batchNo";
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					BatchDTO dto = new BatchDTO();
+					dto.setIdBatch(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					instList.add(dto);
+					count	= 0;
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReceivedbyFPSDAO  -- getAvailableBatches", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+	   
+	   return instList;
+   }
+}

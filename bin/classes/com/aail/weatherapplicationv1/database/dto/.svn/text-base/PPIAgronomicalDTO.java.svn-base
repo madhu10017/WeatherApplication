@@ -1,0 +1,62 @@
+package com.bayer.efm.hsp.database.dto;
+
+
+public class PPIAgronomicalDTO implements DTO {
+	    
+	private String idPPIAgronomical;
+	private String idPPI;
+	private String idAgronomicalCondition;
+	private String date;
+	private String dateCreated;
+	private String dateModified;
+	private Integer syncFlag;
+	private Integer actionFlag;
+	public String getIdPPIAgronomical() {
+		return idPPIAgronomical;
+	}
+	public void setIdPPIAgronomical(String idPPIAgronomical) {
+		this.idPPIAgronomical = idPPIAgronomical;
+	}
+	public String getIdPPI() {
+		return idPPI;
+	}
+	public void setIdPPI(String idPPI) {
+		this.idPPI = idPPI;
+	}
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+}

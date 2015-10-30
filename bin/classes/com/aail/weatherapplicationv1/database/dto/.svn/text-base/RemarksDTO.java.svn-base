@@ -1,0 +1,47 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+ 
+public class RemarksDTO implements DTO {
+ 
+	@SerializedName("idRemarks")
+	private String idRemarks;
+	
+	@SerializedName("remark")
+	private String remark;
+	
+	@SerializedName("idStage")
+	private String idStage;
+	
+	@SerializedName("type")
+	private String type;
+ 
+	public String getIdRemarks () {
+		return idRemarks ;
+	}
+	public void setIdRemarks (String idRemarks ) {
+		this.idRemarks  = idRemarks ;
+	 }
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	 }
+	public String getIdStage () {
+		return idStage ;
+	}
+	public void setIdStage (String idStage ) {
+		this.idStage  = idStage ;
+	 }
+	public String getType () {
+		return type ;
+	}
+	public void setType (String type ) {
+		this.type  = type ;
+	 }
+}
+

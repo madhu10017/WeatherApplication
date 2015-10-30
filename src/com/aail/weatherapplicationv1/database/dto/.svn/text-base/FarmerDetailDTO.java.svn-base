@@ -1,0 +1,219 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class FarmerDetailDTO implements DTO{
+	
+	
+	private String sowingAcres;
+	private String transplantationAcres;
+	private String standingAcres;
+	private String organizerName;
+	private String maleFSLotNo;
+	private String femaleFSLotNo;
+	private String maleFSQty;
+	private String femaleFSQty; 
+	private String maleSowingDate;
+	private String femaleSowingDate;
+	private String maleTPDate;
+	private String femaleTPDate;
+	private String malePPIDate;
+	private String femalePPIDate;
+	private String maleFlowDate;
+	private String femaleFlowDate;
+	private String maleHarvestDate;
+	private String femaleHarvestDate;
+	private String dispatchDate;
+	private String lotStatus;// (Plough or GOT);
+	private String agronoCondiSowing;
+	private String agronoCondiTP;
+	private String agronoCondiPPI;
+	private String agronoCondiFlow;
+	private String agronoCondiHarv;
+	private String yieldEstiSowing;
+	private String yieldEstiTP;
+	private String yieldEstiPPI;
+	private String yieldEstiFlow;
+	private String yieldEstiHarv;
+	
+	public String getSowingAcres() {
+		return sowingAcres;
+	}
+	public void setSowingAcres(String sowingAcres) {
+		this.sowingAcres = sowingAcres;
+	}
+	public String getTransplantationAcres() {
+		return transplantationAcres;
+	}
+	public void setTransplantationAcres(String transplantationAcres) {
+		this.transplantationAcres = transplantationAcres;
+	}
+	public String getStandingAcres() {
+		return standingAcres;
+	}
+	public void setStandingAcres(String standingAcres) {
+		this.standingAcres = standingAcres;
+	}
+	public String getOrganizerName() {
+		return organizerName;
+	}
+	public void setOrganizerName(String organizerName) {
+		this.organizerName = organizerName;
+	}
+	public String getMaleFSLotNo() {
+		return maleFSLotNo;
+	}
+	public void setMaleFSLotNo(String maleFSLotNo) {
+		this.maleFSLotNo = maleFSLotNo;
+	}
+	public String getFemaleFSLotNo() {
+		return femaleFSLotNo;
+	}
+	public void setFemaleFSLotNo(String femaleFSLotNo) {
+		this.femaleFSLotNo = femaleFSLotNo;
+	}
+	public String getMaleFSQty() {
+		return maleFSQty;
+	}
+	public void setMaleFSQty(String maleFSQty) {
+		this.maleFSQty = maleFSQty;
+	}
+	public String getFemaleFSQty() {
+		return femaleFSQty;
+	}
+	public void setFemaleFSQty(String femaleFSQty) {
+		this.femaleFSQty = femaleFSQty;
+	}
+	public String getMaleSowingDate() {
+		return maleSowingDate;
+	}
+	public void setMaleSowingDate(String maleSowingDate) {
+		this.maleSowingDate = maleSowingDate;
+	}
+	public String getFemaleSowingDate() {
+		return femaleSowingDate;
+	}
+	public void setFemaleSowingDate(String femaleSowingDate) {
+		this.femaleSowingDate = femaleSowingDate;
+	}
+	public String getMaleTPDate() {
+		return maleTPDate;
+	}
+	public void setMaleTPDate(String maleTPDate) {
+		this.maleTPDate = maleTPDate;
+	}
+	public String getFemaleTPDate() {
+		return femaleTPDate;
+	}
+	public void setFemaleTPDate(String femaleTPDate) {
+		this.femaleTPDate = femaleTPDate;
+	}
+	public String getMalePPIDate() {
+		return malePPIDate;
+	}
+	public void setMalePPIDate(String malePPIDate) {
+		this.malePPIDate = malePPIDate;
+	}
+	public String getFemalePPIDate() {
+		return femalePPIDate;
+	}
+	public void setFemalePPIDate(String femalePPIDate) {
+		this.femalePPIDate = femalePPIDate;
+	}
+	public String getMaleFlowDate() {
+		return maleFlowDate;
+	}
+	public void setMaleFlowDate(String maleFlowDate) {
+		this.maleFlowDate = maleFlowDate;
+	}
+	public String getFemaleFlowDate() {
+		return femaleFlowDate;
+	}
+	public void setFemaleFlowDate(String femaleFlowDate) {
+		this.femaleFlowDate = femaleFlowDate;
+	}
+	public String getMaleHarvestDate() {
+		return maleHarvestDate;
+	}
+	public void setMaleHarvestDate(String maleHarvestDate) {
+		this.maleHarvestDate = maleHarvestDate;
+	}
+	public String getFemaleHarvestDate() {
+		return femaleHarvestDate;
+	}
+	public void setFemaleHarvestDate(String femaleHarvestDate) {
+		this.femaleHarvestDate = femaleHarvestDate;
+	}
+	public String getDispatchDate() {
+		return dispatchDate;
+	}
+	public void setDispatchDate(String dispatchDate) {
+		this.dispatchDate = dispatchDate;
+	}
+	public String getLotStatus() {
+		return lotStatus;
+	}
+	public void setLotStatus(String lotStatus) {
+		this.lotStatus = lotStatus;
+	}
+	public String getAgronoCondiSowing() {
+		return agronoCondiSowing;
+	}
+	public void setAgronoCondiSowing(String agronoCondiSowing) {
+		this.agronoCondiSowing = agronoCondiSowing;
+	}
+	public String getAgronoCondiTP() {
+		return agronoCondiTP;
+	}
+	public void setAgronoCondiTP(String agronoCondiTP) {
+		this.agronoCondiTP = agronoCondiTP;
+	}
+	public String getAgronoCondiPPI() {
+		return agronoCondiPPI;
+	}
+	public void setAgronoCondiPPI(String agronoCondiPPI) {
+		this.agronoCondiPPI = agronoCondiPPI;
+	}
+	public String getAgronoCondiFlow() {
+		return agronoCondiFlow;
+	}
+	public void setAgronoCondiFlow(String agronoCondiFlow) {
+		this.agronoCondiFlow = agronoCondiFlow;
+	}
+	public String getAgronoCondiHarv() {
+		return agronoCondiHarv;
+	}
+	public void setAgronoCondiHarv(String agronoCondiHarv) {
+		this.agronoCondiHarv = agronoCondiHarv;
+	}
+	public String getYieldEstiSowing() {
+		return yieldEstiSowing;
+	}
+	public void setYieldEstiSowing(String yieldEstiSowing) {
+		this.yieldEstiSowing = yieldEstiSowing;
+	}
+	public String getYieldEstiTP() {
+		return yieldEstiTP;
+	}
+	public void setYieldEstiTP(String yieldEstiTP) {
+		this.yieldEstiTP = yieldEstiTP;
+	}
+	public String getYieldEstiPPI() {
+		return yieldEstiPPI;
+	}
+	public void setYieldEstiPPI(String yieldEstiPPI) {
+		this.yieldEstiPPI = yieldEstiPPI;
+	}
+	public String getYieldEstiFlow() {
+		return yieldEstiFlow;
+	}
+	public void setYieldEstiFlow(String yieldEstiFlow) {
+		this.yieldEstiFlow = yieldEstiFlow;
+	}
+	public String getYieldEstiHarv() {
+		return yieldEstiHarv;
+	}
+	public void setYieldEstiHarv(String yieldEstiHarv) {
+		this.yieldEstiHarv = yieldEstiHarv;
+	}
+
+
+}

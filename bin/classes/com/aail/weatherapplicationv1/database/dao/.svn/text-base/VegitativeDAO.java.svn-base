@@ -1,0 +1,383 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.VegitativeDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class VegitativeDAO implements DAO {
+
+	private static VegitativeDAO vegitativeDAO;
+
+	private VegitativeDAO() {
+
+	}
+
+	public static VegitativeDAO getInstance() {
+		if (vegitativeDAO == null)
+			vegitativeDAO = new VegitativeDAO();
+
+		return vegitativeDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Vegitative(idVegitative,idLand,dovMale,dovFemale,idRemarksMale,idRemarksFemale,idAgronomicalCondition,idAgronomicalRemark,vegitativeAcres,othersMale,othersFemale,othersAgronomical,photo,yeildEstimation,nicking,standingAcerage,dateModified,dateCreated,dateCompletion)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				VegitativeDTO dto = (VegitativeDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDovMale());
+				stmt.bindString(count++, dto.getDovFemale());
+				stmt.bindString(count++, dto.getIdRemarksMale());
+				stmt.bindString(count++, dto.getIdRemarksFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getIdAgronomicalRemark());
+				stmt.bindString(count++, dto.getVegitativeAcres());
+				stmt.bindString(count++, dto.getOthersMale());
+				stmt.bindString(count++, dto.getOthersFemale());
+				stmt.bindString(count++, dto.getOthersAgronomical());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getNicking());
+				stmt.bindString(count++, dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateCompletion());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		VegitativeDTO dtoObj = (VegitativeDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Vegitative WHERE idVegitative = '"
+							+ dtoObj.getIdVegitative() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			VegitativeDTO dtoObj = (VegitativeDTO) dto;
+			String whereCls = "idVegitative = '" + dtoObj.getIdVegitative()
+					+ "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("Vegitative", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("VegitativeDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Vegitative", null);
+			if (cursor.moveToFirst()) {
+				do {
+					VegitativeDTO dto = new VegitativeDTO();
+					dto.setIdVegitative(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDovMale(cursor.getString(count++));
+					dto.setDovFemale(cursor.getString(count++));
+					dto.setIdRemarksMale(cursor.getString(count++));
+					dto.setIdRemarksFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdAgronomicalRemark(cursor.getString(count++));
+					dto.setVegitativeAcres(cursor.getString(count++));
+					dto.setOthersMale(cursor.getString(count++));
+					dto.setOthersFemale(cursor.getString(count++));
+					dto.setOthersAgronomical(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Vegitative WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					VegitativeDTO dto = new VegitativeDTO();
+					dto.setIdVegitative(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDovMale(cursor.getString(count++));
+					dto.setDovFemale(cursor.getString(count++));
+					dto.setIdRemarksMale(cursor.getString(count++));
+					dto.setIdRemarksFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdAgronomicalRemark(cursor.getString(count++));
+					dto.setVegitativeAcres(cursor.getString(count++));
+					dto.setOthersMale(cursor.getString(count++));
+					dto.setOthersFemale(cursor.getString(count++));
+					dto.setOthersAgronomical(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<VegitativeDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idVegitative,idLand,dovMale,dovFemale,idRemarksMale,idRemarksFemale,idAgronomicalCondition,idAgronomicalRemark,vegitativeAcres,othersMale,othersFemale,othersAgronomical,photo,yeildEstimation,nicking,standingAcerage,dateModified,dateCreated,dateCompletion)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (VegitativeDTO dto : list) {
+				stmt.bindString(count++, dto.getIdVegitative());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDovMale());
+				stmt.bindString(count++, dto.getDovFemale());
+				stmt.bindString(count++, dto.getIdRemarksMale());
+				stmt.bindString(count++, dto.getIdRemarksFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getIdAgronomicalRemark());
+				stmt.bindString(count++, dto.getVegitativeAcres());
+				stmt.bindString(count++, dto.getOthersMale());
+				stmt.bindString(count++, dto.getOthersFemale());
+				stmt.bindString(count++, dto.getOthersAgronomical());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getNicking());
+				stmt.bindString(count++, dto.getStandingAcerage());
+				if(dto.getDateModified() != null)
+					stmt.bindString(count++, dto.getDateModified());
+				else
+					stmt.bindString(count++, "");
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateCompletion());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<VegitativeDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<VegitativeDTO> instList = new ArrayList<VegitativeDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Vegitative", null); //missed sync flag from table need to add
+			if (cursor.moveToFirst()) {
+				do {
+					VegitativeDTO dto = new VegitativeDTO();
+					dto.setIdVegitative(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDovMale(cursor.getString(count++));
+					dto.setDovFemale(cursor.getString(count++));
+					dto.setIdRemarksMale(cursor.getString(count++));
+					dto.setIdRemarksFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdAgronomicalRemark(cursor.getString(count++));
+					dto.setVegitativeAcres(cursor.getString(count++));
+					dto.setOthersMale(cursor.getString(count++));
+					dto.setOthersFemale(cursor.getString(count++));
+					dto.setOthersAgronomical(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Vegitative  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("VegitativeDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<VegitativeDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<VegitativeDTO> instList = new ArrayList<VegitativeDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Vegitative", null); //missed sync flag from table need to add
+			if (cursor.moveToFirst()) {
+				do {
+					VegitativeDTO dto = new VegitativeDTO();
+					dto.setIdVegitative(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDovMale(cursor.getString(count++));
+					dto.setDovFemale(cursor.getString(count++));
+					dto.setIdRemarksMale(cursor.getString(count++));
+					dto.setIdRemarksFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdAgronomicalRemark(cursor.getString(count++));
+					dto.setVegitativeAcres(cursor.getString(count++));
+					dto.setOthersMale(cursor.getString(count++));
+					dto.setOthersFemale(cursor.getString(count++));
+					dto.setOthersAgronomical(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("VegitativeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

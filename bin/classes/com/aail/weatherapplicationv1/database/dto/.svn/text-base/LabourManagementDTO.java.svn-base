@@ -1,0 +1,110 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class LabourManagementDTO implements DTO {
+ 
+	private String idLabourManagement;
+	private String idLand;
+	private String female;
+	private String idStages;
+	private String child;
+	private String photo;
+	private String male;
+	private String remarks;
+	private String dateCreated;
+	private String dateModified;
+	private Integer actionFlag;
+	private Integer syncFlag;
+	private String idOperationType;
+	private String operationOthers;
+ 
+	public String getIdOperations() {
+		return idOperationType;
+	}
+	public void setIdOperations(String idOperations) {
+		this.idOperationType = idOperations;
+	}
+	public String getOtherOperations() {
+		return operationOthers;
+	}
+	public void setOtherOperations(String otherOperations) {
+		this.operationOthers = otherOperations;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIdLabourManagement() {
+		return idLabourManagement;
+	}
+	public void setIdLabourManagement(String idLabourManagement) {
+		this.idLabourManagement = idLabourManagement;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getFemale() {
+		return female;
+	}
+	public void setFemale(String female) {
+		this.female = female;
+	 }
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	 }
+	public String getChild() {
+		return child;
+	}
+	public void setChild(String child) {
+		this.child = child;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getMale() {
+		return male;
+	}
+	public void setMale(String male) {
+		this.male = male;
+	 }
+	
+
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+}
+

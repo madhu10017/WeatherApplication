@@ -1,0 +1,32 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class CropDTO implements DTO {
+ 
+	private String idCrop;
+	private String name;
+	private String code;
+	
+ 
+	public String getIdCrop() {
+		return idCrop;
+	}
+	public void setIdCrop(String idCrop) {
+		this.idCrop = idCrop;
+	 }
+	public String getName () {
+		return name ;
+	}
+	public void setName (String name ) {
+		this.name  = name ;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+}
+

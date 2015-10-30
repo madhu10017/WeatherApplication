@@ -1,0 +1,379 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.SownFSIssueDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class SownFSIssueDAO implements DAO 
+{
+
+	private static SownFSIssueDAO sownfsissueDAO;
+
+	private SownFSIssueDAO() {
+
+	}
+
+	public static SownFSIssueDAO getInstance() 
+	{
+		if (sownfsissueDAO == null)
+			sownfsissueDAO = new SownFSIssueDAO();
+
+		return sownfsissueDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list)
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO SownFSIssue(idSownFSIssue,idOrganizer,idLand,idSownFSReturn,acerage,qty,dateRecevied,dateModified,syncFlag)VALUES (?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+
+				SownFSIssueDTO dto = (SownFSIssueDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdOrganizer());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getIdSownFSReturn());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getDateRecevied());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, "0");
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto)
+	{
+		SownFSIssueDTO dtoObj = (SownFSIssueDTO) dto;
+		try
+		{
+			dbObject.compileStatement(
+					"DELETE FROM SownFSIssue WHERE idSownFSIssue = '"
+							+ dtoObj.getIdSownFSIssue() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto)
+	{
+		try 
+		{
+			SownFSIssueDTO dtoObj = (SownFSIssueDTO) dto;
+			String whereCls = "idSownFSIssue = '" + dtoObj.getIdSownFSIssue()
+					+ "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("SownFSIssue", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("SownFSIssueDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSIssue", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSIssueDTO dto = new SownFSIssueDTO();
+					dto.setIdSownFSIssue(cursor.getString(count++));
+					dto.setIdOrganizer(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue)
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSIssue WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst())
+			{
+				do 
+				{
+					SownFSIssueDTO dto = new SownFSIssueDTO();
+					dto.setIdSownFSIssue(cursor.getString(count++));
+					dto.setIdOrganizer(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<SownFSIssueDTO> list,String tablename)
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idSownFSIssue,idOrganizer,idLand,idSownFSReturn,acerage,qty,dateRecevied,dateModified,syncFlag)VALUES (?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (SownFSIssueDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdSownFSIssue());
+				stmt.bindString(count++, dto.getIdOrganizer()  == null ? ""  :dto.getIdOrganizer());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getIdSownFSReturn());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getDateRecevied());
+				stmt.bindString(count++, dto.getDateModified()  == null ? "" : dto.getDateModified());
+
+				stmt.bindString(count++, "1");
+				
+				count = 1;
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<SownFSIssueDTO> getTransactionalData(SQLiteDatabase dbObject)
+	{
+		List<SownFSIssueDTO> instList = new ArrayList<SownFSIssueDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSIssue where syncFlag='0'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSIssueDTO dto = new SownFSIssueDTO();
+					dto.setIdSownFSIssue(cursor.getString(count++));
+					dto.setIdOrganizer(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  SownFSIssue  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("SownFSIssueDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<SownFSIssueDTO> getCompleteData(SQLiteDatabase dbObject)
+	{
+		List<SownFSIssueDTO> instList = new ArrayList<SownFSIssueDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSIssue", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSIssueDTO dto = new SownFSIssueDTO();
+					dto.setIdSownFSIssue(cursor.getString(count++));
+					dto.setIdOrganizer(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO SownFSIssue(idSownFSIssue,idOrganizer,idLand,idSownFSReturn,acerage,qty,dateRecevied,dateModified,syncFlag) SELECT t.idSownFSIssue,t.idOrganizer,t.idLand,t.idSownFSReturn,t.acerage,t.qty,t.dateRecevied,t.dateModified,t.syncFlag  FROM SownFSIssue_Temp t left join SownFSIssue o on o.idSownFSIssue=t.idSownFSIssue";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM SownFSIssue_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSIssueDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

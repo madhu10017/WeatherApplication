@@ -1,0 +1,104 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+ 
+public class FSReceivedbyFPSDTO implements DTO {
+ 
+	private String idFSReceivedbyFPS;
+	private String batchNo;
+	private String qty;
+	private String yieldperAcre;
+	private String acerage;
+	private String qtyToGrowers;
+	private String qtyFromGrowers;
+	private String syncFlag;
+	private String issueQty;
+	private String returnQty;
+	
+	@SerializedName("dateReceived")
+	private String dateRecevied;
+	private String idHybrid;
+	private String idFSRecevied;
+ 
+	public String getIdFSReceivedbyFPS() {
+		return idFSReceivedbyFPS;
+	}
+	public void setIdFSReceivedbyFPS(String idFSReceivedbyFPS) {
+		this.idFSReceivedbyFPS = idFSReceivedbyFPS;
+	 }
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getYieldperAcre() {
+		return yieldperAcre;
+	}
+	public void setYieldperAcre(String yieldperAcre) {
+		this.yieldperAcre = yieldperAcre;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getQtyToGrowers() {
+		return qtyToGrowers;
+	}
+	public void setQtyToGrowers(String qtyToGrowers) {
+		this.qtyToGrowers = qtyToGrowers;
+	 }
+	public String getQtyFromGrowers() {
+		return qtyFromGrowers;
+	}
+	public void setQtyFromGrowers(String qtyFromGrowers) {
+		this.qtyFromGrowers = qtyFromGrowers;
+	 }
+	public String getDateRecevied() {
+		return dateRecevied;
+	}
+	public void setDateRecevied(String dateRecevied) {
+		this.dateRecevied = dateRecevied;
+	 }
+	public String getIdHybrid() {
+		return idHybrid;
+	}
+	public void setIdHybrid(String idHybrid) {
+		this.idHybrid = idHybrid;
+	 }
+	public String getIdFSRecevied() {
+		return idFSRecevied;
+	}
+	public void setIdFSRecevied(String idFSRecevied) {
+		this.idFSRecevied = idFSRecevied;
+	 }
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIssueQty() {
+		return issueQty;
+	}
+	public void setIssueQty(String issueQty) {
+		this.issueQty = issueQty;
+	}
+	public String getReturnQty() {
+		return returnQty;
+	}
+	public void setReturnQty(String returnQty) {
+		this.returnQty = returnQty;
+	}
+}

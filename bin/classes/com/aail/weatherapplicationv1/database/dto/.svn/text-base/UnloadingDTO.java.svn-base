@@ -1,0 +1,112 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class UnloadingDTO implements DTO {
+ 
+	private String idUnloading;
+	private String idDispatch;
+	private String weighingType;
+	private String totalWeight;
+	private String discripency;
+	private String photo;
+	private String weightReceived;
+	private String idRemarks;
+	private String time;
+	private String createdTime;
+	private String modifiedTime;
+	private String syncFlag;
+	private String description;
+	private String got;
+	
+ 
+	
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIdUnloading() {
+		return idUnloading;
+	}
+	public void setIdUnloading(String idUnloading) {
+		this.idUnloading = idUnloading;
+	 }
+	public String getIdDispatch() {
+		return idDispatch;
+	}
+	public void setIdDispatch(String idDispatch) {
+		this.idDispatch = idDispatch;
+	 }
+	public String getWeighingType() {
+		return weighingType;
+	}
+	public void setWeighingType(String weighingType) {
+		this.weighingType = weighingType;
+	 }
+	public String getTotalWeight() {
+		return totalWeight;
+	}
+	public void setTotalWeight(String totalWeight) {
+		this.totalWeight = totalWeight;
+	 }
+	public String getDiscripency() {
+		return discripency;
+	}
+	public void setDiscripency(String discripency) {
+		this.discripency = discripency;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getWeightReceived() {
+		return weightReceived;
+	}
+	public void setWeightReceived(String weightReceived) {
+		this.weightReceived = weightReceived;
+	 }
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	 }
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	 }
+	public String getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
+	 }
+	public String getModifiedTime() {
+		return modifiedTime;
+	}
+	public void setModifiedTime(String modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	 }
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getGot()
+	{
+		return got;
+	}
+	public void setGot(String got)
+	{
+		this.got = got;
+	}
+}
+

@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class QRMappingDTO implements DTO {
+ 
+	private String idQRMapping;
+	private String idStages;
+	private String idLand;
+	private Integer syncFlag;
+ 
+	public String getIdQRMapping() {
+		return idQRMapping;
+	}
+	public void setIdQRMapping(String idQRMapping) {
+		this.idQRMapping = idQRMapping;
+	 }
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

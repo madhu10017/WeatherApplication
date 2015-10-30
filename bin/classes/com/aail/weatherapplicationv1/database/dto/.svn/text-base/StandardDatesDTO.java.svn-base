@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class StandardDatesDTO implements DTO {
+ 
+	private String idStandardDates;
+	private String idZone;
+	private String idHybrid;
+	private String idStageFrom;
+	private String idStageTo;
+	private String seedTypeFrom;
+	private String seedTypeTo;
+	private Integer numberOfDays;
+	public String getIDStandardDates() {
+		return idStandardDates;
+	}
+	public void setIDStandardDates(String iDStandardDates) {
+		idStandardDates = iDStandardDates;
+	}
+	public String getIDZone() {
+		return idZone;
+	}
+	public void setIDZone(String iDZone) {
+		idZone = iDZone;
+	}
+	public String getIDHybrid() {
+		return idHybrid;
+	}
+	public void setIDHybrid(String iDHybrid) {
+		idHybrid = iDHybrid;
+	}
+	public String getIDStageFrom() {
+		return idStageFrom;
+	}
+	public void setIDStageFrom(String iDStageFrom) {
+		idStageFrom = iDStageFrom;
+	}
+	public String getIDStageTo() {
+		return idStageTo;
+	}
+	public void setIDStageTo(String iDStageTo) {
+		idStageTo = iDStageTo;
+	}
+	public String getSeedTypeFrom() {
+		return seedTypeFrom;
+	}
+	public void setSeedTypeFrom(String seedTypeFrom) {
+		this.seedTypeFrom = seedTypeFrom;
+	}
+	public String getSeedTypeTo() {
+		return seedTypeTo;
+	}
+	public void setSeedTypeTo(String seedTypeTo) {
+		this.seedTypeTo = seedTypeTo;
+	}
+	public Integer getNumberOfDays() {
+		return numberOfDays;
+	}
+	public void setNumberOfDays(Integer numberOfDays) {
+		this.numberOfDays = numberOfDays;
+	}
+	public String getSequence() {
+		return sequence;
+	}
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+	private String sequence;
+ 
+}
+

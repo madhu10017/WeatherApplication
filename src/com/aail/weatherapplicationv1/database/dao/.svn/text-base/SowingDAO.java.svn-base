@@ -1,0 +1,672 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.DataNotSubDTO;
+import com.bayer.efm.hsp.database.dto.SeedlingAgeDTO;
+import com.bayer.efm.hsp.database.dto.SowingDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+import com.bayer.efm.hsp.utils.Stages;
+
+public class SowingDAO implements DAO {
+
+	private static SowingDAO sowingDAO;
+
+	private SowingDAO() {
+
+	}
+
+	public static SowingDAO getInstance() {
+		if (sowingDAO == null)
+			sowingDAO = new SowingDAO();
+
+		return sowingDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Sowing(idSowing,idLand,dosMale,dosFemale,idRemarks,otherRemarks,idAgronomicalCondition,sowingAcres,yieldEstimation,photo,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				SowingDTO dto = (SowingDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDosMale());
+				stmt.bindString(count++, dto.getDosFemale());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getSowingAcres());
+				stmt.bindString(count++, dto.getYieldEstimation());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion());
+				stmt.bindLong(count++, dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		SowingDTO dtoObj = (SowingDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Sowing WHERE id = '" + dtoObj.getIdSowing()
+							+ "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			SowingDTO dtoObj = (SowingDTO) dto;
+
+			String whereCls = "idLand = '" + dtoObj.getIdLand() + "'";
+			
+			ContentValues cValues = new ContentValues();
+			cValues.put("dosMale", dtoObj.getDosMale());
+			cValues.put("dosFemale", dtoObj.getDosFemale());
+			cValues.put("idRemarks", dtoObj.getIdRemarks());
+			cValues.put("otherRemarks", dtoObj.getOtherRemarks());
+			cValues.put("idAgronomicalCondition",dtoObj.getIdAgronomicalCondition());
+			cValues.put("sowingAcres", dtoObj.getSowingAcres());
+			cValues.put("yieldEstimation", dtoObj.getYieldEstimation());
+			cValues.put("photo", dtoObj.getPhoto());
+			// cValues.put("dateCreated", dtoObj.getDateCreated());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("dateCompletion", dtoObj.getDateCompletion());
+			cValues.put("maleFlag", dtoObj.getMaleFlag());
+			cValues.put("femaleFlag", dtoObj.getFemaleFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+
+			dbObject.update("Sowing", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("SowingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Sowing", null);
+			if (cursor.moveToFirst()) {
+				do {
+					SowingDTO dto = new SowingDTO();
+					dto.setIdSowing(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDosMale(cursor.getString(count++));
+					dto.setDosFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setSowingAcres(cursor.getString(count++));
+					dto.setYieldEstimation(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Sowing WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					SowingDTO dto = new SowingDTO();
+					dto.setIdSowing(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDosMale(cursor.getString(count++));
+					dto.setDosFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setSowingAcres(cursor.getString(count++));
+					dto.setYieldEstimation(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public String getSowingAcres(SQLiteDatabase dbObject, String idLand) {
+		String sowingAcres = "";
+
+		Cursor cursor = null;
+		try {
+			cursor = dbObject.rawQuery(
+					"SELECT sowingAcres FROM Sowing where idLand='" + idLand
+							+ "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					sowingAcres = cursor.getString(0);
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getHarvestAcres", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return sowingAcres;
+	}
+
+	public boolean insertAll(SQLiteDatabase dbObject, List<SowingDTO> list,
+			String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+ tablename+ "(idSowing,idLand,dosMale,dosFemale,idRemarks,otherRemarks,idAgronomicalCondition,sowingAcres,yieldEstimation,photo,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (SowingDTO dto : list) {
+				
+				stmt.bindString(count++, dto.getIdSowing());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDosMale() 					== null ? "" : dto.getDosMale());
+				stmt.bindString(count++, dto.getDosFemale() 				== null ? "" : dto.getDosFemale());
+				stmt.bindString(count++, dto.getIdRemarks() 				== null ? "" : dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks()	 			== null ? "" : dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition() 	== null ? "" : dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getSowingAcres() 				== null ? "" : dto.getSowingAcres());
+				stmt.bindString(count++, dto.getYieldEstimation() 			== null ? "" : dto.getYieldEstimation());
+				stmt.bindString(count++, dto.getPhoto() 					== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getDateCreated() 				== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified() 				== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion() 			== null ? "" : dto.getDateCompletion());
+				stmt.bindLong(count++, 	dto.getMaleFlag() 					== null ? 0 : dto.getMaleFlag()); // dto.getMaleFlag()
+				stmt.bindLong(count++, 	dto.getFemaleFlag() 				== null ? 0 : dto.getFemaleFlag()); // dto.getFemaleFlag()
+				stmt.bindLong(count++, dto.getSyncFlag() 					== null ? 1 : dto.getSyncFlag());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			// Log.e("SowingDAO  -- insert", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public List<SowingDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<SowingDTO> instList = new ArrayList<SowingDTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery(
+					"SELECT * FROM Sowing where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					SowingDTO dto = new SowingDTO();
+					dto.setIdSowing(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDosMale(cursor.getString(count++));
+					dto.setDosFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setSowingAcres(cursor.getString(count++));
+					dto.setYieldEstimation(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public List<DTO> getDataNotSubmitedRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry = "select G.farmerName [Grower],G.idGrower[IdGrower],G.fatherName[Father], V.name [Village],L.code[LandCode], L.idLand, L.lotNo [LotNo], b.HybridCode, Stage from (select idLand, 'Sowing' [Stage] from Sowing where maleFlag = 0 OR femaleFlag = 0 union all select idLand, 'Transplantation' [Stage] from Transplantation where  maleFlag = 0 OR femaleFlag = 0 union all select idLand, 'PPI' [Stage] from PPI where  maleFlag = 0 OR femaleFlag = 0 union all select idLand, 'Flowering' [Stage] from Flowering where  maleFlag = 0 OR femaleFlag = 0 union all select idLand, 'Harvesting' [Stage] from Harvesting where  maleFlag = 0 OR femaleFlag = 0 union all select idLand, 'Dispatch' [Stage] from Dispatch where actionFlag = 0)a inner join Land L on L.idLand = a.idLand inner join Grower G on G.idGrower = L.idGrower inner join Village V on V.idVillage = G.idVillage left join (select rf.idGrower, f.idHybrid, h.code [HybridCode],rf.idLand from FSReceviedbyFarmer rf inner join FSReceivedbyFPS f on f.idFSReceivedbyFPS = rf.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid = f.idHybrid group by rf.idGrower, h.code , rf.idLand )b on b.idGrower = G.idGrower and b.idLand = L.idLand ";
+
+			// String qry =
+			// "select G.farmerName [Grower],G.idGrower[IdGrower],G.fatherName[Father], V.name [Village],L.code[LandCode], L.idLand, L.lotNo [LotNo], b.HybridCode, Stage from (select idLand, 'Sowing' [Stage] from Sowing where maleFlag = 0 OR femaleFlag =0 union all select idLand, 'Transplantation' [Stage] from Transplantation where maleFlag = 0 OR femaleFlag =0 union all select idLand, 'PPI' [Stage] from PPI where maleFlag = 0 OR femaleFlag =0 union all select idLand, 'Flowering' [Stage] from Flowering where maleFlag = 0 OR femaleFlag =0 union all select idLand, 'Harvesting' [Stage] from Harvesting where maleFlag = 0 OR femaleFlag =0 union all select idLand, 'Dispatch' [Stage] from Dispatch where actionFlag = 0)a inner join Land L on L.idLand = a.idLand inner join Grower G on G.idGrower = L.idGrower inner join Village V on V.idVillage = G.idVillage left join (select rf.idGrower, f.idHybrid, h.code [HybridCode] from FSReceviedbyFarmer rf inner join FSReceivedbyFPS f on f.idFSReceivedbyFPS = rf.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid = f.idHybrid group by rf.idGrower, f.idHybrid)b on b.idGrower = G.idGrower";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					DataNotSubDTO dto = new DataNotSubDTO();
+
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setIdFarmer(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setLandCode(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					dto.setStage(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getDataNotSubmitedRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public List<DTO> getRecordBySeedlingAge(SQLiteDatabase dbObject,
+			int seedlingAge) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+
+			String qry = "select c.*, "
+					+ "case when H.idHarvesting is not null then '"
+					+ Stages.HARVESTING.code()
+					+ "' "
+					+ "when F.idFlowering is not null then '"
+					+ Stages.FLOWERING.code()
+					+ "' "
+					+ "when P.idPPI is not null then '"
+					+ Stages.PPI.code()
+					+ "' "
+					+ "when T.idTransplantation is not null then '"
+					+ Stages.TRANSPLANTATION.code()
+					+ "' "
+					+ "when S.idSowing is not null then '"
+					+ Stages.SOWING.code()
+					+ "' end [Stage], "
+					+ ""
+					+ "case when H.idHarvesting is not null then H.idHarvesting "
+					+ "when F.idFlowering is not null then F.idFlowering "
+					+ "when P.idPPI is not null then P.idPPI "
+					+ "when T.idTransplantation is not null then T.idTransplantation "
+					+ "when S.idSowing is not null then S.idSowing end [idStage] "
+					+ "from("
+					+ "select distinct * from (select G.idGrower[idGrower],G.farmerName [Grower], G.fatherName [Father],V.name [Village], L.idLand, L.lotNo [LotNo],L.code[Land Code] ,b.HybridCode, case when (dosFemale is not null and dosFemale <> '') then 'Female' else 'Male' end [dosType], (cast(julianday('now') - julianday(case when (dosFemale is not null and dosFemale <> '') then dosFemale else dosMale end) as integer)) [SeedlingAge]from Sowing S inner join Land L on L.idLand = S.idLand inner join Grower G on G.idGrower = L.idGrower inner join Village V on V.idVillage = G.idVillage left join (select rf.idGrower, rf.idLand, f.idHybrid, h.code [HybridCode] from  FSReceviedbyFarmer rf inner join FSReceivedbyFPS f on f.idFSReceivedbyFPS = rf.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid = f.idHybrid group by rf.idGrower, rf.idLand, f.idHybrid)b on b.idGrower = G.idGrower and b.idLand=S.idLand)a where SeedlingAge ="
+					+ seedlingAge
+					+ ")c "
+					+ "left join Sowing S on S.idLand=c.idLand "
+					+ "left join Transplantation T on T.idLand=c.idLand "
+					+ "left join PPI P on P.idLand=c.idLand "
+					+ "left join Flowering F on F.idLand=c.idLand "
+					+ "left join Harvesting H on H.idLand=c.idLand ";
+
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+
+					SeedlingAgeDTO dto = new SeedlingAgeDTO();
+
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setLandCode(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					// dto.setDateOfSowing(cursor.getString(count++));
+					count++;
+					dto.setSeedlingAge(cursor.getString(count++));
+					dto.setStage(cursor.getString(count++));
+
+					instList.add(dto);
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getRecordBySeedlingAge", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public boolean updateTransactionalData(SQLiteDatabase dbObject) {
+		try {
+
+			String query = "UPDATE  Sowing  set syncFlag='1'";
+			dbObject.execSQL(query);
+			return true;
+
+		} catch (SQLException e) {
+			Log.e("SowingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public List<SowingDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<SowingDTO> instList = new ArrayList<SowingDTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Sowing", null);
+			if (cursor.moveToFirst()) {
+				do {
+					SowingDTO dto = new SowingDTO();
+					dto.setIdSowing(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDosMale(cursor.getString(count++));
+					dto.setDosFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setSowingAcres(cursor.getString(count++));
+					dto.setYieldEstimation(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public Hashtable<String, String> getStagesStates(SQLiteDatabase dbObject,
+			String idLand) {
+		/*
+		 * Not Started - 1 In-Progress - 2 Completed - 3
+		 */
+		String query = "select Stage, ifnull(Status, '1') [Status]from ("
+				+ "select 'Sowing' [Stage], (select case when S.dosMale is not null and S.dosMale <> '' and S.dosFemale is not null and S.dosFemale <> '' then '3' "
+				+ "when (S.dosMale is not null and S.dosMale <> '') or (S.dosFemale is not null and S.dosFemale <> '') then '2' end "
+				+ "from Sowing S where S.idLand='"
+				+ idLand
+				+ "') [Status] "
+				+ "union all "
+				+ "select 'Transplantation', (select case when T.dotMale is not null and T.dotMale <> '' and T.dotFemale is not null and T.dotFemale <> '' then '3' "
+				+ "when (T.dotMale is not null and T.dotMale <> '') or (T.dotFemale is not null and T.dotFemale <> '') then '2' end "
+				+ "from Transplantation T where T.idLand='"
+				+ idLand
+				+ "') "
+				+ "union all "
+				+ "select 'PPI',  (select case when P.dopMale is not null and P.dopMale <> '' and P.dopFemale is not null and P.dopFemale <> '' then '3' "
+				+ "when (P.dopMale is not null and P.dopMale <> '') or (P.dopFemale is not null and P.dopFemale <> '') then '2' end "
+				+ "from PPI P where P.idLand='"
+				+ idLand
+				+ "') "
+				+ "union all "
+				+ "select 'Flowering', (select case when F.dofMale is not null and F.dofMale <> '' and F.dofFemale is not null and F.dofFemale <> '' then '3' "
+				+ "when (F.dofMale is not null and F.dofMale <> '') or (F.dofFemale is not null and F.dofFemale <> '') then '2' end "
+				+ "from Flowering F where F.idLand='"
+				+ idLand
+				+ "') "
+				+ "union all "
+				+ "select 'Harvesting', (select case when H.dohMale is not null and H.dohMale <> '' and H.dohFemale is not null and H.dohFemale <> '' then '3' "
+				+ "when (H.dohMale is not null and H.dohMale <> '') or (H.dohFemale is not null and H.dohFemale <> '') then '2' end "
+				+ "from Harvesting H where H.idLand='"
+				+ idLand
+				+ "') "
+				+ "union all "
+				+ "select 'Dispatch', (select case when D.idDispatch is not null then '3' end "
+				+ "from Dispatch D where D.idLand='" + idLand + "'))a";
+
+		Cursor cursor = null;
+		Hashtable<String, String> states = new Hashtable<String, String>();
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					states.put(cursor.getString(0), cursor.getString(1));
+
+				} while (cursor.moveToNext());
+			}
+
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- getStagesStates", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return states;
+	}
+
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query = "INSERT OR REPLACE INTO Sowing(idSowing,idLand,dosMale,dosFemale,idRemarks,otherRemarks,idAgronomicalCondition,sowingAcres,yieldEstimation,photo,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag) SELECT t.idSowing,t.idLand,t.dosMale,t.dosFemale,t.idRemarks,t.otherRemarks,t.idAgronomicalCondition,t.sowingAcres,t.yieldEstimation,t.photo,t.dateCreated,t.dateModified,t.dateCompletion,t.maleFlag,t.femaleFlag,t.syncFlag  FROM Sowing_Temp t left join Sowing o on o.idSowing = t.idSowing";
+			dbObject.execSQL(query);
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- insertPartial", e.getMessage());
+		} finally {
+			// dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query = "DELETE   FROM Sowing_Temp";
+			dbObject.execSQL(query);
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SowingDAO  -- deleteall", e.getMessage());
+		} finally {
+
+			dbObject.close();
+		}
+		return false;
+
+	}
+
+	public String getLatestAcres(SQLiteDatabase dbObject, String idLand) {
+		String latestAcres = "";
+
+		Cursor cursor = null;
+		try {
+			String qry = "SELECT  case when d.dispatchAcres != '' then  d.dispatchAcres when  h.standingAcerage != '' then  h.standingAcerage when f.standingAcerage != '' then f.standingAcerage when  p.standingAcerage != '' then p.standingAcerage when t.transplantationAcres != '' then t.transplantationAcres when s.sowingAcres != '' then s.sowingAcres end Acre       FROM Land l left join Sowing s on l.idLand = s.idLand Left join Transplantation t on l.idLand = t.idLand left join  PPI p on l.idLand = p.idLand left join Flowering f on l.idLand = f.idLand left join Harvesting h on l.idLand = h.idLand left join (select * from Dispatch d group by d.idLand order by dateofDispatch desc) as d on l.idLand = d.idLand where l.idLand ='"+ idLand + "'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					latestAcres = cursor.getString(0);
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getHarvestAcres", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return latestAcres;
+	}
+	
+	public String getFSFemale(SQLiteDatabase dbObject,String idLand)
+	{
+		Cursor cursor = null;
+		String fsFemale = null;
+		try
+		{
+			String quy = "select sum( ifnull(rf.availableQtyWithGrower,0)) [availableQtyWithGrower] from FSReceviedbyFarmer rf inner join FSReceivedbyFPS f on f.idFSReceivedbyFPS = rf.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=f.idHybrid where h.seedType='F' and rf.idLand='"+idLand+"'";
+			cursor = dbObject.rawQuery(quy, null);
+			if (cursor.moveToFirst()) 
+			{
+			 do {
+			    	fsFemale = cursor.getString(0);
+			    } while (cursor.moveToNext());
+					   }
+				} catch (Exception e) {
+					Log.e("SowingDAO  -- getRecords", e.getMessage());
+				} finally {
+					if (cursor != null && !cursor.isClosed())
+						cursor.close();
+
+					dbObject.close();
+				}
+
+				return fsFemale;
+			}
+}

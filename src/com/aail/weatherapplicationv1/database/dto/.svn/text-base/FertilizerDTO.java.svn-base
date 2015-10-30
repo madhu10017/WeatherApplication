@@ -1,0 +1,87 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FertilizerDTO implements DTO {
+ 
+	private String idFertilizer;
+	private String idStage;
+	private String idLand;
+	private String ssp;
+	private String fym;
+	private String zinc;
+	private String photo;
+	private String dateCreated;
+	private String dateModified;
+	private Integer actionFlag;
+	private Integer syncFlag;
+ 
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIdFertilizer() {
+		return idFertilizer;
+	}
+	public void setIdFertilizer(String idFertilizer) {
+		this.idFertilizer = idFertilizer;
+	 }
+	public String getIdStage() {
+		return idStage;
+	}
+	public void setIdStage(String idStage) {
+		this.idStage = idStage;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getSsp() {
+		return ssp;
+	}
+	public void setSsp(String ssp) {
+		this.ssp = ssp;
+	 }
+	public String getFym() {
+		return fym;
+	}
+	public void setFym(String fym) {
+		this.fym = fym;
+	 }
+	public String getZinc() {
+		return zinc;
+	}
+	public void setZinc(String zinc) {
+		this.zinc = zinc;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+}
+

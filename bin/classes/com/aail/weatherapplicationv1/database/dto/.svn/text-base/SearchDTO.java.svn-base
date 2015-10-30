@@ -1,0 +1,79 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class SearchDTO implements DTO {
+	private String village, farmer, father, landCode,idFarmer,idLand,hydrid,lotNo,latestAcres ;
+	
+
+	public String getHydrid() {
+		return hydrid;
+	}
+
+	public void setHydrid(String hydrid) {
+		this.hydrid = hydrid;
+	}
+
+	public String getLotNo() {
+		return lotNo;
+	}
+
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+
+	public String getIdLand() {
+		return idLand;
+	}
+
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+
+	public String getIdFarmer() {
+		return idFarmer;
+	}
+
+	public void setIdFarmer(String idFarmer) {
+		this.idFarmer = idFarmer;
+	}
+
+	public String getVillage() {
+		return village;
+	}
+
+	public void setVillage(String village) {
+		this.village = village;
+	}
+
+	public String getFarmer() {
+		return farmer;
+	}
+
+	public void setFarmer(String farmer) {
+		this.farmer = farmer;
+	}
+
+	public String getFather() {
+		return father;
+	}
+
+	public void setFather(String father) {
+		this.father = father;
+	}
+
+	public String getLandCode() {
+		return landCode;
+	}
+
+	public void setLandCode(String landCode) {
+		this.landCode = landCode;
+	}
+
+	public String getLatestAcres() {
+		return latestAcres;
+	}
+
+	public void setLatestAcres(String latestAcres) {
+		this.latestAcres = latestAcres;
+	}
+	
+}

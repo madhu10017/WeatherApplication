@@ -1,0 +1,59 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FSReturnbyFarmerDTO implements DTO {
+ 
+	private String idFSReturnbyFarmer;
+	private String qty;
+	private String acerage;
+	private String idReceviedbyFarmer;
+	private String dateReturned;
+	private String dateModified;
+	private String syncFlag;
+	
+	public String getIdFSReturnbyFarmer() {
+		return idFSReturnbyFarmer;
+	}
+	public void setIdFSReturnbyFarmer(String idFSReturnbyFarmer) {
+		this.idFSReturnbyFarmer = idFSReturnbyFarmer;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getIdReceviedbyFarmer() {
+		return idReceviedbyFarmer;
+	}
+	public void setIdReceviedbyFarmer(String idReceviedbyFarmer) {
+		this.idReceviedbyFarmer = idReceviedbyFarmer;
+	 }
+	public String getDateReturned() {
+		return dateReturned;
+	}
+	public void setDateReturned(String dateReturned) {
+		this.dateReturned = dateReturned;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

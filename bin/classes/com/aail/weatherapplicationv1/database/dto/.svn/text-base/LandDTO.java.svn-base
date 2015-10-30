@@ -1,0 +1,121 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+ 
+public class LandDTO implements DTO {
+ 
+	private String idLand;
+	private String surveyNo;
+	private String latLong;
+	private String code;
+	private String calculatedArea;
+	private String manualArea;
+	private String landFlag;
+	private String neighbouringInfo;
+	
+	@SerializedName("dateCreated")
+	private String createdTime;
+	
+	@SerializedName("dateModified")
+	private String modifiedTime;
+	private String idsoilType;
+	private String idGrower;
+	private String idIrrigationSource;
+	private String lotNo;
+	private Integer status;
+ 
+	
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getSurveyNo() {
+		return surveyNo;
+	}
+	public void setSurveyNo(String surveyNo) {
+		this.surveyNo = surveyNo;
+	 }
+	public String getLatLong() {
+		return latLong;
+	}
+	public void setLatLong(String latLong) {
+		this.latLong = latLong;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+	public String getCalculatedArea() {
+		return calculatedArea;
+	}
+	public void setCalculatedArea(String calculatedArea) {
+		this.calculatedArea = calculatedArea;
+	 }
+	public String getManualArea() {
+		return manualArea;
+	}
+	public void setManualArea(String manualArea) {
+		this.manualArea = manualArea;
+	 }
+	public String getLandFlag() {
+		return landFlag;
+	}
+	public void setLandFlag(String landFlag) {
+		this.landFlag = landFlag;
+	 }
+	public String getNeighbouringInfo() {
+		return neighbouringInfo;
+	}
+	public void setNeighbouringInfo(String neighbouringInfo) {
+		this.neighbouringInfo = neighbouringInfo;
+	 }
+	public String getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
+	 }
+	public String getModifiedTime() {
+		return modifiedTime;
+	}
+	public void setModifiedTime(String modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	 }
+	public String getIdsoilType() {
+		return idsoilType;
+	}
+	public void setIdsoilType(String idsoilType) {
+		this.idsoilType = idsoilType;
+	 }
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String idGrower) {
+		this.idGrower = idGrower;
+	 }
+	public String getIdIrrigationSource() {
+		return idIrrigationSource;
+	}
+	public void setIdIrrigationSource(String idIrrigationSource) {
+		this.idIrrigationSource = idIrrigationSource;
+	 }
+	public String getLotNo() {
+		return lotNo;
+	}
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+}

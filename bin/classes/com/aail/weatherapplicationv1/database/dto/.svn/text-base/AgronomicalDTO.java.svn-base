@@ -1,0 +1,66 @@
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+
+public class AgronomicalDTO implements DTO {
+	    
+		private String idPPIAgronomicalCondition;
+		private String idPPI;
+		private String idAgronomicalCondition;
+		private String agronomicalDate;
+		@SerializedName("dateCreated")
+		private String createdOn;
+		@SerializedName("dateModified")
+		private String modifiedOn;
+		private Integer syncFlag;
+		private Integer actionFlag;
+		
+		public String getIDPPIAgronomicalCondition() {
+			return idPPIAgronomicalCondition;
+		}
+		public void setIDPPIAgronomicalCondition(String iDPPIAgronomicalCondition) {
+			idPPIAgronomicalCondition = iDPPIAgronomicalCondition;
+		}
+		public String getIdPPI() {
+			return idPPI;
+		}
+		public void setIdPPI(String idPPI) {
+			this.idPPI = idPPI;
+		}
+		public String getIdAgronomicalCondition() {
+			return idAgronomicalCondition;
+		}
+		public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+			this.idAgronomicalCondition = idAgronomicalCondition;
+		}
+		public String getAgronomicalDate() {
+			return agronomicalDate;
+		}
+		public void setAgronomicalDate(String agronomicalDate) {
+			this.agronomicalDate = agronomicalDate;
+		}
+		public String getCreatedOn() {
+			return createdOn;
+		}
+		public void setCreatedOn(String createdOn) {
+			this.createdOn = createdOn;
+		}
+		public String getModifiedOn() {
+			return modifiedOn;
+		}
+		public void setModifiedOn(String modifiedOn) {
+			this.modifiedOn = modifiedOn;
+		}
+		public Integer getSyncFlag() {
+			return syncFlag;
+		}
+		public void setSyncFlag(Integer syncFlag) {
+			this.syncFlag = syncFlag;
+		} 
+		public Integer getActionFlag() {
+			return actionFlag;
+		}
+		public void setActionFlag(Integer actionFlag) {
+			this.actionFlag = actionFlag;
+		} 
+}

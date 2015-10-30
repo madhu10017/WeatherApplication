@@ -1,0 +1,31 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class PestsDTO implements DTO {
+ 
+	private String idPest ;
+	private String name;
+	private String code;
+ 
+	public String getIdPest () {
+		return idPest ;
+	}
+	public void setIdPest (String idPest ) {
+		this.idPest  = idPest ;
+	 }
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+}
+

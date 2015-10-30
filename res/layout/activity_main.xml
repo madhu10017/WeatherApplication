@@ -1,0 +1,276 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground"
+    android:orientation="vertical"
+    tools:context="com.example.userinput.MainActivity" >
+
+    <!-- Auto Complete -->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" >
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView1"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/enter_location"
+            android:textColor="@color/black" >
+
+            <requestFocus />
+        </AutoCompleteTextView>
+        
+        
+        <Button
+            android:id="@+id/go"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_alignTop="@+id/autoCompleteTextView1"
+            android:layout_toRightOf="@+id/autoCompleteTextView1"
+            android:background="@drawable/rounded_corner1"
+            android:text="@string/go"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        
+        <Button
+            android:id="@+id/grid"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/go"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/go"
+            android:background="@drawable/rounded_corner1"
+            android:text="@string/grid"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        
+</RelativeLayout>
+    <!-- Five Images -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" >
+
+        <TextView
+            android:id="@+id/description1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="@string/description"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:layout_weight=".1" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/sunny" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_weight=".1" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/temp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/black"
+                    android:textSize="90sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- rectangle -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.80" >
+
+        <DigitalClock
+            android:id="@+id/digitalClock1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:text="DigitalClock"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/digitalClock1"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="22dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+    </RelativeLayout>
+
+    <!-- Scroll View -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="6dp" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="left"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/nextday1"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Mon"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/nextday2"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Tues"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/nextday3"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Wed"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="left"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/nextday4"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Thurs"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/nextday5"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Fri"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/nextday6"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner1"
+                        android:text="Sat"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+            </ViewFlipper>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8" >
+
+        <Button
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/rounded_corner1"
+            android:text="@string/detail"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,285 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.CommonConditionDTO;
+import com.bayer.efm.hsp.database.dto.DTO;
+
+public class CommonConditionDAO implements DAO {
+
+	private static CommonConditionDAO commonconditionDAO;
+
+	private CommonConditionDAO() {
+
+	}
+
+	public static CommonConditionDAO getInstance() {
+		if (commonconditionDAO == null)
+			commonconditionDAO = new CommonConditionDAO();
+
+		return commonconditionDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO CommonCondition(idCommonconditionName, type,idStages)VALUES (?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				CommonConditionDTO dto = (CommonConditionDTO) items;
+				stmt.bindString(count++, dto.getIdCommonconditionName());
+				stmt.bindString(count++, dto.getType());
+				stmt.bindString(count++, dto.getIdStages());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		CommonConditionDTO dtoObj = (CommonConditionDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM CommonCondition WHERE idCommonconditionName '" + dtoObj.getIdCommonconditionName()
+							+ "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			CommonConditionDTO dtoObj = (CommonConditionDTO) dto;
+			String whereCls = "idCommonconditionName = '"
+					+ dtoObj.getIdCommonconditionName() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("CommonCondition", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("CommonConditionDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM CommonCondition Order By Case When type Like '%Excellent%' Then 1  When type Like '%Good%' Then 2  When type Like '%Average%' Then 3  When type Like '%Poor%' Then 4  End", null);
+			if (cursor.moveToFirst()) {
+				do {
+					CommonConditionDTO dto = new CommonConditionDTO();
+					dto.setIdCommonconditionName(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+					dto.setIdStages(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM CommonCondition WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					CommonConditionDTO dto = new CommonConditionDTO();
+					dto.setIdCommonconditionName(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+					dto.setIdStages(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<CommonConditionDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idCommonconditionName, type,idStages)VALUES (?,?,?)");
+	
+			int count = 1;
+	
+			for (CommonConditionDTO items : list) {
+	
+				CommonConditionDTO dto = items;
+				stmt.bindString(count++, dto.getIdCommonconditionName());
+				stmt.bindString(count++, dto.getType());
+				stmt.bindString(count++, ""); //ignoring column: dto.getIdStages()
+				count = 1;
+				stmt.executeInsert();
+			}
+	
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+
+			String query ="UPDATE  CommonCondition   set type=(SELECT type FROM tbl_3 WHERE tbl_4.idnum =tbl_3.idnum),o.idStages=t.idStages from CommonCondition_Temp t where o.idCommonconditionName=t.idCommonconditionName";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("CommonConditionDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO CommonCondition(idCommonconditionName,type,idStages) SELECT t.idCommonconditionName,t.type,t.idStages  FROM CommonCondition_Temp t left join CommonCondition o on o.idCommonconditionName=t.idCommonconditionName  ";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- insert", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM CommonCondition_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<CommonConditionDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<CommonConditionDTO> instList = new ArrayList<CommonConditionDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM CommonCondition ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					CommonConditionDTO dto = new CommonConditionDTO();
+					dto.setIdCommonconditionName(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+					dto.setIdStages(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+}
+	

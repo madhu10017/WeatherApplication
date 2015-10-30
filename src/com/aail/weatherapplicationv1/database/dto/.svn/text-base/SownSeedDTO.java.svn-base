@@ -1,0 +1,117 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class SownSeedDTO implements DTO {
+	
+	private String idFSReceviedbyFarmer;
+	private String idGrower;
+	private String fpsqty;
+	private String acerage;
+	private String dateRecevied;
+	private String dateModified;
+	private String fpsQtyToGrowers;
+	private String fpsQtyFromGrowers;
+	private String qtyFromFps;
+	private String seedType;
+	private String batchNo;
+	private String hybridCode;
+
+
+	
+	public String getHybridCode() {
+		return hybridCode;
+	}
+	public void setHybridCode(String hybridCode) {
+		this.hybridCode = hybridCode;
+	}
+	public String getIdFSReceviedbyFarmer() {
+		return idFSReceviedbyFarmer;
+	}
+	public void setIdFSReceviedbyFarmer(String IdFSReceviedbyFarmer) {
+		this.idFSReceviedbyFarmer = IdFSReceviedbyFarmer;
+	 }
+	
+	
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String IdGrower) {
+		this.idGrower = IdGrower;
+	 }
+	
+	
+	public String getFpsqty() {
+		return fpsqty;
+	}
+	public void setFpsqty(String Fpsqty) {
+		this.fpsqty = Fpsqty;
+	}
+	
+	
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	
+	
+	public String getDateRecevied() {
+		return dateRecevied;
+	}
+	public void setDateRecevied(String dateRecevied) {
+		this.dateRecevied = dateRecevied;
+	 }
+	
+	
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+	
+	
+	public String getFpsQtyToGrowers() {
+		return fpsQtyToGrowers;
+	}
+	public void setFpsQtyToGrowers(String fpsQtyToGrowers) {
+		this.fpsQtyToGrowers = fpsQtyToGrowers;
+	 }
+	
+	
+	public String getFpsQtyFromGrowers() {
+		return fpsQtyFromGrowers;
+	}
+	public void setFpsQtyFromGrowers(String fpsQtyFromGrowers) {
+		this.fpsQtyFromGrowers = fpsQtyFromGrowers;
+	 }
+	
+	
+	public String getQtyFromFps() {
+		return qtyFromFps;
+	}
+	public void setQtyFromFps(String qtyFromFps) {
+		this.qtyFromFps = qtyFromFps;
+	 }
+	
+	
+	public String getSeedType() {
+		return seedType;
+	}
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	}
+}
+
+
+
+	
+	
+	

@@ -1,0 +1,24 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class IrrigationSourceDTO implements DTO {
+ 
+	private String idirrigationSource;
+	private String sourceType;
+ 
+	public String getIdirrigationSource() {
+		return idirrigationSource;
+	}
+	public void setIdirrigationSource(String idirrigationSource) {
+		this.idirrigationSource = idirrigationSource;
+	 }
+	public String getSourceType() {
+		return sourceType;
+	}
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	 }
+}
+

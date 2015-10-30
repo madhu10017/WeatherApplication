@@ -1,0 +1,87 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class RoughingDTO implements DTO 
+{
+	private String roughingType;
+	private String atBootLeaf;
+	private String preFlow;
+	private String postFlow;
+	private String atSeedSetting;
+	private String total;
+	private String idQualityRoughing;
+	private Integer actionFlag;
+	private Integer syncFlag;
+
+	public String getIdQualityRoughing() {
+		return idQualityRoughing;
+	}
+
+	public void setIdQualityRoughing(String idQualityRoughing) {
+		this.idQualityRoughing = idQualityRoughing;
+	}
+
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+
+	public String getRoughingType() {
+		return roughingType;
+	}
+
+	public void setRoughingType(String roughingType) {
+		this.roughingType = roughingType;
+	}
+
+	public String getAtBootLeaf() {
+		return atBootLeaf;
+	}
+
+	public void setAtBootLeaf(String atBootLeaf) {
+		this.atBootLeaf = atBootLeaf;
+	}
+
+	public String getPreFlow() {
+		return preFlow;
+	}
+
+	public void setPreFlow(String preFlow) {
+		this.preFlow = preFlow;
+	}
+
+	public String getPostFlow() {
+		return postFlow;
+	}
+
+	public void setPostFlow(String postFlow) {
+		this.postFlow = postFlow;
+	}
+
+	public String getAtSeedSetting() {
+		return atSeedSetting;
+	}
+
+	public void setAtSeedSetting(String atSeedSetting) {
+		this.atSeedSetting = atSeedSetting;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+}

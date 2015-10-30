@@ -1,0 +1,134 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class PPIDTO implements DTO {
+ 
+	private String idPPI;
+	private String idLand;
+	private String dopMale;
+	private String dopFemale;
+	private String idAgronomicalCondition;
+	private String idRemarks;
+	private String otherRemarks;
+	private String photo;
+	private String yeildEstimation;
+	private String nicking;
+	private String standingAcerage;
+	private String dateCreated;
+	private String dateModified;
+	private String dateCompletion;
+	private Integer maleFlag;
+	private Integer femaleFlag;
+	private Integer syncFlag;
+	private String parentalSynchrony;
+	public String getIdPPI() {
+		return idPPI;
+	}
+	public void setIdPPI(String idPPI) {
+		this.idPPI = idPPI;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getDopMale() {
+		return dopMale;
+	}
+	public void setDopMale(String dopMale) {
+		this.dopMale = dopMale;
+	}
+	public String getDopFemale() {
+		return dopFemale;
+	}
+	public void setDopFemale(String dopFemale) {
+		this.dopFemale = dopFemale;
+	}
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	}
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	}
+	public String getOtherRemarks() {
+		return otherRemarks;
+	}
+	public void setOtherRemarks(String otherRemarks) {
+		this.otherRemarks = otherRemarks;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getYeildEstimation() {
+		return yeildEstimation;
+	}
+	public void setYeildEstimation(String yeildEstimation) {
+		this.yeildEstimation = yeildEstimation;
+	}
+	public String getNicking() {
+		return nicking;
+	}
+	public void setNicking(String nicking) {
+		this.nicking = nicking;
+	}
+	public String getStandingAcerage() {
+		return standingAcerage;
+	}
+	public void setStandingAcerage(String standingAcerage) {
+		this.standingAcerage = standingAcerage;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public String getDateCompletion() {
+		return dateCompletion;
+	}
+	public void setDateCompletion(String dateCompletion) {
+		this.dateCompletion = dateCompletion;
+	}
+	public Integer getMaleFlag() {
+		return maleFlag;
+	}
+	public void setMaleFlag(Integer maleFlag) {
+		this.maleFlag = maleFlag;
+	}
+	public Integer getFemaleFlag() {
+		return femaleFlag;
+	}
+	public void setFemaleFlag(Integer femaleFlag) {
+		this.femaleFlag = femaleFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getParentalSynchrony() {
+		return parentalSynchrony;
+	}
+	public void setParentalSynchrony(String parentalSynchrony) {
+		this.parentalSynchrony = parentalSynchrony;
+	}
+}

@@ -1,0 +1,1071 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FarmerPrimaryInfoDTO;
+import com.bayer.efm.hsp.database.dto.GrowerDTO;
+import com.bayer.efm.hsp.database.dto.SearchResultsDTO;
+
+public class GrowerDAO implements DAO 
+{
+
+	private static GrowerDAO growerDAO;
+
+	private GrowerDAO() {
+
+	}
+
+	public static GrowerDAO getInstance() {
+		if (growerDAO == null)
+			growerDAO = new GrowerDAO();
+
+		return growerDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Grower(idGrower,farmerName,fatherName,age,dob,bankAccountNo,bankName,ifscCode,aadhaarCardNo,contactNo,photo,code,farmerFlag,dateCreated,dateModified,thumbImpression,signature1,signature2,signature3,idVillage,status)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+
+				
+				GrowerDTO dto = (GrowerDTO) items;
+				stmt.bindString(count++, dto.getIdGrower());
+				stmt.bindString(count++, dto.getFarmerName());
+				stmt.bindString(count++, dto.getFatherName());
+				stmt.bindString(count++, dto.getAge());
+				stmt.bindString(count++, dto.getDob());
+				stmt.bindString(count++, dto.getBankAccountNo());
+				stmt.bindString(count++, dto.getBankName());
+				stmt.bindString(count++, dto.getIfscCode());
+				stmt.bindString(count++, dto.getAadhaarCardNo());
+				stmt.bindString(count++, dto.getContactNo());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getCode());
+				stmt.bindString(count++, dto.getFarmerFlag());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getThumbImpression());
+				stmt.bindString(count++, dto.getSignature1());
+				stmt.bindString(count++, dto.getSignature2());
+				stmt.bindString(count++, dto.getSignature3());
+				stmt.bindString(count++, dto.getIdVillage());
+				stmt.bindLong(count++, dto.getStatus());
+				
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		GrowerDTO dtoObj = (GrowerDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Grower WHERE idGrower = '"
+							+ dtoObj.getIdGrower() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try {
+			GrowerDTO dtoObj = (GrowerDTO) dto;
+			String whereCls = "idGrower = '" + dtoObj.getIdGrower() + "'";
+
+			ContentValues cValues = new ContentValues();
+			
+			cValues.put("farmerName ",dtoObj.getFarmerName());
+			cValues.put("fatherName ", dtoObj.getFatherName());
+			cValues.put("age", dtoObj.getAge());
+			cValues.put("dob", dtoObj.getDob());
+			cValues.put("bankAccountNo", dtoObj.getBankAccountNo());
+			cValues.put("bankName", dtoObj.getBankName());
+			cValues.put("ifscCode", dtoObj.getIfscCode());
+			cValues.put("aadhaarCardNo", dtoObj.getAadhaarCardNo());
+			cValues.put("contactNo", dtoObj.getContactNo());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("code", dtoObj.getCode());
+			cValues.put("farmerFlag", dtoObj.getFarmerFlag());
+			//cValues.put("dateCreated", dtoObj.getDateCreated());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			
+			cValues.put("thumbImpression", dtoObj.getThumbImpression());
+			cValues.put("signature1", dtoObj.getSignature1());
+			cValues.put("signature2", dtoObj.getSignature2());
+			cValues.put("signature3", dtoObj.getSignature3());
+			cValues.put("idVillage", dtoObj.getIdVillage());
+			cValues.put("status", dtoObj.getStatus());
+			dbObject.update("Grower", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("GrowerDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower WHERE "+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getGrowersByVillage(SQLiteDatabase dbObject, int villageId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower WHERE idVillage='"+villageId+"'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByVillage", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	public List<DTO> getGrowersByVillages(SQLiteDatabase dbObject, String villageId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower WHERE idVillage='"+villageId+"'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByVillage", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	public List<DTO> getGrowersByVillageAndHybrid(SQLiteDatabase dbObject, int villageId, int hybridId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+			String qry	= "select * from Grower where idVillage='"+villageId+"' and idGrower IN (select idGrower from FSReceviedbyFarmer where idFSReceviedbyFPS IN (select idFSReceivedbyFPS from FSReceivedbyFPS where idHybrid='"+hybridId+"'))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByVillageAndHybrid", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getGrowersByHybrid(SQLiteDatabase dbObject, int hybridId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+			String qry	= "select * from Grower where idGrower IN (select idGrower from FSReceviedbyFarmer where idFSReceviedbyFPS IN (select idFSReceivedbyFPS from FSReceivedbyFPS where idHybrid='"+hybridId+"'))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByHybrid", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getGrowersByHybridAndLot(SQLiteDatabase dbObject, int hybridId, int lot) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+			String qry	= "select * from Grower where idGrower IN (select idGrower from Land where idLand='"+lot+"' and idGrower IN (select idGrower from FSReceviedbyFarmer where idFSReceviedbyFPS IN (select idFSReceivedbyFPS from FSReceivedbyFPS where idHybrid='"+hybridId+"')))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByHybridAndLot", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getGrowersByLot(SQLiteDatabase dbObject, int lot) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+			String qry	= "select * from Grower where idGrower IN (select idGrower from Land where idLand='"+lot+"')";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowersByLot", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	//**********************************************************************
+	public List<DTO> getFilteredGrowers(SQLiteDatabase dbObject, String villageId, String hybridId, String lotNo) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+//			String qry		= "select distinct g.idGrower, g.farmerName, g.fatherName, g.age, g.dob, g.bankAccountNo, g.bankName, g.ifscCode, g.aadhaarCardNo, g.contactNo, g.photo, g.code, g.farmerFlag, g.dateCreated, g.dateModified, g.thumbImpression, g.signature1, g.signature2, g.signature3, g.idVillage from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower and L.Status = 1 left join (select a.IDGrower,h.idHybrid,h.code [Hybrid] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower";
+			
+//			With status column
+			String qry		= "select distinct g.idGrower, g.farmerName, g.fatherName, g.age, g.dob, g.bankAccountNo, g.bankName, g.ifscCode, g.aadhaarCardNo, g.contactNo, g.photo, g.code, g.farmerFlag, g.dateCreated, g.dateModified, g.thumbImpression, g.signature1, g.signature2, g.signature3, g.idVillage,g.status from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower and L.Status = 1 left join (select a.IDGrower,h.idHybrid,h.code [Hybrid] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower where G.Status = 1";
+			String where = "";
+			
+			if(villageId != null && !"".equals(villageId))
+				where += " and V.IDVillage in "+villageId;
+			
+			if(!"0".equals(lotNo))
+			{
+				if("".equals(where))
+					where += " and L.idLand='"+lotNo+"'";
+				else
+					where += " and L.idLand='"+lotNo+"'";
+			}
+			
+			if(!"0".equals(hybridId))
+			{
+				if("".equals(where))
+					where += " and a.idHybrid='"+hybridId+"'";
+				else
+					where += " and a.idHybrid='"+hybridId+"'";
+			}
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getFilteredGrowers", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	//*************************
+	public List<DTO> getSearchResults(SQLiteDatabase dbObject, String villageId, String farmerId, String hybridCode, String lotNo,int lotCount) 
+	{
+		List<DTO> searchResList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			String qryCon   = "";
+			if(hybridCode != null)
+				qryCon = "and a.availQty!=0";
+				
+			String qry		= "select * from(select G.idGrower, G.farmerName,G.fatherName, v.idvillage, V.name, a.idhybrid, ifnull(a.Hybrid,'') [Hybrid] , L.idLand, ifnull(L.lotNo,'')[lotNo],  L.code,a.availQty from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.idGrower=G.idGrower left join (select a.IDGrower,a.idLand,h.idHybrid,h.code [Hybrid],sum(a.availableQtyWithGrower) [availQty] from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid group by idGrower,idLand)a on a.IDGrower=G.IDGrower and a.idLand = L.idLand";
+			String where = "";
+			
+			if(villageId != null && !"".equals(villageId))
+				where += " where V.IDVillage in "+villageId;
+			
+			if(farmerId != null)
+			{
+				if("".equals(where))
+					where += " where G.farmerName like '%"+farmerId+"%'";
+				else
+					where += " and G.farmerName like '%"+farmerId+"%'";
+				
+				where += " and G.Status = 1 and L.Status = 1"; 
+			}
+			if(lotCount != 0)
+				where += " and L.lotNo is not null and L.lotNo != ''";
+			
+			if(lotNo != null)
+			{
+				if("".equals(where))
+					where += " where L.idLand='"+lotNo+"'";
+				else
+					where += " and L.idLand='"+lotNo+"'";
+			}
+			
+			if(hybridCode != null)
+			{
+				if("".equals(where))
+					where += " where a.Hybrid='"+hybridCode+"'";
+				else
+					where += " and a.Hybrid='"+hybridCode+"'";
+			}
+//			if(!"".equals(where))
+			
+			where += " "+qryCon+")a order by lotNo desc,case when a.availQty!=0 then  Hybrid end desc, code asc, name asc, farmerName asc";
+//				where += " order by a.Hybrid desc,L.lotNo asc,L.code asc";
+			//order by L.lotNo desc, a.Hybrid desc, L.code asc, V.name asc, G.farmerName asc 
+			
+			System.out.println("Search qry :"+qry+where);
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) {
+				do {
+
+						SearchResultsDTO dto	= new SearchResultsDTO();
+						dto.setIdGrower(cursor.getString(count++));
+						dto.setGrowerName(cursor.getString(count++));
+						dto.setFatherName(cursor.getString(count++));
+						dto.setIdVillage(cursor.getString(count++));
+						dto.setVillageName(cursor.getString(count++));
+						dto.setIdHybrid(cursor.getString(count++));
+						dto.setHybridName(cursor.getString(count++));
+						dto.setIdLand(cursor.getString(count++));
+						dto.setLotNo(cursor.getString(count++));
+						dto.setCode(cursor.getString(count++));
+						dto.setQty(cursor.getFloat(count++));
+						
+						
+					searchResList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+			
+			
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getSearchResults", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return searchResList;
+	}
+	
+	public List<DTO> getGrowerPrimaryInfo(SQLiteDatabase dbObject, String growerId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			
+			String qry	= "select g.idGrower, g.farmerName, g.fatherName, g.age, g.dob, g.bankAccountNo, g.bankName, g.ifscCode, g.aadhaarCardNo, g.contactNo, g.photo, g.code, g.farmerFlag, g.idVillage, v.name, m.name,m.idMandal from grower g, village v, mandal m where g.idGrower ='"+growerId+"' and m.idMandal = v.idMandal and g.idVillage = v.idVillage";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					FarmerPrimaryInfoDTO dto = new FarmerPrimaryInfoDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setMandalName(cursor.getString(count++));
+					dto.setIdMandal(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getGrowerPrimaryInfo", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<GrowerDTO> list,String tablename) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idGrower,farmerName,fatherName,age,dob,bankAccountNo,bankName,ifscCode,aadhaarCardNo,contactNo,photo,code,farmerFlag,dateCreated,dateModified,thumbImpression,signature1,signature2,signature3,idVillage,status)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (GrowerDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdGrower());
+				stmt.bindString(count++, dto.getFarmerName());
+				stmt.bindString(count++, dto.getFatherName());
+				stmt.bindString(count++, dto.getAge());
+				stmt.bindString(count++, dto.getDob()				== null ? "" :dto.getDob());
+				stmt.bindString(count++, dto.getBankAccountNo() 	== null ? "" :dto.getBankAccountNo());
+				stmt.bindString(count++, dto.getBankName() 			== null ? "" : dto.getBankName());
+				stmt.bindString(count++, dto.getIfscCode() 			== null ? "" : dto.getIfscCode());
+				stmt.bindString(count++, dto.getAadhaarCardNo() 	== null ? "" : dto.getAadhaarCardNo());
+				stmt.bindString(count++, dto.getContactNo() 		== null ? "" : dto.getContactNo());
+				stmt.bindString(count++, dto.getPhoto() 			== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getCode() 				== null ? "" : dto.getCode());
+				stmt.bindString(count++, dto.getFarmerFlag()    	== null ? "2": dto.getFarmerFlag()); // inserting default as 2 nothing but farmer came from web-service:  dto.getFarmerFlag()
+				stmt.bindString(count++, dto.getDateCreated()		== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()		== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getThumbImpression()	== null ? "" : dto.getThumbImpression());
+				stmt.bindString(count++, dto.getSignature1()		== null ? "" : dto.getSignature1());
+				stmt.bindString(count++, dto.getSignature2()		== null ? "" : dto.getSignature2());
+				stmt.bindString(count++, dto.getSignature3()		== null ? "" : dto.getSignature3());
+				stmt.bindString(count++, dto.getIdVillage()			== null ? "" : dto.getIdVillage());
+				stmt.bindLong(count++, dto.getStatus()				== null ? 1 : dto.getStatus());
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	
+	public List<GrowerDTO> getTransactionalData(SQLiteDatabase dbObject)
+	{
+		List<GrowerDTO> instList = new ArrayList<GrowerDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower where farmerFlag='0' or farmerFlag='1'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			//idGrower,farmerName,fatherName,age,dob,bankAccountNo,bankName,ifscCode,aadhaarCardNo,contactNo,photo,code,farmerFlag,dateCreated,dateModified,thumbImpression,signature1,signature2,signature3,idVillage
+			String query ="UPDATE  Grower o set o.farmerName=t.farmerName,o.fatherName=t.fatherName,o.age=t.age,o.dob=t.dob,o.bankAccountNo=t.bankAccountNo,o.bankName=t.bankName,o.ifscCode=t.ifscCode"+
+			",o.aadhaarCardNo=t.aadhaarCardNo,o.contactNo=t.contactNo,o.photo=t.photo,o.code=t.code,o.farmerFlag=t.farmerFlag,o.dateCreated=t.dateCreated,o.thumbImpression=t.thumbImpression,o.signature1=t.signature1,o.signature2=t.signature2,o.signature3=t.signature3,o.idVillage=t.idVillage,o.status=t.status from Grower_Temp t where o.idGrower=t.idGrower";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("GrowerDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Grower(idGrower,farmerName,fatherName,age,dob,bankAccountNo,bankName,ifscCode,aadhaarCardNo,contactNo,photo,code,farmerFlag,dateCreated,dateModified,thumbImpression,signature1,signature2,signature3,idVillage,status) SELECT t.idGrower,t.farmerName,t.fatherName,t.age,t.dob,t.bankAccountNo,t.bankName,t.ifscCode,t.aadhaarCardNo,t.contactNo,t.photo,t.code,t.farmerFlag,t.dateCreated,t.dateModified,t.thumbImpression,t.signature1,t.signature2,t.signature3,t.idVillage,t.status  FROM Grower_Temp t left join Grower o on o.idGrower=t.idGrower";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Grower_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Grower  set farmerFlag='2' where farmerFlag='0'";
+			dbObject.execSQL(query);   
+			 query ="UPDATE  Grower  set farmerFlag='11' where farmerFlag='1'";
+			dbObject.execSQL(query);
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("GrowerDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<GrowerDTO> getCompleteData(SQLiteDatabase dbObject)
+	{
+		List<GrowerDTO> instList = new ArrayList<GrowerDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Grower", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GrowerDTO dto = new GrowerDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setAge(cursor.getString(count++));
+					dto.setDob(cursor.getString(count++));
+					dto.setBankAccountNo(cursor.getString(count++));
+					dto.setBankName(cursor.getString(count++));
+					dto.setIfscCode(cursor.getString(count++));
+					dto.setAadhaarCardNo(cursor.getString(count++));
+					dto.setContactNo(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setFarmerFlag(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setThumbImpression(cursor.getString(count++));
+					dto.setSignature1(cursor.getString(count++));
+					dto.setSignature2(cursor.getString(count++));
+					dto.setSignature3(cursor.getString(count++));
+					dto.setIdVillage(cursor.getString(count++));
+					dto.setStatus(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<String> getFarmerDetails(SQLiteDatabase dbObject,String idLand)
+	{
+		List<String> detailList = new ArrayList<String>();
+		Cursor cursor = null;
+		
+		int count = 1;
+		
+		try {
+			String query ="select a.*, sowingAcres, dosMale [MaleSowingDate], dosFemale [FemaleSowingDate], AgronomicalConditionAtSowing, EstimatedYieldAtSowing,transplantationAcres [TPAcres], dotMale [MaleTPDate], dotFemale [FemaleTPDate], AgronomicalConditionAtTransplantation, EstimatedYieldAtTransplantation,dopMale [MalePPIDate], dopFemale [FemalePPIDate], AgronomicalConditionAtPPI, EstimatedYieldAtPPI,PPIStandingAcers,dofMale [MaleFloweringDate], dofFemale [FemaleFloweringDate], AgronomicalConditionAtFlowering, EstimatedYieldAtFlowering,FlowringStandingAcers,dohMale [MaleHarvestingDate], dohFemale [FemaleHarvestingDate], AgronomicalConditionAtHarvesting, EstimatedYieldAtHarvesting, HarvestinStandingAcers,dateofDispatch [DispatchDate],dispatchAcres[DispatchAcers], case when flag = 'G' then 'GOT' when flag = 'P' then 'PloughDown' else '' end[LotStatus],MaleQty,FemaleQty from(select idLand, HybridCode,OrganiserName, max( MaleFSBatchNo) [MaleFSBatchNo],max(FemaleFSBatchNo) [FemaleFSBatchNo],sum(MaleQty) [MaleQty],sum(FemaleQty) [FemaleQty] from(select idLand, h.idHybrid, h.code [HybridCode], h.seedType, case when lower(seedType)='m' then batchNo end [MaleFSBatchNo],case when lower(seedType)='f' then batchNo end [FemaleFSBatchNo],case when lower(seedType)='m' then sum(availableQtyWithGrower) end [MaleQty],case when lower(seedType)='f' then sum(availableQtyWithGrower) end [FemaleQty],o.name [OrganiserName] FROM FSReceviedbyFarmer fr inner join Organizer o on fr.idOrganizer=o.idOrganizer  inner join FSReceivedbyFPS f on f.idFSReceivedbyFPS = fr.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid = f.idHybrid where idLand = '"+idLand+"' group by idLand, h.idHybrid, h.code, h.seedType)a group by idLand, HybridCode)a left join (select S.*, C.type [AgronomicalConditionAtSowing], yieldEstimation [EstimatedYieldAtSowing] from Sowing S left join CommonCondition C on C.idCommonconditionname=S.idAgronomicalCondition)S on S.idLand = a.idLand left join (select T.*, C.type [AgronomicalConditionAtTransplantation], yeildEstimation [EstimatedYieldAtTransplantation] from Transplantation T left join CommonCondition C on C.idCommonconditionname=T.idAgronomicalCondition)T on T.idLand = a.idLand left join (select P.*, C.type [AgronomicalConditionAtPPI],agronomicalDate, yeildEstimation [EstimatedYieldAtPPI] ,standingAcerage[PPIStandingAcers] from PPI P left join (select C.type, A.date [agronomicalDate],A.idPPI,idPPIAgronomical from PPIAgronomical A inner join CommonCondition C on C.idCommonconditionname=A.idAgronomicalCondition group by A.idPPI order by idPPIAgronomical desc) C on C.idPPI=P.idPPI group by C.idPPI )P on P.idLand = a.idLand left join (select F.*, C.type [AgronomicalConditionAtFlowering], yeildEstimation [EstimatedYieldAtFlowering],standingAcerage[FlowringStandingAcers] from Flowering F left join CommonCondition C on C.idCommonconditionname=F.idAgronomicalCondition)F on F.idLand = a.idLand left join (select H.*, C.type [AgronomicalConditionAtHarvesting], yeildEstimation [EstimatedYieldAtHarvesting],standingAcerage[HarvestinStandingAcers] from Harvesting H left join CommonCondition C on C.idCommonconditionname=H.idAgronomicalCondition)H on H.idLand = a.idLand left join (select * from Dispatch group by idLand order by idDispatch desc)D on D.idLand = a.idLand left join GOTandPlowdown G on G.idLand=a.idLand";
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					detailList.add(cursor.getString(count++));
+					
+					count = 1;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GrowerDAO  -- getFarmerDetails", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+		return detailList;
+	}
+}

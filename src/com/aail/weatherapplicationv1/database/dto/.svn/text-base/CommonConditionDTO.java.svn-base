@@ -1,0 +1,33 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+ 
+public class CommonConditionDTO implements DTO {
+    @SerializedName("idAgronomicalCondition")
+	private String idCommonconditionName;
+	private String type;
+	private String idStages;
+ 
+	public String getIdCommonconditionName() {
+		return idCommonconditionName;
+	}
+	public void setIdCommonconditionName(String idCommonconditionName) {
+		this.idCommonconditionName = idCommonconditionName;
+	 }
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	 }
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	 }
+}
+

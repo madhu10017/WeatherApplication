@@ -1,0 +1,22 @@
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+
+public class WeedTypeDTO implements DTO
+{
+	private String idWeedType;
+	@SerializedName("grade")
+	private String name;
+	public String getIdWeedType() {
+		return idWeedType;
+	}
+	public void setIdWeedType(String idWeedType) {
+		this.idWeedType = idWeedType;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+}

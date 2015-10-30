@@ -1,0 +1,117 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class GOTandPlowdownDTO implements DTO {
+ 
+	private String idGOTandPlowdown;
+	private String idLand;
+	private String idStage;
+	private String photo;
+	private String flag;
+	private String idRemarks;
+	private String latLong;
+	private String othersRemarks;
+	private String date;
+	private String dateCreated;
+	private String dateModified;
+	private String calculatedArea;
+	private String manualArea;
+	private Integer actionFlag;
+	private Integer syncFlag;
+	
+ 
+	public String getCalculatedArea() {
+		return calculatedArea;
+	}
+	public void setCalculatedArea(String calculatedArea) {
+		this.calculatedArea = calculatedArea;
+	}
+	public String getManualArea() {
+		return manualArea;
+	}
+	public void setManualArea(String manualArea) {
+		this.manualArea = manualArea;
+	}
+	public String getIdGOTandPlowdown() {
+		return idGOTandPlowdown;
+	}
+	public void setIdGOTandPlowdown(String idGOTandPlowdown) {
+		this.idGOTandPlowdown = idGOTandPlowdown;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getIdStage() {
+		return idStage;
+	}
+	public void setIdStage(String idStage) {
+		this.idStage = idStage;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	 }
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	 }
+	public String getLatLong() {
+		return latLong;
+	}
+	public void setLatLong(String latLong) {
+		this.latLong = latLong;
+	 }
+	public String getOthersRemarks() {
+		return othersRemarks;
+	}
+	public void setOthersRemarks(String othersRemarks) {
+		this.othersRemarks = othersRemarks;
+	 }
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	 }
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

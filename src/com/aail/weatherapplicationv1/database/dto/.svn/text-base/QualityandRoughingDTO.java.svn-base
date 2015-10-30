@@ -1,0 +1,101 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class QualityandRoughingDTO implements DTO {
+ 
+	private String idQualityandRoughing;
+	private String idQRMapping;
+	private String atbootLeaf;
+	private String pre50perFlow;
+	private String post50perFlow;
+	private String afterSeedSetting;
+	private String total;
+	private String roughingType;
+	private String dateCreated;
+	private String dateModified;
+	private Integer actionFlag;
+	private Integer syncFlag;
+	private String photo;
+ 
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIdQualityandRoughing() {
+		return idQualityandRoughing;
+	}
+	public void setIdQualityandRoughing(String idQualityandRoughing) {
+		this.idQualityandRoughing = idQualityandRoughing;
+	 }
+	public String getIdQRMapping() {
+		return idQRMapping;
+	}
+	public void setIdQRMapping(String idQRMapping) {
+		this.idQRMapping = idQRMapping;
+	 }
+	public String getAtbootLeaf() {
+		return atbootLeaf;
+	}
+	public void setAtbootLeaf(String atbootLeaf) {
+		this.atbootLeaf = atbootLeaf;
+	 }
+	public String getPre50perFlow() {
+		return pre50perFlow;
+	}
+	public void setPre50perFlow(String pre50perFlow) {
+		this.pre50perFlow = pre50perFlow;
+	 }
+	public String getPost50perFlow() {
+		return post50perFlow;
+	}
+	public void setPost50perFlow(String post50perFlow) {
+		this.post50perFlow = post50perFlow;
+	 }
+	public String getAfterSeedSetting() {
+		return afterSeedSetting;
+	}
+	public void setAfterSeedSetting(String afterSeedSetting) {
+		this.afterSeedSetting = afterSeedSetting;
+	 }
+	public String getTotal() {
+		return total;
+	}
+	public void setTotal(String total) {
+		this.total = total;
+	 }
+	public String getRoughingType() {
+		return roughingType;
+	}
+	public void setRoughingType(String roughingType) {
+		this.roughingType = roughingType;
+	 }
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+}
+

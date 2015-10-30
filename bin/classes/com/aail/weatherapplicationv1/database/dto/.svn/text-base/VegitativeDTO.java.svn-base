@@ -1,0 +1,143 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class VegitativeDTO implements DTO {
+ 
+	private String idVegitative;
+	private String idLand;
+	private String dovMale;
+	private String dovFemale;
+	private String idRemarksMale;
+	private String idRemarksFemale;
+	private String idAgronomicalCondition;
+	private String idAgronomicalRemark;
+	private String vegitativeAcres;
+	private String othersMale;
+	private String othersFemale;
+	private String othersAgronomical;
+	private String photo;
+	private String yeildEstimation;
+	private String nicking;
+	private String standingAcerage;
+	private String dateModified;
+	private String dateCreated;
+	private String dateCompletion;
+ 
+	public String getIdVegitative() {
+		return idVegitative;
+	}
+	public void setIdVegitative(String idVegitative) {
+		this.idVegitative = idVegitative;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getDovMale() {
+		return dovMale;
+	}
+	public void setDovMale(String dovMale) {
+		this.dovMale = dovMale;
+	 }
+	public String getDovFemale() {
+		return dovFemale;
+	}
+	public void setDovFemale(String dovFemale) {
+		this.dovFemale = dovFemale;
+	 }
+	public String getIdRemarksMale() {
+		return idRemarksMale;
+	}
+	public void setIdRemarksMale(String idRemarksMale) {
+		this.idRemarksMale = idRemarksMale;
+	 }
+	public String getIdRemarksFemale() {
+		return idRemarksFemale;
+	}
+	public void setIdRemarksFemale(String idRemarksFemale) {
+		this.idRemarksFemale = idRemarksFemale;
+	 }
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	 }
+	public String getIdAgronomicalRemark() {
+		return idAgronomicalRemark;
+	}
+	public void setIdAgronomicalRemark(String idAgronomicalRemark) {
+		this.idAgronomicalRemark = idAgronomicalRemark;
+	 }
+	public String getVegitativeAcres() {
+		return vegitativeAcres;
+	}
+	public void setVegitativeAcres(String vegitativeAcres) {
+		this.vegitativeAcres = vegitativeAcres;
+	 }
+	public String getOthersMale() {
+		return othersMale;
+	}
+	public void setOthersMale(String othersMale) {
+		this.othersMale = othersMale;
+	 }
+	public String getOthersFemale() {
+		return othersFemale;
+	}
+	public void setOthersFemale(String othersFemale) {
+		this.othersFemale = othersFemale;
+	 }
+	public String getOthersAgronomical() {
+		return othersAgronomical;
+	}
+	public void setOthersAgronomical(String othersAgronomical) {
+		this.othersAgronomical = othersAgronomical;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getYeildEstimation() {
+		return yeildEstimation;
+	}
+	public void setYeildEstimation(String yeildEstimation) {
+		this.yeildEstimation = yeildEstimation;
+	 }
+	public String getNicking() {
+		return nicking;
+	}
+	public void setNicking(String nicking) {
+		this.nicking = nicking;
+	 }
+	public String getStandingAcerage() {
+		return standingAcerage;
+	}
+	public void setStandingAcerage(String standingAcerage) {
+		this.standingAcerage = standingAcerage;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateCompletion() {
+		return dateCompletion;
+	}
+	public void setDateCompletion(String dateCompletion) {
+		this.dateCompletion = dateCompletion;
+	 }
+}
+

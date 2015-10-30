@@ -1,0 +1,656 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.DispatchDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+@SuppressLint("DefaultLocale")
+public class DispatchDAO implements DAO {
+
+	private static DispatchDAO dispatchDAO;
+
+	private DispatchDAO() {
+
+	}
+
+	public static DispatchDAO getInstance() {
+		if (dispatchDAO == null)
+			dispatchDAO = new DispatchDAO();
+
+		return dispatchDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Dispatch(idDispatch,idLand,dateofDispatch,moisture,truckNo,quantity,photo,sdn,idProcessplant,dateModified,got,lotNo,gradeQuality,dateCreated,syncFlag, actionFlag, noOfBags,dispatchAcres)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				DispatchDTO dto = (DispatchDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDateofDispatch());
+				stmt.bindString(count++, dto.getMoisture());
+				stmt.bindString(count++, dto.getTruckNo());
+				stmt.bindString(count++, dto.getQuantity());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getSdn());
+				stmt.bindString(count++, dto.getIdProcessplant());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getGot());
+				stmt.bindString(count++, dto.getLotNo());
+				stmt.bindString(count++, dto.getGradeQuality());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindLong(count++, dto.getActionFlag());
+				stmt.bindString(count++, dto.getNoOfBags());
+				stmt.bindString(count++, dto.getDispatchAcres());
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		DispatchDTO dtoObj = (DispatchDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Dispatch WHERE idDispatch = '"
+							+ dtoObj.getIdDispatch() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			DispatchDTO dtoObj = (DispatchDTO) dto;
+			String whereCls = "idDispatch = '" + dtoObj.getIdDispatch() + "'";
+			
+			ContentValues cValues = new ContentValues();
+			cValues.put("idLand",dtoObj.getIdLand());
+			cValues.put("dateofDispatch",dtoObj.getDateofDispatch());
+			cValues.put("moisture", dtoObj.getMoisture());
+			cValues.put("truckNo", dtoObj.getTruckNo());
+			cValues.put("quantity", dtoObj.getQuantity());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("sdn", dtoObj.getSdn());
+			cValues.put("idProcessplant",dtoObj.getIdProcessplant());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("got ", dtoObj.getGot());
+			cValues.put("lotNo", dtoObj.getLotNo());
+			cValues.put("gradeQuality", dtoObj.getGradeQuality());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("actionFlag", dtoObj.getActionFlag());
+			cValues.put("noOfBags", dtoObj.getNoOfBags());
+			cValues.put("dispatchAcres", dtoObj.getDispatchAcres());
+			
+			dbObject.update("Dispatch", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("DispatchDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Dispatch", null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDateofDispatch(cursor.getString(count++));
+					dto.setMoisture(cursor.getString(count++));
+					dto.setTruckNo(cursor.getString(count++));
+					dto.setQuantity(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setSdn(cursor.getString(count++));
+					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setGradeQuality(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setNoOfBags(cursor.getString(count++));
+//					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDispatchAcres(cursor.getString(count++));
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Dispatch WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDateofDispatch(cursor.getString(count++));
+					dto.setMoisture(cursor.getString(count++));
+					dto.setTruckNo(cursor.getString(count++));
+					dto.setQuantity(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setSdn(cursor.getString(count++));
+					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setGradeQuality(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setNoOfBags(cursor.getString(count++));
+					dto.setDispatchAcres(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<DispatchDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idDispatch,idLand,dateofDispatch,moisture,truckNo,quantity,photo,sdn,idProcessplant,dateModified,got,lotNo,gradeQuality,dateCreated,syncFlag, actionFlag, noOfBags,dispatchAcres)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DispatchDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdDispatch());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDateofDispatch()	== null ? "" : dto.getDateofDispatch());
+				stmt.bindString(count++, dto.getMoisture()			== null ? "" : dto.getMoisture());
+				stmt.bindString(count++, dto.getTruckNo()			== null ? "" : dto.getTruckNo());
+				stmt.bindString(count++, dto.getQuantity()			== null ? "" : dto.getQuantity());
+				stmt.bindString(count++, dto.getPhoto()				== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getSdn()				== null ? "" : dto.getSdn());
+				stmt.bindString(count++, dto.getIdProcessplant()	== null ? "" : dto.getIdProcessplant());
+				stmt.bindString(count++, dto.getDateModified()		== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getGot()				== null ? "" : dto.getGot());
+				stmt.bindString(count++, dto.getLotNo()				== null ? "" : dto.getLotNo());
+				stmt.bindString(count++, dto.getGradeQuality()		== null ? "" : dto.getGradeQuality());
+				stmt.bindString(count++, dto.getDateCreated()		== null ? "" : dto.getDateCreated());
+				stmt.bindLong(count++, dto.getSyncFlag()			== null ? 1 : dto.getSyncFlag());
+				stmt.bindLong(count++, dto.getActionFlag()          == null ? 0 : dto.getActionFlag()); //dto.getActionFlag()
+				stmt.bindString(count++, dto.getNoOfBags()			== null ? "" : dto.getNoOfBags());
+				stmt.bindString(count++, dto.getDispatchAcres()		== null ? "" : dto.getDispatchAcres());
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<DispatchDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<DispatchDTO> instList = new ArrayList<DispatchDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Dispatch where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDateofDispatch(cursor.getString(count++));
+					dto.setMoisture(cursor.getString(count++));
+					dto.setTruckNo(cursor.getString(count++));
+					dto.setQuantity(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setSdn(cursor.getString(count++));
+					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setGradeQuality(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					
+					String noOfBagsStr	= cursor.getString(count++);
+					dto.setNoOfBags(noOfBagsStr.equals("") ? "0" : noOfBagsStr);
+					
+					String dispatchAcr	= cursor.getString(count++);
+					dto.setDispatchAcres(dispatchAcr.equals("") ? "0" :dispatchAcr);
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Dispatch  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("DispatchDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<DispatchDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<DispatchDTO> instList = new ArrayList<DispatchDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Dispatch ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDateofDispatch(cursor.getString(count++));
+					dto.setMoisture(cursor.getString(count++));
+					dto.setTruckNo(cursor.getString(count++));
+					dto.setQuantity(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setSdn(cursor.getString(count++));
+					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					dto.setLotNo(cursor.getString(count++));
+					dto.setGradeQuality(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setNoOfBags(cursor.getString(count++));
+//					dto.setIdProcessplant(cursor.getString(count++));
+					dto.setDispatchAcres(cursor.getString(count++));
+					instList.add(dto);
+					
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsWithValuesForLotNo(SQLiteDatabase dbObject,String col1,String col1value,String col2,String col2value) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry;
+			if("".equals(col1) && "".equals(col2))
+				qry="SELECT distinct(lotNo) FROM Dispatch";
+			else
+			{
+				if(!"".equals(col1) && !"".equals(col2))
+					qry="SELECT distinct(lotNo) FROM Dispatch where "+col1+"='"+col1value+"' and "+col2+"='"+col2value+"'";
+				else 
+					qry="SELECT distinct(lotNo) FROM Dispatch where "+col1+"='"+col1value+"'";
+					
+			}
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setLotNo(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecordsWithValuesForLotNo", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsWithValuesForSDNNo(SQLiteDatabase dbObject,String col1,String col1value,String col2,String col2value) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry;
+			if("".equals(col1) && "".equals(col2))
+				qry="SELECT distinct(sdn) FROM Dispatch";
+			else
+			{
+				if(!"".equals(col1) && !"".equals(col2))
+					qry="SELECT distinct(sdn) FROM Dispatch where "+col1+"='"+col1value+"' and "+col2+"='"+col2value+"'";
+				else 
+					qry="SELECT distinct(sdn) FROM Dispatch where "+col1+"='"+col1value+"'";
+					
+			}
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setSdn(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecordsWithValuesForSDNNo", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsWithValuesForTruckNo(SQLiteDatabase dbObject,String col1,String col1value,String col2,String col2value) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			String qry;
+			if("".equals(col1) && "".equals(col2))
+				qry="SELECT distinct(truckNo) FROM Dispatch";
+			else
+			{
+				if(!"".equals(col1) && !"".equals(col2))
+					qry="SELECT distinct(truckNo) FROM Dispatch where "+col1+"='"+col1value+"' and "+col2+"='"+col2value+"'";
+				else 
+					qry="SELECT distinct(truckNo) FROM Dispatch where "+col1+"='"+col1value+"'";
+					
+			}
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					DispatchDTO dto = new DispatchDTO();
+					dto.setTruckNo(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecordsWithValuesForTruckNo", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsWithValuesForSearchData(SQLiteDatabase dbObject,String col1,String col1value,String col2,String col2value,String col3,String col3value) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			StringBuffer qry=new StringBuffer();
+			qry.append("SELECT lotNo,sdn,truckNo,dateofDispatch,idDispatch,quantity,got FROM Dispatch");
+			String and="";
+			String where = " where";
+			String con;
+			if(!"".equals(col1) || !"".equals(col2) || !"".equals(col2))
+				qry.append(where);
+			if(!"".equals(col1value))
+			{
+				con=" "+col1+"='"+col1value+"'";
+			    and=" and";
+			    qry.append(con);
+			}
+			if(!"".equals(col2value))
+			{
+				con=" "+col2+"='"+col2value+"'";
+				qry.append(and);
+				qry.append(con);
+			    and=" and";
+			}
+			if(!"".equals(col3value))
+			{
+				con=" "+col3+"='"+col3value+"'";
+				qry.append(and);
+				qry.append(con);
+			}
+				con=" and idDispatch not in(select idDispatch from Unloading)" ;
+				qry.append(con);
+				  
+				
+			cursor = dbObject.rawQuery(qry.toString(), null);
+			if (cursor.moveToFirst()) {
+				do {
+					
+					DispatchDTO dto = new DispatchDTO();
+					dto.setLotNo(cursor.getString(count++));
+					dto.setSdn(cursor.getString(count++));
+					dto.setTruckNo(cursor.getString(count++));
+					dto.setDateofDispatch(cursor.getString(count++));
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setQuantity(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getRecordsWithValuesForSearchData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Dispatch(idDispatch,idLand,dateofDispatch,moisture,truckNo,quantity,photo,sdn,idProcessplant,dateModified,got,lotNo,gradeQuality,dateCreated,syncFlag, actionFlag, noOfBags,dispatchAcres) SELECT t.idDispatch,t.idLand,t.dateofDispatch,t.moisture,t.truckNo,t.quantity,t.photo,t.sdn,t.idProcessplant,t.dateModified,t.got,t.lotNo,t.gradeQuality,t.dateCreated,t.syncFlag,t.actionFlag,t.noOfBags,t.dispatchAcres  FROM Dispatch_Temp t left join Dispatch o on o.idDispatch=t.idDispatch";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Dispatch_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	
+	public List<String> getDispatchDetailsList(SQLiteDatabase dbObject,String truckNo, String sdnNo) 
+	{
+		List<String> instList = new ArrayList<String>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT lotNo,truckNo,sdn,dateofDispatch,dispatchAcres,quantity,noOfBags,moisture,gradeQuality,got  FROM Dispatch WHERE truckNo ='"+truckNo+"' and sdn ='"+sdnNo+ "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++));
+					instList.add(cursor.getString(count++).toUpperCase());
+					if("1".equals(cursor.getString(count++)))
+						instList.add("Yes");
+					else
+						instList.add("No");
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("DispatchDAO  -- getDispatchDetailsList", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

@@ -1,0 +1,449 @@
+
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.GOTandPlowdownDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class GOTandPlowdownDAO implements DAO {
+
+	private static GOTandPlowdownDAO gotandplowdownDAO;
+
+	private GOTandPlowdownDAO() {
+
+	}
+
+	public static GOTandPlowdownDAO getInstance() {
+		if (gotandplowdownDAO == null)
+			gotandplowdownDAO = new GOTandPlowdownDAO();
+
+		return gotandplowdownDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO GOTandPlowdown(idGOTandPlowdown,idLand,idStage,photo,flag,idRemarks,latLong,othersRemarks,date,dateCreated,dateModified,calculatedArea,manulaArea,actionFlag,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				GOTandPlowdownDTO dto = (GOTandPlowdownDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getIdStage());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getFlag());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getLatLong());
+				stmt.bindString(count++, dto.getOthersRemarks());
+				stmt.bindString(count++, dto.getDate());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getCalculatedArea());
+				stmt.bindString(count++, dto.getManualArea());
+				stmt.bindLong(count++, dto.getActionFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		GOTandPlowdownDTO dtoObj = (GOTandPlowdownDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM GOTandPlowdown WHERE idGOTandPlowdown = '"
+							+ dtoObj.getIdGOTandPlowdown() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			GOTandPlowdownDTO dtoObj = (GOTandPlowdownDTO) dto;
+			String whereCls = "idLand = '"+ dtoObj.getIdLand() + "'  and flag='"+dtoObj.getFlag()+"'";
+
+			ContentValues cValues = new ContentValues();
+//			cValues.put("idLand",dtoObj.getIdLand());
+			cValues.put("idStage", dtoObj.getIdStage());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("flag", dtoObj.getFlag());
+			cValues.put("idRemarks", dtoObj.getIdRemarks());
+			cValues.put("latLong", dtoObj.getLatLong());
+			cValues.put("othersRemarks", dtoObj.getOthersRemarks());
+			cValues.put("date", dtoObj.getDate());
+			//cValues.put("dateCreated", dtoObj.getDateCreated());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("calculatedArea", dtoObj.getCalculatedArea());
+			cValues.put("manulaArea", dtoObj.getManualArea());
+			cValues.put("actionFlag", dtoObj.getActionFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			
+
+			dbObject.update("GOTandPlowdown", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("GOTandPlowdownDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM GOTandPlowdown", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GOTandPlowdownDTO dto = new GOTandPlowdownDTO();
+					dto.setIdGOTandPlowdown(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdStage(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setFlag(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setOthersRemarks(cursor.getString(count++));
+					dto.setDate(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM GOTandPlowdown WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GOTandPlowdownDTO dto = new GOTandPlowdownDTO();
+					dto.setIdGOTandPlowdown(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdStage(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setFlag(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setOthersRemarks(cursor.getString(count++));
+					dto.setDate(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByLandAndStage(SQLiteDatabase dbObject,String columnName1,String columnName2, String columnValue1,String columnValue2) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry = "SELECT * FROM GOTandPlowdown WHERE  "+ columnName1 + " = '" + columnValue1 + "' and "+columnName2+"= '"+columnValue2+"'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					GOTandPlowdownDTO dto = new GOTandPlowdownDTO();
+					dto.setIdGOTandPlowdown(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdStage(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setFlag(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setOthersRemarks(cursor.getString(count++));
+					dto.setDate(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("WeedManagementDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<GOTandPlowdownDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idGOTandPlowdown,idLand,idStage,photo,flag,idRemarks,latLong,othersRemarks,date,dateCreated,dateModified,calculatedArea,manulaArea,actionFlag,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (GOTandPlowdownDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdGOTandPlowdown());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getIdStage()           == null ? "" : dto.getIdStage());
+				stmt.bindString(count++, dto.getPhoto()				== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getFlag()				== null ? "" : dto.getFlag());
+				stmt.bindString(count++, dto.getIdRemarks()			== null ? "" : dto.getIdRemarks());
+				stmt.bindString(count++, dto.getLatLong()			== null ? "" : dto.getLatLong());
+				stmt.bindString(count++, dto.getOthersRemarks()		== null ? "" : dto.getOthersRemarks());
+				stmt.bindString(count++, dto.getDate()				== null ? "" : dto.getDate());
+				stmt.bindString(count++, dto.getDateCreated()		== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()		== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getCalculatedArea()		== null ? "" : dto.getCalculatedArea());
+				stmt.bindString(count++, dto.getManualArea()		== null ? "" : dto.getManualArea());
+				stmt.bindLong(count++, dto.getActionFlag()			== null ? 1 : dto.getActionFlag());
+				stmt.bindLong(count++, dto.getSyncFlag()			== null ? 1 : dto.getSyncFlag());
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<GOTandPlowdownDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<GOTandPlowdownDTO> instList = new ArrayList<GOTandPlowdownDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM GOTandPlowdown where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GOTandPlowdownDTO dto = new GOTandPlowdownDTO();
+					dto.setIdGOTandPlowdown(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdStage(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setFlag(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setOthersRemarks(cursor.getString(count++));
+					dto.setDate(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  GOTandPlowdown  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("GOTandPlowdownDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<GOTandPlowdownDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<GOTandPlowdownDTO> instList = new ArrayList<GOTandPlowdownDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM GOTandPlowdown", null);
+			if (cursor.moveToFirst()) {
+				do {
+					GOTandPlowdownDTO dto = new GOTandPlowdownDTO();
+					dto.setIdGOTandPlowdown(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdStage(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setFlag(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setLatLong(cursor.getString(count++));
+					dto.setOthersRemarks(cursor.getString(count++));
+					dto.setDate(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setCalculatedArea(cursor.getString(count++));
+					dto.setManualArea(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO GOTandPlowdown(idGOTandPlowdown,idLand,idStage,photo,flag,idRemarks,latLong,othersRemarks,date,dateCreated,dateModified,calculatedArea,manulaArea,actionFlag,syncFlag) SELECT t.idGOTandPlowdown,t.idLand,t.idStage,t.photo,t.flag,t.idRemarks,t.latLong,t.othersRemarks,t.date,t.dateCreated,t.dateModified,t.calculatedArea,t.manulaArea,t.actionFlag,t.syncFlag  FROM GOTandPlowdown_Temp t left join GOTandPlowdown o on o.idGOTandPlowdown=t.idGOTandPlowdown";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM GOTandPlowdown_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("GOTandPlowdownDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

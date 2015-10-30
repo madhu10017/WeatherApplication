@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class SownFSIssueDTO implements DTO {
+ 
+	private String idSownFSIssue;
+	private String idOrganizer;
+	private String idLand;
+	private String idSownFSReturn;
+	private String acerage;
+	private String qty;
+	private String dateRecevied;
+	private String dateModified;
+	private String syncFlag;
+ 
+	public String getIdSownFSIssue() {
+		return idSownFSIssue;
+	}
+	public void setIdSownFSIssue(String idSownFSIssue) {
+		this.idSownFSIssue = idSownFSIssue;
+	 }
+	public String getIdOrganizer() {
+		return idOrganizer;
+	}
+	public void setIdOrganizer(String idOrganizer) {
+		this.idOrganizer = idOrganizer;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getIdSownFSReturn() {
+		return idSownFSReturn;
+	}
+	public void setIdSownFSReturn(String idSownFSReturn) {
+		this.idSownFSReturn = idSownFSReturn;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getDateRecevied() {
+		return dateRecevied;
+	}
+	public void setDateRecevied(String dateRecevied) {
+		this.dateRecevied = dateRecevied;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

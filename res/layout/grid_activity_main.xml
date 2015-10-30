@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/LightSalmon"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp" >
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent_white_hex_1"
+            android:text="Button" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/button"
+            android:background="@color/transparent_white_hex_1"
+            android:ems="20"
+            android:hint="Enter Location" >
+
+            <requestFocus />
+        </AutoCompleteTextView>
+    </RelativeLayout>
+   
+    
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

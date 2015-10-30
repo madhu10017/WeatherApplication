@@ -1,0 +1,232 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FloweringDTO implements DTO 
+{
+	private String idFlowering;
+	private String idLand;
+	private String dofMale;
+	private String dofFemale;
+	private String idRemarks;
+	private String otherRemarks;
+	private String idAgronomicalCondition;
+	private String floweringAcres;
+	private String photo;
+	private String yeildEstimation;
+	private String standingAcerage;
+	private String pollenDays;
+	private String idccseedSetting;
+	private String idccPollen;
+	private String ga1;
+	private String ga2;
+	private String gaAdditional;
+	private String gaMale;
+	private String ga1Dose;
+	private String ga2Dose;
+	private String gaAdditionalDose;
+	private String gaMaleDose;
+	private String dateCreated;
+	private String dateModified;
+	private String dateCompletion;
+	private Integer maleFlag;
+	private Integer femaleFlag;
+	private Integer syncFlag;
+	private String pollinationStartDate;
+	private String pollinationEndDate; 
+	private String idSeedSettingGrade;
+	private String parentalSynchrony;
+	public String getIdFlowering() {
+		return idFlowering;
+	}
+	public void setIdFlowering(String idFlowering) {
+		this.idFlowering = idFlowering;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getDofMale() {
+		return dofMale;
+	}
+	public void setDofMale(String dofMale) {
+		this.dofMale = dofMale;
+	}
+	public String getDofFemale() {
+		return dofFemale;
+	}
+	public void setDofFemale(String dofFemale) {
+		this.dofFemale = dofFemale;
+	}
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	}
+	public String getOtherRemarks() {
+		return otherRemarks;
+	}
+	public void setOtherRemarks(String otherRemarks) {
+		this.otherRemarks = otherRemarks;
+	}
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	}
+	public String getFloweringAcres() {
+		return floweringAcres;
+	}
+	public void setFloweringAcres(String floweringAcres) {
+		this.floweringAcres = floweringAcres;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getYeildEstimation() {
+		return yeildEstimation;
+	}
+	public void setYeildEstimation(String yeildEstimation) {
+		this.yeildEstimation = yeildEstimation;
+	}
+	public String getStandingAcerage() {
+		return standingAcerage;
+	}
+	public void setStandingAcerage(String standingAcerage) {
+		this.standingAcerage = standingAcerage;
+	}
+	public String getPollenDays() {
+		return pollenDays;
+	}
+	public void setPollenDays(String pollenDays) {
+		this.pollenDays = pollenDays;
+	}
+	public String getIdccseedSetting() {
+		return idccseedSetting;
+	}
+	public void setIdccseedSetting(String idccseedSetting) {
+		this.idccseedSetting = idccseedSetting;
+	}
+	public String getIdccPollen() {
+		return idccPollen;
+	}
+	public void setIdccPollen(String idccPollen) {
+		this.idccPollen = idccPollen;
+	}
+	public String getGa1() {
+		return ga1;
+	}
+	public void setGa1(String ga1) {
+		this.ga1 = ga1;
+	}
+	public String getGa2() {
+		return ga2;
+	}
+	public void setGa2(String ga2) {
+		this.ga2 = ga2;
+	}
+	public String getGaAdditional() {
+		return gaAdditional;
+	}
+	public void setGaAdditional(String gaAdditional) {
+		this.gaAdditional = gaAdditional;
+	}
+	public String getGaMale() {
+		return gaMale;
+	}
+	public void setGaMale(String gaMale) {
+		this.gaMale = gaMale;
+	}
+	public String getGa1Dose() {
+		return ga1Dose;
+	}
+	public void setGa1Dose(String ga1Dose) {
+		this.ga1Dose = ga1Dose;
+	}
+	public String getGa2Dose() {
+		return ga2Dose;
+	}
+	public void setGa2Dose(String ga2Dose) {
+		this.ga2Dose = ga2Dose;
+	}
+	public String getGaAdditionalDose() {
+		return gaAdditionalDose;
+	}
+	public void setGaAdditionalDose(String gaAdditionalDose) {
+		this.gaAdditionalDose = gaAdditionalDose;
+	}
+	public String getGaMaleDose() {
+		return gaMaleDose;
+	}
+	public void setGaMaleDose(String gaMaleDose) {
+		this.gaMaleDose = gaMaleDose;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public String getDateCompletion() {
+		return dateCompletion;
+	}
+	public void setDateCompletion(String dateCompletion) {
+		this.dateCompletion = dateCompletion;
+	}
+	public Integer getMaleFlag() {
+		return maleFlag;
+	}
+	public void setMaleFlag(Integer maleFlag) {
+		this.maleFlag = maleFlag;
+	}
+	public Integer getFemaleFlag() {
+		return femaleFlag;
+	}
+	public void setFemaleFlag(Integer femaleFlag) {
+		this.femaleFlag = femaleFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getPollinationStartDate() {
+		return pollinationStartDate;
+	}
+	public void setPollinationStartDate(String pollinationStartDate) {
+		this.pollinationStartDate = pollinationStartDate;
+	}
+	public String getPollinationEndDate() {
+		return pollinationEndDate;
+	}
+	public void setPollinationEndDate(String pollinationEndDate) {
+		this.pollinationEndDate = pollinationEndDate;
+	}
+	public String getIdSeedSettingGrade() {
+		return idSeedSettingGrade;
+	}
+	public void setIdSeedSettingGrade(String idSeedSettingGrade) {
+		this.idSeedSettingGrade = idSeedSettingGrade;
+	}
+	public String getParentalSynchrony() {
+		return parentalSynchrony;
+	}
+	public void setParentalSynchrony(String parentalSynchrony) {
+		this.parentalSynchrony = parentalSynchrony;
+	}
+}

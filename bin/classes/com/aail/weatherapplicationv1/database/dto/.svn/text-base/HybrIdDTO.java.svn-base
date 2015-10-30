@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class HybrIdDTO implements DTO {
+ 
+	private String idHybrid;
+	private String code;
+	private String seedType;
+	private String mask;
+	private String idCrop;
+ 
+	public String getIdHybrid() {
+		return idHybrid;
+	}
+	public void setIdHybrid(String idHybrid) {
+		this.idHybrid = idHybrid;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+	public String getSeedType() {
+		return seedType;
+	}
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	 }
+	public String getMask() {
+		return mask;
+	}
+	public void setMask(String mask) {
+		this.mask = mask;
+	 }
+	public String getIdCrop() {
+		return idCrop;
+	}
+	public void setIdCrop(String idCrop) {
+		this.idCrop = idCrop;
+	 }
+}
+

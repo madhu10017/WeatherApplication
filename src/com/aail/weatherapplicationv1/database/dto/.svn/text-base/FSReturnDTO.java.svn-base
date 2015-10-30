@@ -1,0 +1,29 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class FSReturnDTO implements DTO {
+
+	private String totalMaleReturnedQty;
+	private String totalFemaleReturnedQty;
+	private String totalAcerage;
+	public String getTotalMaleReturnedQty() {
+		return totalMaleReturnedQty;
+	}
+	public void setTotalMaleReturnedQty(String totalMaleReturnedQty) {
+		this.totalMaleReturnedQty = totalMaleReturnedQty;
+	}
+	public String getTotalFemaleReturnedQty() {
+		return totalFemaleReturnedQty;
+	}
+	public void setTotalFemaleReturnedQty(String totalFemaleReturnedQty) {
+		this.totalFemaleReturnedQty = totalFemaleReturnedQty;
+	}
+	public String getTotalAcerage() {
+		return totalAcerage;
+	}
+	public void setTotalAcerage(String totalAcerage) {
+		this.totalAcerage = totalAcerage;
+	}
+	
+	
+	
+}

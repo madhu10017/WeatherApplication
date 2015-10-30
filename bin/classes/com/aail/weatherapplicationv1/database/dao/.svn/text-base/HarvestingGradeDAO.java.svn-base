@@ -1,0 +1,275 @@
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.HarvestingGradeDTO;
+
+public class HarvestingGradeDAO implements DAO 
+{
+
+	private static HarvestingGradeDAO harvestingGradeDAO;
+
+	private HarvestingGradeDAO() 
+	{
+
+	}
+
+	public static HarvestingGradeDAO getInstance() 
+	{
+		if (harvestingGradeDAO == null)
+			harvestingGradeDAO = new HarvestingGradeDAO();
+
+		return harvestingGradeDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject.compileStatement("INSERT INTO HarvestingGrade(idHarvestingGrade,name)VALUES (?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				HarvestingGradeDTO dto = (HarvestingGradeDTO) items;
+				stmt.bindString(count++, dto.getIdHarvestingGrade());
+				stmt.bindString(count++, dto.getName());
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		HarvestingGradeDTO dtoObj = (HarvestingGradeDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM HarvestingGrade WHERE idHarvestingGrade  = '"
+							+ dtoObj.getIdHarvestingGrade() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try 
+		{
+			HarvestingGradeDTO dtoObj = (HarvestingGradeDTO) dto;
+			String whereCls = "idHarvestingGrade  = '" + dtoObj.getIdHarvestingGrade() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("HarvestingGrade", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("HarvestingGradeDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HarvestingGrade", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingGradeDTO dto = new HarvestingGradeDTO();
+					dto.setIdHarvestingGrade(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HarvestingGrade WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingGradeDTO dto = new HarvestingGradeDTO();
+					dto.setIdHarvestingGrade(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public boolean insertAll(SQLiteDatabase dbObject, List<HarvestingGradeDTO> list,
+			String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject.compileStatement("INSERT INTO "+ tablename+ "(idHarvestingGrade,name)VALUES (?,?)");
+			int count = 1;
+
+			for (HarvestingGradeDTO dto : list) {
+				stmt.bindString(count++, dto.getIdHarvestingGrade());
+				stmt.bindString(count++, dto.getName());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			String query = "UPDATE  HarvestingGrade o set o.idHarvestingGrade=t.idHarvestingGrade,o.name=t.name from HarvestingGrade_Temp t where o.idHarvestingGrade=t.idHarvestingGrade";
+			Cursor cu = dbObject.rawQuery(query, null);
+			cu.moveToFirst();
+			cu.close();
+			return true;
+
+		} catch (SQLException e) {
+			Log.e("HarvestingGradeDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query = "INSERT OR REPLACE INTO HarvestingGrade(idHarvestingGrade,name) SELECT t.idHarvestingGrade,t.name  FROM HarvestingGrade_Temp t left join HarvestingGrade o on o.idHarvestingGrade=t.idHarvestingGrade";
+			dbObject.execSQL(query);
+
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- insertPartial", e.getMessage());
+		} finally {
+			// dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query = "DELETE  FROM HarvestingGrade_Temp";
+			dbObject.execSQL(query);
+
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- deleteall", e.getMessage());
+		} finally {
+
+			dbObject.close();
+		}
+		return false;
+
+	}
+
+	public List<HarvestingGradeDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<HarvestingGradeDTO> instList = new ArrayList<HarvestingGradeDTO>();
+		Cursor cursor = null;
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HarvestingGrade ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingGradeDTO dto = new HarvestingGradeDTO();
+					dto.setIdHarvestingGrade(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingGradeDAO  -- getCompleteData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+}

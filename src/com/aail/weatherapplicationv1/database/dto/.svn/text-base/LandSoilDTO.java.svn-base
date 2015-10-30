@@ -1,0 +1,124 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class LandSoilDTO implements DTO
+{
+	private String idLand;
+	private String surveyNo;
+	private String latLong;
+	private String code;
+	private String calculatedArea;
+	private String manualArea;
+	private String landFlag;
+	private String neighbouringInfo;
+	private String createdTime;
+	private String modifiedTime;
+	private String lotno;
+	
+	public String getLotno() {
+		return lotno;
+	}
+
+	public void setLotno(String lotno) {
+		this.lotno = lotno;
+	}
+
+	private String type;
+	
+	private String sourceType;
+
+	public String getIdLand() {
+		return idLand;
+	}
+
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+
+	public String getSurveyNo() {
+		return surveyNo;
+	}
+
+	public void setSurveyNo(String surveyNo) {
+		this.surveyNo = surveyNo;
+	}
+
+	public String getLatLong() {
+		return latLong;
+	}
+
+	public void setLatLong(String latLong) {
+		this.latLong = latLong;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getCalculatedArea() {
+		return calculatedArea;
+	}
+
+	public void setCalculatedArea(String calculatedArea) {
+		this.calculatedArea = calculatedArea;
+	}
+
+	public String getManualArea() {
+		return manualArea;
+	}
+
+	public void setManualArea(String manualArea) {
+		this.manualArea = manualArea;
+	}
+
+	public String getLandFlag() {
+		return landFlag;
+	}
+
+	public void setLandFlag(String landFlag) {
+		this.landFlag = landFlag;
+	}
+
+	public String getNeighbouringInfo() {
+		return neighbouringInfo;
+	}
+
+	public void setNeighbouringInfo(String neighbouringInfo) {
+		this.neighbouringInfo = neighbouringInfo;
+	}
+
+	public String getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public String getModifiedTime() {
+		return modifiedTime;
+	}
+
+	public void setModifiedTime(String modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+}

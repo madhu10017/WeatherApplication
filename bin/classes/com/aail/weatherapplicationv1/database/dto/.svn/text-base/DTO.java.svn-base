@@ -1,0 +1,14 @@
+/**
+ * 
+ * @author 
+ * Ybrant Digital
+ * Copyright (C) Ybrant Digital
+ * http://www.ybrantdigital.com
+ *
+ */
+
+package com.bayer.efm.hsp.database.dto;
+
+public interface DTO {
+
+}

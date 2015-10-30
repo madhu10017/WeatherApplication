@@ -1,0 +1,109 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FertilizerDoseDTO implements DTO {
+ 
+	private String idFertilizerDose;
+	private String idFertilizer;
+	private String dose;
+	private String date;
+	private String urea;
+	private String mop;
+	private String complexname;
+	private String quantity;
+	private String idRemarks;
+	private String remarksOthers;
+	private String dateCreated;
+	private String dateModified;
+	private Integer actionFlag;
+	private Integer syncFlag;
+ 
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIdFertilizerDose() {
+		return idFertilizerDose;
+	}
+	public void setIdFertilizerDose(String idFertilizerDose) {
+		this.idFertilizerDose = idFertilizerDose;
+	 }
+	public String getIdFertilizer() {
+		return idFertilizer;
+	}
+	public void setIdFertilizer(String idFertilizer) {
+		this.idFertilizer = idFertilizer;
+	 }
+	public String getDose() {
+		return dose;
+	}
+	public void setDose(String dose) {
+		this.dose = dose;
+	 }
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	 }
+	public String getUrea() {
+		return urea;
+	}
+	public void setUrea(String urea) {
+		this.urea = urea;
+	 }
+	
+	public String getMop() {
+		return mop;
+	}
+	public void setMop(String mop) {
+		this.mop = mop;
+	}
+	public String getComplexname() {
+		return complexname;
+	}
+	public void setComplexname(String complexname) {
+		this.complexname = complexname;
+	}
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	 }
+	public String getRemarksOthers() {
+		return remarksOthers;
+	}
+	public void setRemarksOthers(String remarksOthers) {
+		this.remarksOthers = remarksOthers;
+	 }
+	public String getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+}
+

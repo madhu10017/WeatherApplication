@@ -1,0 +1,305 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.InboxDTO;
+
+public class InboxDAO implements DAO 
+{
+
+	private static InboxDAO inboxDAO;
+
+	private InboxDAO() {
+
+	}
+
+	public static InboxDAO getInstance() 
+	{
+		if (inboxDAO == null)
+			inboxDAO = new InboxDAO();
+
+		return inboxDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Inbox(idInbox, title, message, dateReceived, sender)VALUES (?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				InboxDTO dto = (InboxDTO) items;
+				stmt.bindString(count++, dto.getIdInbox());
+				stmt.bindString(count++, dto.getTitle());
+				stmt.bindString(count++, dto.getMessage());
+				stmt.bindString(count++, dto.getDateReceived());
+				stmt.bindString(count++, dto.getSender());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		InboxDTO dtoObj = (InboxDTO) dto;
+		
+		try 
+		{
+			dbObject.compileStatement(
+					"DELETE FROM Inbox WHERE idInbox = '" + dtoObj.getIdInbox()
+							+ "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto)
+	{
+		try 
+		{
+			InboxDTO dtoObj = (InboxDTO) dto;
+			String whereCls = "idInbox = '" + dtoObj.getIdInbox() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("Inbox", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("InboxDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Inbox", null);
+			if (cursor.moveToFirst()) {
+				do {
+					InboxDTO dto = new InboxDTO();
+					dto.setIdInbox(cursor.getString(count++));
+					dto.setTitle(cursor.getString(count++));
+					dto.setMessage(cursor.getString(count++));
+					dto.setDateReceived(cursor.getString(count++));
+					dto.setSender(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue)
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Inbox WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					InboxDTO dto = new InboxDTO();
+					dto.setIdInbox(cursor.getString(count++));
+					dto.setTitle(cursor.getString(count++));
+					dto.setMessage(cursor.getString(count++));
+					dto.setDateReceived(cursor.getString(count++));
+					dto.setSender(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<InboxDTO> list,String tablename) 
+	{
+		try
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idInbox, title, message, dateReceived, sender)VALUES (?,?,?,?,?)");
+			int count = 1;
+
+			for (InboxDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdInbox());
+				stmt.bindString(count++, dto.getTitle());
+				stmt.bindString(count++, dto.getMessage());
+				stmt.bindString(count++, dto.getDateReceived()	== null ? "" :dto.getDateReceived());
+				stmt.bindString(count++, dto.getSender()		== null ? "" :dto.getSender());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+
+			String query ="UPDATE  Inbox o set o.title=t.title,o.message=t.message,o.dateReceived=t.dateReceived,o.sender=t.sender from Inbox_Temp t where o.idInbox=t.idInbox";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("InboxDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Inbox(idInbox,title,message,dateReceived,sender) SELECT t.idInbox,t.title,t.message,t.dateReceived,t.sender  FROM Inbox_Temp t left join Inbox o on o.idInbox=t.idInbox";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE  FROM Inbox_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<InboxDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<InboxDTO> instList = new ArrayList<InboxDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Inbox ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					InboxDTO dto = new InboxDTO();
+					dto.setIdInbox(cursor.getString(count++));
+					dto.setTitle(cursor.getString(count++));
+					dto.setMessage(cursor.getString(count++));
+					dto.setDateReceived(cursor.getString(count++));
+					dto.setSender(cursor.getString(count++));
+				
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("InboxDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

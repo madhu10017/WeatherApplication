@@ -1,0 +1,59 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FSReturnbyFPSDTO implements DTO {
+ 
+	private String idFSReturnbyFPS;
+	private String idFSReceviedbyFPS;
+	private String qty;
+	private String acerage;
+	private String dateReturned;
+	private String dateModified;
+	private String syncFlag;
+ 
+	public String getIdFSReturnbyFPS() {
+		return idFSReturnbyFPS;
+	}
+	public void setIdFSReturnbyFPS(String idFSReturnbyRPS) {
+		this.idFSReturnbyFPS = idFSReturnbyRPS;
+	 }
+	public String getIdFSReceviedbyFPS() {
+		return idFSReceviedbyFPS;
+	}
+	public void setIdFSReceviedbyFPS(String idFSReceviedbyFPS) {
+		this.idFSReceviedbyFPS = idFSReceviedbyFPS;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getDateReturned() {
+		return dateReturned;
+	}
+	public void setDateReturned(String dateReturned) {
+		this.dateReturned = dateReturned;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

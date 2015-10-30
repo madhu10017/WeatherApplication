@@ -1,0 +1,19 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class HarvestingGradeDTO implements DTO
+{
+	private String idHarvestingGrade;
+	private String name;
+	public String getIdHarvestingGrade() {
+		return idHarvestingGrade;
+	}
+	public void setIdHarvestingGrade(String idHarvestingGrade) {
+		this.idHarvestingGrade = idHarvestingGrade;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+}

@@ -1,0 +1,150 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class DispatchDTO implements DTO {
+ 
+	private String idDispatch;
+	private String idLand;
+	private String dateofDispatch;
+	private String moisture;
+	private String truckNo;
+	private String quantity;
+	private String photo;
+//	private int idRemarks;
+	private String sdn;
+	private String idProcessplant;
+	private String dateModified;
+	private String got;
+	private String lotNo;
+	private String gradeQuality;
+//	private String otherRemarks;
+	private String dateCreated;
+	private Integer syncFlag; 
+	private Integer actionFlag;
+	private String noOfBags;
+	private String dispatchAcres;
+ 
+	public String getIdDispatch() {
+		return idDispatch;
+	}
+	public void setIdDispatch(String idDispatch) {
+		this.idDispatch = idDispatch;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getDateofDispatch() {
+		return dateofDispatch;
+	}
+	public void setDateofDispatch(String dateofDispatch) {
+		this.dateofDispatch = dateofDispatch;
+	 }
+	public String getMoisture() {
+		return moisture;
+	}
+	public void setMoisture(String moisture) {
+		this.moisture = moisture;
+	 }
+	public String getTruckNo() {
+		return truckNo;
+	}
+	public void setTruckNo(String truckNo) {
+		this.truckNo = truckNo;
+	 }
+	public String getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	/*public int getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(int idRemarks) {
+		this.idRemarks = idRemarks;
+	 }*/
+	public String getSdn() {
+		return sdn;
+	}
+	public void setSdn(String sdn) {
+		this.sdn = sdn;
+	 }
+	public String getIdProcessplant() {
+		return idProcessplant;
+	}
+	public void setIdProcessplant(String idProcessplant) {
+		this.idProcessplant = idProcessplant;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getGot() {
+		return got;
+	}
+	public void setGot(String got) {
+		this.got = got;
+	 }
+	public String getLotNo() {
+		return lotNo;
+	}
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	 }
+	public String getGradeQuality() {
+		return gradeQuality;
+	}
+	public void setGradeQuality(String gradeQuality) {
+		this.gradeQuality = gradeQuality;
+	 }
+	/*public String getOtherRemarks() {
+		return otherRemarks;
+	}
+	public void setOtherRemarks(String otherRemarks) {
+		this.otherRemarks = otherRemarks;
+	 }*/
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public String getNoOfBags() {
+		return noOfBags;
+	}
+	public void setNoOfBags(String noOfBags) {
+		this.noOfBags = noOfBags;
+	}
+	public String getDispatchAcres() {
+		return dispatchAcres;
+	}
+	public void setDispatchAcres(String dispatchAcres) {
+		this.dispatchAcres = dispatchAcres;
+	}
+}
+

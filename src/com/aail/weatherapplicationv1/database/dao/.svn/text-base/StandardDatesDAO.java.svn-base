@@ -1,0 +1,306 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.StandardDatesDTO;
+
+public class StandardDatesDAO implements DAO {
+
+	private static StandardDatesDAO standarddatesDAO;
+
+	private StandardDatesDAO() {
+
+	}
+
+	public static StandardDatesDAO getInstance() {
+		if (standarddatesDAO == null)
+			standarddatesDAO = new StandardDatesDAO();
+
+		return standarddatesDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO StandardDates(IDZone,IDHybrid,IDStageFrom,IDStageTo,SeedTypeFrom,SeedTypeTo,NumberOfDays,sequence)VALUES (?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				StandardDatesDTO dto = (StandardDatesDTO) items;
+				stmt.bindString(count++, dto.getIDZone());
+				stmt.bindString(count++, dto.getIDHybrid());
+				stmt.bindString(count++, dto.getIDStageFrom());
+				stmt.bindString(count++, dto.getIDStageTo());
+				stmt.bindString(count++, dto.getSeedTypeFrom());
+				stmt.bindString(count++, dto.getSeedTypeTo());
+				stmt.bindLong(count++, dto.getNumberOfDays());
+				stmt.bindString(count++, dto.getSequence());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		StandardDatesDTO dtoObj = (StandardDatesDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM StandardDates WHERE IDStandardDates = '"
+							+ dtoObj.getIDStandardDates() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			StandardDatesDTO dtoObj = (StandardDatesDTO) dto;
+			String whereCls = "IDStandardDates = '"
+					+ dtoObj.getIDStandardDates() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("StandardDates", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("StandardDatesDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM StandardDates", null);
+			if (cursor.moveToFirst()) {
+				do {
+					StandardDatesDTO dto = new StandardDatesDTO();
+					dto.setIDStandardDates(cursor.getString(count++));
+					dto.setIDZone(cursor.getString(count++));
+					dto.setIDHybrid(cursor.getString(count++));
+					dto.setIDStageFrom(cursor.getString(count++));
+					dto.setIDStageTo(cursor.getString(count++));
+					dto.setSeedTypeFrom(cursor.getString(count++));
+					dto.setSeedTypeTo(cursor.getString(count++));
+					dto.setNumberOfDays(cursor.getInt(count++));
+					dto.setSequence(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count = 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM StandardDates WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					StandardDatesDTO dto = new StandardDatesDTO();
+					dto.setIDStandardDates(cursor.getString(1));
+					dto.setIDZone(cursor.getString(2));
+					dto.setIDHybrid(cursor.getString(3));
+					dto.setIDStageFrom(cursor.getString(4));
+					dto.setIDStageTo(cursor.getString(5));
+					dto.setSeedTypeFrom(cursor.getString(6));
+					dto.setSeedTypeTo(cursor.getString(7));
+					dto.setNumberOfDays(cursor.getInt(8));
+					dto.setSequence(cursor.getString(9));
+
+					instList.add(dto);
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<StandardDatesDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(IDStandardDates, IDZone,IDHybrid,IDStageFrom,IDStageTo,SeedTypeFrom,SeedTypeTo,NumberOfDays,sequence)VALUES (?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (StandardDatesDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIDStandardDates());
+				stmt.bindString(count++, dto.getIDZone() == null ?"" : dto.getIDZone());
+				stmt.bindString(count++, dto.getIDHybrid() == null ? "" : dto.getIDHybrid());
+				stmt.bindString(count++, dto.getIDStageFrom() == null ? "" : dto.getIDStageFrom() );
+				stmt.bindString(count++, dto.getIDStageTo() == null ? "" : dto.getIDStageTo());
+				stmt.bindString(count++, dto.getSeedTypeFrom() == null ? "" : dto.getSeedTypeFrom());
+				stmt.bindString(count++, dto.getSeedTypeTo() == null ? "" : dto.getSeedTypeTo());
+				stmt.bindLong(count++, dto.getNumberOfDays() == null ? 0 : dto.getNumberOfDays());
+				stmt.bindString(count++, dto.getSequence() == null ? "" : dto.getSequence());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			//IDStandardDates, IDZone,IDHybrid,IDStageFrom,IDStageTo,SeedTypeFrom,SeedTypeTo,NumberOfDays,sequence
+			String query ="UPDATE  StandardDates o set o.IDZone=t.IDZone,o.IDHybrid=t.IDHybrid,o.IDStageFrom=t.IDStageFrom,o.IDStageTo=t.IDStageTo,o.SeedTypeFrom=t.SeedTypeFrom,o.SeedTypeTo=t.SeedTypeTo,o.NumberOfDays=t.NumberOfDays,o.sequence=t.sequence from StandardDates_Temp t where o.IDStandardDates=t.IDStandardDates";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("StandardDatesDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO StandardDates(IDStandardDates,IDZone,IDHybrid,IDStageFrom,IDStageTo,SeedTypeFrom,SeedTypeTo,NumberOfDays,sequence) SELECT t.IDStandardDates,t.IDZone,t.IDHybrid,t.IDStageFrom,t.IDStageTo,t.SeedTypeFrom,t.SeedTypeTo,t.NumberOfDays,t.sequence  FROM StandardDates_Temp t left join StandardDates o on o.IDStandardDates=t.IDStandardDates";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM StandardDates_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<StandardDatesDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<StandardDatesDTO> instList = new ArrayList<StandardDatesDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM StandardDates ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					StandardDatesDTO dto = new StandardDatesDTO();
+					dto.setIDStandardDates(cursor.getString(count++));
+					dto.setIDZone(cursor.getString(count++));
+					dto.setIDHybrid(cursor.getString(count++));
+					dto.setIDStageFrom(cursor.getString(count++));
+					dto.setIDStageTo(cursor.getString(count++));
+					dto.setSeedTypeFrom(cursor.getString(count++));
+					dto.setSeedTypeTo(cursor.getString(count++));
+					dto.setNumberOfDays(cursor.getInt(count++));
+					dto.setSequence(cursor.getString(count++));
+				
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("StandardDatesDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

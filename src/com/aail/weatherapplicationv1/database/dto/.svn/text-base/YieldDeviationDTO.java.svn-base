@@ -1,0 +1,161 @@
+package com.bayer.efm.hsp.database.dto;
+
+
+public class YieldDeviationDTO implements DTO {
+	    
+		private String orgName;
+		
+		private String villageName;
+		private String farmerCode;
+		private String farmerName;
+		private String landCode;
+		private String idLand;
+		private String hybridCode;
+		private String hybridMask;
+		private String dispatchQty;
+		private String dispatchBags;
+		private String harvestYield;
+		private String harvestVariation;
+		private String floweringYield;
+		private String floweringVariation;
+		private String ppiYield;
+		private String ppiVariation;
+		private String transplantYield;
+		private String transVariation;
+		private String dispatch;
+		
+		
+		
+		private String idGrower;
+
+		private String sowingYield;
+
+		public String getIdLand() {
+			return idLand;
+		}
+		public void setIdLand(String idLand) {
+			this.idLand = idLand;
+		}
+		public String getVillageName() {
+			return villageName;
+		}
+		public void setVillageName(String villageName) {
+			this.villageName = villageName;
+		}
+		public String getFarmerCode() {
+			return farmerCode;
+		}
+		public void setFarmerCode(String farmerCode) {
+			this.farmerCode = farmerCode;
+		}
+		public String getFarmerName() {
+			return farmerName;
+		}
+		public void setFarmerName(String farmerName) {
+			this.farmerName = farmerName;
+		}
+		public String getLandCode() {
+			return landCode;
+		}
+		public void setLandCode(String landCode) {
+			this.landCode = landCode;
+		}
+		public String getOrgName() {
+			return orgName;
+		}
+		public void setOrgName(String orgName) {
+			this.orgName = orgName;
+		}
+		
+		public String getDispatchQty() {
+			return dispatchQty;
+		}
+		public void setDispatchQty(String dispatchQty) {
+			this.dispatchQty = dispatchQty;
+		}
+		public String getDispatchBags() {
+			return dispatchBags;
+		}
+		public void setDispatchBags(String dispatchBags) {
+			this.dispatchBags = dispatchBags;
+		}
+		public String getHarvestYield() {
+			return harvestYield;
+		}
+		public void setHarvestYield(String harvestYield) {
+			this.harvestYield = harvestYield;
+		}
+		public String getHarvestVariation() {
+			return harvestVariation;
+		}
+		public void setHarvestVariation(String harvestVariation) {
+			this.harvestVariation = harvestVariation;
+		}
+		public String getFloweringYield() {
+			return floweringYield;
+		}
+		public void setFloweringYield(String floweringYield) {
+			this.floweringYield = floweringYield;
+		}
+		public String getFloweringVariation() {
+			return floweringVariation;
+		}
+		public void setFloweringVariation(String floweringVariation) {
+			this.floweringVariation = floweringVariation;
+		}
+		public String getPpiYield() {
+			return ppiYield;
+		}
+		public void setPpiYield(String ppiYield) {
+			this.ppiYield = ppiYield;
+		}
+		public String getPpiVariation() {
+			return ppiVariation;
+		}
+		public void setPpiVariation(String ppiVariation) {
+			this.ppiVariation = ppiVariation;
+		}
+		public String getTransplantYield() {
+			return transplantYield;
+		}
+		public void setTransplantYield(String transplantYield) {
+			this.transplantYield = transplantYield;
+		}
+		public String getTransVariation() {
+			return transVariation;
+		}
+		public void setTransVariation(String transVariation) {
+			this.transVariation = transVariation;
+		}
+		public String getSowingYield() {
+			return sowingYield;
+		}
+		public void setSowingYield(String sowingYield) {
+			this.sowingYield = sowingYield;
+		}
+		public String getHybridCode() {
+			return hybridCode;
+		}
+		public void setHybridCode(String hybridCode) {
+			this.hybridCode = hybridCode;
+		}
+		public String getHybridMask() {
+			return hybridMask;
+		}
+		public void setHybridMask(String hybridMask) {
+			this.hybridMask = hybridMask;
+		}
+		public String getIdGrower() {
+			return idGrower;
+		}
+		public void setIdGrower(String idGrower) {
+			this.idGrower = idGrower;
+		}
+		public String getDispatch() {
+			return dispatch;
+		}
+		public void setDispatch(String dispatch) {
+			this.dispatch = dispatch;
+		}
+		
+ }

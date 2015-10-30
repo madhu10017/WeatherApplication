@@ -1,0 +1,162 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class HarvestingDTO implements DTO {
+ 
+	private String idHarvesting;
+	private String dohMale;
+	private String idLand;
+	private String idRemarks;
+	private String otherRemarks;
+	private String dohFemale;
+	private String idAgronomicalCondition;
+	private String dateCompletion;
+	private String harvestingAcres;
+	private String photo;
+	private String yeildEstimation;
+	private String standingAcerage;
+	private String harvestingMode;
+	private String dateCreated;
+	private String dateModified;
+	private Integer maleFlag;
+	private Integer femaleFlag;
+	private Integer syncFlag;
+	private String burningDate;
+	private String idPostHarvestGrade;
+	private String harvesterNumber;
+	private String numberOfBags;
+	public String getIdHarvesting() {
+		return idHarvesting;
+	}
+	public void setIdHarvesting(String idHarvesting) {
+		this.idHarvesting = idHarvesting;
+	}
+	public String getDohMale() {
+		return dohMale;
+	}
+	public void setDohMale(String dohMale) {
+		this.dohMale = dohMale;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	}
+	public String getOtherRemarks() {
+		return otherRemarks;
+	}
+	public void setOtherRemarks(String otherRemarks) {
+		this.otherRemarks = otherRemarks;
+	}
+	public String getDohFemale() {
+		return dohFemale;
+	}
+	public void setDohFemale(String dohFemale) {
+		this.dohFemale = dohFemale;
+	}
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	}
+	public String getDateCompletion() {
+		return dateCompletion;
+	}
+	public void setDateCompletion(String dateCompletion) {
+		this.dateCompletion = dateCompletion;
+	}
+	public String getHarvestingAcres() {
+		return harvestingAcres;
+	}
+	public void setHarvestingAcres(String harvestingAcres) {
+		this.harvestingAcres = harvestingAcres;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getYeildEstimation() {
+		return yeildEstimation;
+	}
+	public void setYeildEstimation(String yeildEstimation) {
+		this.yeildEstimation = yeildEstimation;
+	}
+	public String getStandingAcerage() {
+		return standingAcerage;
+	}
+	public void setStandingAcerage(String standingAcerage) {
+		this.standingAcerage = standingAcerage;
+	}
+	public String getHarvestingMode() {
+		return harvestingMode;
+	}
+	public void setHarvestingMode(String harvestingMode) {
+		this.harvestingMode = harvestingMode;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Integer getMaleFlag() {
+		return maleFlag;
+	}
+	public void setMaleFlag(Integer maleFlag) {
+		this.maleFlag = maleFlag;
+	}
+	public Integer getFemaleFlag() {
+		return femaleFlag;
+	}
+	public void setFemaleFlag(Integer femaleFlag) {
+		this.femaleFlag = femaleFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getBurningDate() {
+		return burningDate;
+	}
+	public void setBurningDate(String burningDate) {
+		this.burningDate = burningDate;
+	}
+	public String getIdPostHarvestGrade() {
+		return idPostHarvestGrade;
+	}
+	public void setIdPostHarvestGrade(String idPostHarvestGrade) {
+		this.idPostHarvestGrade = idPostHarvestGrade;
+	}
+	public String getHarvesterNumber() {
+		return harvesterNumber;
+	}
+	public void setHarvesterNumber(String harvesterNumber) {
+		this.harvesterNumber = harvesterNumber;
+	}
+	public String getNumberOfBags() {
+		return numberOfBags;
+	}
+	public void setNumberOfBags(String numberOfBags) {
+		this.numberOfBags = numberOfBags;
+	}
+}

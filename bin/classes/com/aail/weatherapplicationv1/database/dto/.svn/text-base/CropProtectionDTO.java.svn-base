@@ -1,0 +1,97 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+
+ 
+public class CropProtectionDTO implements DTO {
+ 
+	private String idCropProtection;
+	private String insectOrDiseaseName;
+	private String dateOfSpray;
+	private String remarks;
+	private String idLand;
+	private String idStages;
+	private String photo;
+	private String dateCreated;
+	private String dateModified;
+	private Integer actionFlag;
+	private Integer syncFlag;
+	@SerializedName("chemicalNameAndDose")
+	private String chemicalName;
+	
+	public String getIdCropProtection() {
+		return idCropProtection;
+	}
+	public void setIdCropProtection(String idCropProtection) {
+		this.idCropProtection = idCropProtection;
+	}
+	public String getInsectOrDiseaseName() {
+		return insectOrDiseaseName;
+	}
+	public void setInsectOrDiseaseName(String insectOrDiseaseName) {
+		this.insectOrDiseaseName = insectOrDiseaseName;
+	}
+	public String getDateOfSpray() {
+		return dateOfSpray;
+	}
+	public void setDateOfSpray(String dateOfSpray) {
+		this.dateOfSpray = dateOfSpray;
+	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getChemicalName() {
+		return chemicalName;
+	}
+	public void setChemicalName(String chemicalName) {
+		this.chemicalName = chemicalName;
+	}
+}

@@ -1,0 +1,492 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.HarvestingDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class HarvestingDAO implements DAO 
+{
+
+	private static HarvestingDAO harvestingDAO;
+
+	private HarvestingDAO() {
+
+	}
+
+	public static HarvestingDAO getInstance() 
+	{
+		if (harvestingDAO == null)
+			harvestingDAO = new HarvestingDAO();
+
+		return harvestingDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Harvesting(idHarvesting,dohMale,idLand,idRemarks,otherRemarks,dohFemale,idAgronomicalCondition,dateCompletion,harvestingAcres,photo,yeildEstimation,standingAcerage,harvestingMode,dateCreated,dateModified,maleFlag,femaleFlag,syncFlag,burningDate,idPostHarvestGrade,harvesterNumber,numberOfBags)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list)
+			{
+				HarvestingDTO dto = (HarvestingDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getDohMale());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getDohFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getDateCompletion());
+				stmt.bindString(count++, dto.getHarvestingAcres());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getHarvestingMode());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindLong(count++, dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindString(count++,dto.getBurningDate() );
+				stmt.bindString(count++,dto.getIdPostHarvestGrade());
+				stmt.bindString(count++,dto.getHarvesterNumber());
+				stmt.bindString(count++,dto.getNumberOfBags());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	
+	public boolean delete(SQLiteDatabase dbObject, DTO dto)
+	{
+		HarvestingDTO dtoObj = (HarvestingDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Harvesting WHERE idHarvesting = '"
+							+ dtoObj.getIdHarvesting() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto)
+	{
+		try {
+			HarvestingDTO dtoObj = (HarvestingDTO) dto;
+			String whereCls = "idLand = '" + dtoObj.getIdLand()+ "'";
+			
+			ContentValues cValues = new ContentValues();
+			cValues.put("dohMale",dtoObj.getDohMale());
+			cValues.put("idRemarks", dtoObj.getIdRemarks());
+			cValues.put("otherRemarks", dtoObj.getOtherRemarks());
+			cValues.put("dohFemale", dtoObj.getDohFemale());
+			cValues.put("idAgronomicalCondition", dtoObj.getIdAgronomicalCondition());
+			cValues.put("dateCompletion", dtoObj.getDateCompletion());
+			cValues.put("harvestingAcres", dtoObj.getHarvestingAcres());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("yeildEstimation", dtoObj.getYeildEstimation());
+			cValues.put("standingAcerage", dtoObj.getStandingAcerage());
+			cValues.put("harvestingMode", dtoObj.getHarvestingMode());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("maleFlag", dtoObj.getMaleFlag());
+			cValues.put("femaleFlag", dtoObj.getFemaleFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("burningDate", dtoObj.getBurningDate());
+			cValues.put("idPostHarvestGrade", dtoObj.getIdPostHarvestGrade());
+			cValues.put("harvesterNumber", dtoObj.getHarvesterNumber());
+			cValues.put("numberOfBags", dtoObj.getNumberOfBags());
+			
+			
+			dbObject.update("Harvesting", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("HarvestingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Harvesting", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingDTO dto = new HarvestingDTO();
+					dto.setIdHarvesting(cursor.getString(count++));
+					dto.setDohMale(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setDohFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setHarvestingAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setHarvestingMode(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setBurningDate(cursor.getString(count++));
+					dto.setIdPostHarvestGrade(cursor.getString(count++));
+					dto.setHarvesterNumber(cursor.getString(count++));
+					dto.setNumberOfBags(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) 
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Harvesting WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst())
+			{
+				do 
+				{
+					HarvestingDTO dto = new HarvestingDTO();
+					dto.setIdHarvesting(cursor.getString(count++));
+					dto.setDohMale(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setDohFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setHarvestingAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setHarvestingMode(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setBurningDate(cursor.getString(count++));
+					dto.setIdPostHarvestGrade(cursor.getString(count++));
+					dto.setHarvesterNumber(cursor.getString(count++));
+					dto.setNumberOfBags(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<HarvestingDTO> list,String tablename) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idHarvesting,dohMale,idLand,idRemarks,otherRemarks,dohFemale,idAgronomicalCondition,dateCompletion,harvestingAcres,photo,yeildEstimation,standingAcerage,harvestingMode,dateCreated,dateModified,maleFlag,femaleFlag,syncFlag,burningDate,idPostHarvestGrade,harvesterNumber,numberOfBags)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (HarvestingDTO dto : list)
+			{
+				stmt.bindString(count++, dto.getIdHarvesting());
+				stmt.bindString(count++, dto.getDohMale()				== null ? "" : dto.getDohMale());
+				stmt.bindString(count++, dto.getIdLand()				== null ? "" : dto.getIdLand());
+				stmt.bindString(count++, dto.getIdRemarks()				== null ? "" : dto.getIdRemarks());	
+				stmt.bindString(count++, dto.getOtherRemarks()			== null ? "" : dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getDohFemale()				== null ? "" : dto.getDohFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition()== null ? "" : dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getDateCompletion()		== null ? "" : dto.getDateCompletion());
+				stmt.bindString(count++, dto.getHarvestingAcres()		== null ? "" : dto.getHarvestingAcres());
+				stmt.bindString(count++, dto.getPhoto()					== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation()		== null ? "" : dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getStandingAcerage()		== null ? "" : dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getHarvestingMode()		== null ? "" : dto.getHarvestingMode());
+				stmt.bindString(count++, dto.getDateCreated()			== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()			== null ? "" : dto.getDateModified());
+				stmt.bindLong(count++, dto.getMaleFlag()				== null ? 0 : dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag()				== null ? 0 : dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag()				== null ? 1 : dto.getSyncFlag());
+				stmt.bindString(count++, dto.getBurningDate()			== null ? "" : dto.getBurningDate());
+				stmt.bindString(count++, dto.getIdPostHarvestGrade()	== null ? "" : dto.getIdPostHarvestGrade());
+				stmt.bindString(count++, dto.getHarvesterNumber()		== null ? "" : dto.getHarvesterNumber());
+				stmt.bindString(count++, dto.getNumberOfBags()			== null ? "" : dto.getNumberOfBags());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public String getHarvestingAcres(SQLiteDatabase dbObject, String idLand)
+	 {
+	  String standingAcres = "";
+	  
+	  Cursor cursor = null;
+	  try {
+		  String qry = "SELECT standingAcerage FROM Harvesting where idLand='"+idLand+"'";
+	   cursor = dbObject.rawQuery(qry, null);
+	   if (cursor.moveToFirst()) {
+	    do {
+	    	standingAcres = cursor.getString(0);
+
+	    } while (cursor.moveToNext());
+	   }
+	  } catch (Exception e) {
+	   Log.e("HarvestingDAO  -- getHarvestAcres", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+
+	  return standingAcres;
+	 }
+
+	
+	public List<HarvestingDTO> getTransactionalData(SQLiteDatabase dbObject)
+	{
+		List<HarvestingDTO> instList = new ArrayList<HarvestingDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Harvesting where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingDTO dto = new HarvestingDTO();
+					dto.setIdHarvesting(cursor.getString(count++));
+					dto.setDohMale(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setDohFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setHarvestingAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setHarvestingMode(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setBurningDate(cursor.getString(count++));
+					dto.setIdPostHarvestGrade(cursor.getString(count++));
+					dto.setHarvesterNumber(cursor.getString(count++));
+					dto.setNumberOfBags(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Harvesting  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("HarvestingDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<HarvestingDTO> getCompleteData(SQLiteDatabase dbObject)
+	{
+		List<HarvestingDTO> instList = new ArrayList<HarvestingDTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Harvesting", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HarvestingDTO dto = new HarvestingDTO();
+					dto.setIdHarvesting(cursor.getString(count++));
+					dto.setDohMale(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setDohFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setHarvestingAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setHarvestingMode(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setBurningDate(cursor.getString(count++));
+					dto.setIdPostHarvestGrade(cursor.getString(count++));
+					dto.setHarvesterNumber(cursor.getString(count++));
+					dto.setNumberOfBags(cursor.getString(count++));
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Harvesting(idHarvesting,dohMale,idLand,idRemarks,otherRemarks,dohFemale,idAgronomicalCondition,dateCompletion,harvestingAcres,photo,yeildEstimation,standingAcerage,harvestingMode,dateCreated,dateModified,maleFlag,femaleFlag,syncFlag,burningDate,idPostHarvestGrade,harvesterNumber,numberOfBags) SELECT t.idHarvesting,t.dohMale,t.idLand,t.idRemarks,t.otherRemarks,t.dohFemale,t.idAgronomicalCondition,t.dateCompletion,t.harvestingAcres,t.photo,t.yeildEstimation,t.standingAcerage,t.harvestingMode,t.dateCreated,t.dateModified,t.maleFlag,t.femaleFlag,t.syncFlag,t.burningDate,t.idPostHarvestGrade,t.harvesterNumber,t.numberOfBags  FROM Harvesting_Temp t left join Harvesting o on o.idHarvesting=t.idHarvesting";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Harvesting_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("HarvestingDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

@@ -1,0 +1,283 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.MandalDTO;
+
+public class MandalDAO implements DAO {
+
+	private static MandalDAO mandalDAO;
+
+	private MandalDAO() {
+
+	}
+
+	public static MandalDAO getInstance() {
+		if (mandalDAO == null)
+			mandalDAO = new MandalDAO();
+
+		return mandalDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Mandal(idMandal,name,code)VALUES (?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				MandalDTO dto = (MandalDTO) items;
+				stmt.bindString(count++, dto.getIdMandal());
+				stmt.bindString(count++, dto.getName());
+				stmt.bindString(count++, dto.getCode());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		MandalDTO dtoObj = (MandalDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Mandal WHERE idMandal = '"
+							+ dtoObj.getIdMandal() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			MandalDTO dtoObj = (MandalDTO) dto;
+			String whereCls = "idMandal = '" + dtoObj.getIdMandal() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("Mandal", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("MandalDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count = 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Mandal", null);
+			if (cursor.moveToFirst()) {
+				do {
+					MandalDTO dto = new MandalDTO();
+					dto.setIdMandal(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Mandal WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					MandalDTO dto = new MandalDTO();
+					dto.setIdMandal(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<MandalDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idMandal,name,code)VALUES (?,?,?)");
+			int count = 1;
+
+			for (MandalDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdMandal());
+				stmt.bindString(count++, dto.getName());
+				stmt.bindString(count++, dto.getCode());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+
+			String query ="UPDATE  Mandal o set o.name=t.name,o.code=t.code from Mandal_Temp t where o.idMandal=t.idMandal";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("MandalDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Mandal(idMandal,name,code) SELECT t.idMandal,t.name,t.code  FROM Mandal_Temp t left join Mandal o on o.idMandal=t.idMandal";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- insert", e.getMessage());
+		} finally {
+		//	dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Mandal_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<MandalDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<MandalDTO> instList = new ArrayList<MandalDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Mandal ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					MandalDTO dto = new MandalDTO();
+					dto.setIdMandal(cursor.getString(count++));
+					dto.setName(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("MandalDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

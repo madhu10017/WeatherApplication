@@ -1,0 +1,334 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FSReturnbyFPSDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class FSReturnbyFPSDAO implements DAO {
+
+	private static FSReturnbyFPSDAO fsreturnbyfpsDAO;
+
+	private FSReturnbyFPSDAO() {
+
+	}
+
+	public static FSReturnbyFPSDAO getInstance() {
+		if (fsreturnbyfpsDAO == null)
+			fsreturnbyfpsDAO = new FSReturnbyFPSDAO();
+
+		return fsreturnbyfpsDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO FSReturnbyFPS(idFSReturnbyFPS,idFSReceviedbyFPS,qty,acerage,dateReturned,dateModified,syncFlag)VALUES (?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				FSReturnbyFPSDTO dto = (FSReturnbyFPSDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdFSReceviedbyFPS());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getDateReturned());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, "0");
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		FSReturnbyFPSDTO dtoObj = (FSReturnbyFPSDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM FSReturnbyFPS WHERE idFSReturnbyFPS = '"
+							+ dtoObj.getIdFSReturnbyFPS() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			FSReturnbyFPSDTO dtoObj = (FSReturnbyFPSDTO) dto;
+			String whereCls = "idFSReturnbyFPS = '"
+					+ dtoObj.getIdFSReturnbyFPS() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("FSReturnbyFPS", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("FSReturnbyFPSDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReturnbyFPS", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReturnbyFPSDTO dto = new FSReturnbyFPSDTO();
+					dto.setIdFSReturnbyFPS(cursor.getString(count++));
+					dto.setIdFSReceviedbyFPS(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturned(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReturnbyFPS WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReturnbyFPSDTO dto = new FSReturnbyFPSDTO();
+					dto.setIdFSReturnbyFPS(cursor.getString(count++));
+					dto.setIdFSReceviedbyFPS(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturned(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<FSReturnbyFPSDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idFSReturnbyFPS,idFSReceviedbyFPS,qty,acerage,dateReturned,dateModified,syncFlag)VALUES (?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (FSReturnbyFPSDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdFSReturnbyFPS());
+				stmt.bindString(count++, dto.getIdFSReceviedbyFPS());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getDateReturned());
+				stmt.bindString(count++, dto.getDateModified()	== null ? "" :dto.getDateModified());
+				stmt.bindString(count++, "1");
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	
+	public List<FSReturnbyFPSDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<FSReturnbyFPSDTO> instList = new ArrayList<FSReturnbyFPSDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReturnbyFPS where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReturnbyFPSDTO dto = new FSReturnbyFPSDTO();
+					dto.setIdFSReturnbyFPS(cursor.getString(count++));
+					dto.setIdFSReceviedbyFPS(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturned(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  FSReturnbyFPS  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("FSReturnbyFPSDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<FSReturnbyFPSDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<FSReturnbyFPSDTO> instList = new ArrayList<FSReturnbyFPSDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM FSReturnbyFPS", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSReturnbyFPSDTO dto = new FSReturnbyFPSDTO();
+					dto.setIdFSReturnbyFPS(cursor.getString(count++));
+					dto.setIdFSReceviedbyFPS(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturned(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO FSReturnbyFPS(idFSReturnbyFPS,idFSReceviedbyFPS,qty,acerage,dateReturned,dateModified,syncFlag) SELECT t.idFSReturnbyFPS,t.idFSReceviedbyFPS,t.qty,t.acerage,t.dateReturned,t.dateModified,t.syncFlag  FROM FSReturnbyFPS_Temp t left join FSReturnbyFPS o on o.idFSReturnbyFPS=t.idFSReturnbyFPS";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM FSReturnbyFPS_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FSReturnbyFPSDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

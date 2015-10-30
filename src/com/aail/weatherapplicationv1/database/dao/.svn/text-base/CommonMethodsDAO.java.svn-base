@@ -1,0 +1,145 @@
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+import android.util.Log;
+
+public class CommonMethodsDAO 
+{
+	private static CommonMethodsDAO commonMethodsDAO;
+
+	private CommonMethodsDAO() {
+
+	}
+
+	public static CommonMethodsDAO getInstance() {
+		if (commonMethodsDAO == null)
+			commonMethodsDAO = new CommonMethodsDAO();
+
+		return commonMethodsDAO;
+	}
+	
+	public int getCountForTransactionalData(SQLiteDatabase dbObject)
+	{
+	  int count		= 0;
+	  Cursor cursor = null;
+	  try 
+	  {
+		  String qry = "select sum(id) from (select count(*) [id] from CropProtection where syncFlag='0' union all"+ 
+				  " select count(*) [id] from Dispatch where syncFlag='0' union all"+
+				  " select count(*) [id] from FSReceivedbyFPS where syncFlag='0' union all"+
+				  " select count(*) [id] from FSReceviedbyFarmer where syncFlag='0' union all"+
+				  " select count(*) [id] from FSReturnbyFPS where syncFlag='0' union all"+
+				  " select count(*) [id] from FSReturnbyFarmer where syncFlag='0' union all"+
+				  " select count(*) [id] from Fertilizer where syncFlag='0' union all"+
+				  " select count(*) [id] from FertilizerDose where syncFlag='0' union all"+
+				  " select count(*) [id] from Flowering where syncFlag='0' union all"+
+				  " select count(*) [id] from GOTandPlowdown where syncFlag='0' union all"+
+				  " select count(*) [id] from Harvesting where syncFlag='0' union all"+
+				  " select count(*) [id] from LabourManagement where syncFlag='0' union all"+
+				  " select count(*) [id] from PPI where syncFlag='0' union all"+
+				  " select count(*) [id] from AgronomicalCondition where syncFlag='0' union all"+
+				  " select count(*) [id] from QRMapping where syncFlag='0' union all"+
+				  " select count(*) [id] from QualityandRoughing where syncFlag='0' union all"+
+				  " select count(*) [id] from QualityReview where syncFlag='0' union all"+
+				  " select count(*) [id] from Sowing where syncFlag='0' union all"+
+				  " select count(*) [id] from SownFSIssue where syncFlag='0' union all"+
+				  " select count(*) [id] from SownFSReturn where syncFlag='0' union all"+
+				  " select count(*) [id] from Transplantation where syncFlag='0' union all"+
+				  " select count(*) [id] from Unloading where syncFlag='0' union all"+
+				//  " select count(*) [id] from Vegitative where syncFlag='0' union all"+
+				  " select count(*) [id] from WeedManagement where syncFlag='0' union all"+
+				  " select count(*) [id] from Isolation where syncFlag='0' union all"+
+				  " select count(*) [id] from Grower where farmerFlag='0' union all"+
+				  " select count(*) [id] from Land where landFlag='0' )a";
+		  cursor = dbObject.rawQuery(qry, null);
+		  if (cursor.moveToFirst()) {
+				do 
+				{
+					count = cursor.getInt(0);
+				}while (cursor.moveToNext());
+		  }
+	  }
+	  catch (Exception e) 
+	  {
+	   Log.e("CommonMethodsDAO  -- getCount", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+	  	return count;
+	}
+	
+	public int getCountForTransactionalDataPP(SQLiteDatabase dbObject)
+	{
+	  int count		= 0;
+	  Cursor cursor = null;
+	  try 
+	  {
+		  String qry = "select sum(id) from ( select count(*) [id] from Unloading where syncFlag='0')a";
+		  cursor = dbObject.rawQuery(qry, null);
+		  if (cursor.moveToFirst()) {
+				do 
+				{
+					count = cursor.getInt(0);
+				}while (cursor.moveToNext());
+		  }
+	  }
+	  catch (Exception e) 
+	  {
+	   Log.e("CommonMethodsDAO  -- getCountpp", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+	  	return count;
+	}
+
+	public List<String>  getImagePaths(SQLiteDatabase dbObject)
+	{
+	 List<String> imagepaths    =     new ArrayList<String>();
+	  Cursor cursor = null;
+	  try 
+	  {
+		  String qry =  "select image from (select photo [image] from Sowing  union all"+ 
+				  " select photo [image] from Transplantation union all"+
+				  " select photo [image] from PPI union all"+
+				  " select photo [image] from Flowering union all"+
+				  " select photo [image] from Harvesting union all"+
+				  " select photo [image] from Dispatch union all"+
+				  " select photo [image] from Isolation union all"+
+				  " select photo [image] from WeedManagement union all"+
+				  " select photo [image] from Fertilizer union all"+
+				  " select photo [image] from CropProtection union all"+
+				  " select photo [image] from QualityandRoughing union all"+
+				  " select photo [image] from LabourManagement union all"+
+				  " select photo [image] from GOTandPlowdown)a where image!=\"\"";
+		  
+		  cursor = dbObject.rawQuery(qry, null);
+		  if (cursor.moveToFirst()) {
+				do 
+				{
+					imagepaths.add(cursor.getString(0));
+				}while (cursor.moveToNext());
+		  }
+	  }
+	  catch (Exception e) 
+	  {
+	   Log.e("CommonMethodsDAO  -- getImages", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+	  	return imagepaths;
+	}
+
+}

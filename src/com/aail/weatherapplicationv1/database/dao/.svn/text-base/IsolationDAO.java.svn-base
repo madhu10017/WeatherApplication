@@ -1,0 +1,580 @@
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FloweringDTO;
+import com.bayer.efm.hsp.database.dto.IsolationDTO;
+import com.bayer.efm.hsp.database.dto.SowingDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class IsolationDAO implements DAO{
+	
+	private static IsolationDAO IsolationDAO;
+	
+	private IsolationDAO() {
+
+	}
+	
+	public static IsolationDAO getInstance() {
+		if (IsolationDAO == null)
+			IsolationDAO = new IsolationDAO();
+
+		return IsolationDAO;
+	}
+
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Isolation(idIsolation,idLand,Photo,datecreated,datemodified,syncFlag,isolationDistance,timeIsolation,barrierIsolation,duration,actualDistance,previousCrop,borderRows,side,variety,area,dosC,dotC,dofC,dohC,diffAtFlow,actionFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+				IsolationDTO dto = (IsolationDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getDatecreated());
+				stmt.bindString(count++, dto.getDatemodified());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindString(count++, dto.getIsolationDistance());
+				stmt.bindString(count++, dto.getTimeIsolation());
+				stmt.bindString(count++,dto.getBarrierIsolation());
+				stmt.bindString(count++,dto.getDuration());
+				stmt.bindString(count++,dto.getActualDistance());
+				stmt.bindString(count++, dto.getPreviousCrop());
+				stmt.bindString(count++,dto.getBorderRows());
+				stmt.bindString(count++,dto.getSide());
+				stmt.bindString(count++, dto.getVariety());
+				stmt.bindString(count++,dto.getArea());
+				stmt.bindString(count++,dto.getDosC());
+				stmt.bindString(count++, dto.getDotC());
+				stmt.bindString(count++,dto.getDofC());
+				stmt.bindString(count++,dto.getDohC());
+				stmt.bindString(count++,dto.getDiffAtFlow());
+				stmt.bindLong(count++,dto.getActionFlag());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		IsolationDTO dtoObj = (IsolationDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Isolation WHERE idIsolation = '"
+							+ dtoObj.getIdIsolation() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			
+			IsolationDTO dtoObj = (IsolationDTO) dto;
+			String whereCls = "idIsolation = '"+ dtoObj.getIdIsolation()+"'";
+			ContentValues cValues = new ContentValues();
+			cValues.put("idLand", dtoObj.getIdLand());
+			cValues.put("Photo", dtoObj.getPhoto());
+			cValues.put("datecreated", dtoObj.getDatecreated());
+			cValues.put("datemodified", dtoObj.getDatemodified());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("isolationDistance", dtoObj.getIsolationDistance());
+			cValues.put("timeIsolation",dtoObj.getTimeIsolation());
+			cValues.put("barrierIsolation",dtoObj.getBarrierIsolation());
+			cValues.put("duration",dtoObj.getDuration());
+			cValues.put("actualDistance",dtoObj.getActualDistance());
+			cValues.put("previousCrop", dtoObj.getPreviousCrop());
+			cValues.put("borderRows",dtoObj.getBorderRows());
+			cValues.put("side",dtoObj.getSide());
+			cValues.put("variety", dtoObj.getVariety());
+			cValues.put("area",dtoObj.getArea());
+			cValues.put("dosC",dtoObj.getDosC());
+			cValues.put("dotC", dtoObj.getDotC());
+			cValues.put("dofC",dtoObj.getDofC());
+			cValues.put("dohC",dtoObj.getDohC());
+			cValues.put("diffAtFlow",dtoObj.getDiffAtFlow());
+			cValues.put("actionFlag",dtoObj.getActionFlag());
+			
+			dbObject.update("Isolation", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("IsolationDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Isolation", null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					IsolationDTO dto = new IsolationDTO();
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDatecreated(cursor.getString(count++));
+					dto.setDatemodified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setIsolationDistance(cursor.getString(count++));
+					dto.setTimeIsolation(cursor.getString(count++));
+					dto.setBarrierIsolation(cursor.getString(count++));
+					dto.setDuration(cursor.getString(count++));
+					dto.setActualDistance(cursor.getString(count++));
+					dto.setPreviousCrop(cursor.getString(count++));
+					dto.setBorderRows(cursor.getString(count++));
+					dto.setSide(cursor.getString(count++));
+					dto.setVariety(cursor.getString(count++));
+					dto.setArea(cursor.getString(count++));
+					dto.setDosC(cursor.getString(count++));
+					dto.setDotC(cursor.getString(count++));
+					dto.setDofC(cursor.getString(count++));
+					dto.setDohC(cursor.getString(count++));
+					dto.setDiffAtFlow(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,String columnName, String columnValue) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Isolation WHERE "+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					IsolationDTO dto = new IsolationDTO();
+					
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDatecreated(cursor.getString(count++));
+					dto.setDatemodified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setIsolationDistance(cursor.getString(count++));
+					dto.setTimeIsolation(cursor.getString(count++));
+					dto.setBarrierIsolation(cursor.getString(count++));
+					dto.setDuration(cursor.getString(count++));
+					dto.setActualDistance(cursor.getString(count++));
+					dto.setPreviousCrop(cursor.getString(count++));
+					dto.setBorderRows(cursor.getString(count++));
+					dto.setSide(cursor.getString(count++));
+					dto.setVariety(cursor.getString(count++));
+					dto.setArea(cursor.getString(count++));
+					dto.setDosC(cursor.getString(count++));
+					dto.setDotC(cursor.getString(count++));
+					dto.setDofC(cursor.getString(count++));
+					dto.setDohC(cursor.getString(count++));
+					dto.setDiffAtFlow(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByLand(SQLiteDatabase dbObject,String columnName1, String columnValue1) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry = "SELECT * FROM Isolation WHERE "+ columnName1 + " = '" + columnValue1 + "'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					IsolationDTO dto = new IsolationDTO();
+					
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDatecreated(cursor.getString(count++));
+					dto.setDatemodified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setIsolationDistance(cursor.getString(count++));
+					dto.setTimeIsolation(cursor.getString(count++));
+					dto.setBarrierIsolation(cursor.getString(count++));
+					dto.setDuration(cursor.getString(count++));
+					dto.setActualDistance(cursor.getString(count++));
+					dto.setPreviousCrop(cursor.getString(count++));
+					dto.setBorderRows(cursor.getString(count++));
+					dto.setSide(cursor.getString(count++));
+					dto.setVariety(cursor.getString(count++));
+					dto.setArea(cursor.getString(count++));
+					dto.setDosC(cursor.getString(count++));
+					dto.setDotC(cursor.getString(count++));
+					dto.setDofC(cursor.getString(count++));
+					dto.setDohC(cursor.getString(count++));
+					dto.setDiffAtFlow(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByLandOfSowing(SQLiteDatabase dbObject,String columnName1, String columnValue1) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry = "SELECT dosMale,dosFemale FROM Sowing WHERE "+ columnName1 + " = '" + columnValue1 + "'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					SowingDTO dto = new SowingDTO();
+					
+					dto.setDosMale(cursor.getString(count++));
+					dto.setDosFemale(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SowingDaoIsolation  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByLandOfFlowering(SQLiteDatabase dbObject,String columnName1, String columnValue1) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			
+			String qry = "SELECT dofMale,dofFemale FROM Flowering WHERE "+ columnName1 + " = '" + columnValue1 + "'";
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					FloweringDTO dto = new FloweringDTO();
+					
+					dto.setDofMale(cursor.getString(count++));
+					dto.setDofFemale(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FloweringDaoIsolation  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<IsolationDTO> list,String tablename)  {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idIsolation,idLand,Photo,datecreated,datemodified,syncFlag,isolationDistance,timeIsolation,barrierIsolation,duration,actualDistance,previousCrop,borderRows,side,variety,area,dosC,dotC,dofC,dohC,diffAtFlow,actionFlag)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (IsolationDTO dto : list) {
+				stmt.bindString(count++, dto.getIdIsolation());
+				stmt.bindString(count++, dto.getIdLand()			== null ? "" : dto.getIdLand());
+				stmt.bindString(count++, dto.getPhoto()				== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getDatecreated()		== null ? "" : dto.getDatecreated());
+				stmt.bindString(count++, dto.getDatemodified()		== null ? "" : dto.getDatemodified());
+				stmt.bindLong(count++, dto.getSyncFlag()			== null ? 1 : dto.getSyncFlag());
+				stmt.bindString(count++, dto.getIsolationDistance()	== null ? "" : dto.getIsolationDistance());
+				stmt.bindString(count++, dto.getTimeIsolation()		== null ? "" : dto.getTimeIsolation());
+				stmt.bindString(count++, dto.getBarrierIsolation()	== null ? "" : dto.getBarrierIsolation());
+				stmt.bindString(count++,dto.getDuration()			== null ? "" : dto.getDuration());
+				stmt.bindString(count++,dto.getActualDistance()		== null ? "" : dto.getActualDistance());
+				stmt.bindString(count++, dto.getPreviousCrop()		== null ? "" : dto.getPreviousCrop());
+				stmt.bindString(count++,dto.getBorderRows()			== null ? "" : dto.getBorderRows());
+				stmt.bindString(count++,dto.getSide()				== null ? "" : dto.getSide());
+				stmt.bindString(count++, dto.getVariety()			== null ? "" : dto.getVariety());
+				stmt.bindString(count++,dto.getArea()				== null ? "" : dto.getArea());
+				stmt.bindString(count++,dto.getDosC()				== null ? "" : dto.getDosC());
+				stmt.bindString(count++, dto.getDotC()				== null ? "" : dto.getDotC());
+				stmt.bindString(count++,dto.getDofC()				== null ? "" : dto.getDofC());
+				stmt.bindString(count++,dto.getDohC()				== null ? "" : dto.getDohC());
+				stmt.bindString(count++,dto.getDiffAtFlow()			== null ? "" : dto.getDiffAtFlow());
+				stmt.bindLong(count++,dto.getActionFlag()			== null ? 0 : dto.getActionFlag());
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public List<IsolationDTO> getTransactionalData(SQLiteDatabase dbObject) 
+	{
+		List<IsolationDTO> instList = new ArrayList<IsolationDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Isolation where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					IsolationDTO dto = new IsolationDTO();
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDatecreated(cursor.getString(count++));
+					dto.setDatemodified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setIsolationDistance(cursor.getString(count++));
+					dto.setTimeIsolation(cursor.getString(count++));
+					dto.setBarrierIsolation(cursor.getString(count++));
+					dto.setDuration(cursor.getString(count++));
+					dto.setActualDistance(cursor.getString(count++));
+					dto.setPreviousCrop(cursor.getString(count++));
+					dto.setBorderRows(cursor.getString(count++));
+					dto.setSide(cursor.getString(count++));
+					dto.setVariety(cursor.getString(count++));
+					dto.setArea(cursor.getString(count++));
+					dto.setDosC(cursor.getString(count++));
+					dto.setDotC(cursor.getString(count++));
+					dto.setDofC(cursor.getString(count++));
+					dto.setDohC(cursor.getString(count++));
+					dto.setDiffAtFlow(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Isolation  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("IsolationDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<IsolationDTO> getCompleteData(SQLiteDatabase dbObject) 
+	{
+		List<IsolationDTO> instList = new ArrayList<IsolationDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Isolation", null);
+			if (cursor.moveToFirst()) {
+				do {
+					IsolationDTO dto = new IsolationDTO();
+					dto.setIdIsolation(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setDatecreated(cursor.getString(count++));
+					dto.setDatemodified(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setIsolationDistance(cursor.getString(count++));
+					dto.setTimeIsolation(cursor.getString(count++));
+					dto.setBarrierIsolation(cursor.getString(count++));
+					dto.setDuration(cursor.getString(count++));
+					dto.setActualDistance(cursor.getString(count++));
+					dto.setPreviousCrop(cursor.getString(count++));
+					dto.setBorderRows(cursor.getString(count++));
+					dto.setSide(cursor.getString(count++));
+					dto.setVariety(cursor.getString(count++));
+					dto.setArea(cursor.getString(count++));
+					dto.setDosC(cursor.getString(count++));
+					dto.setDotC(cursor.getString(count++));
+					dto.setDofC(cursor.getString(count++));
+					dto.setDohC(cursor.getString(count++));
+					dto.setDiffAtFlow(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Isolation(idIsolation,idLand,Photo,datecreated,datemodified,syncFlag,isolationDistance,timeIsolation,barrierIsolation,duration,actualDistance,previousCrop,borderRows,side,variety,area,dosC,dotC,dofC,dohC,diffAtFlow,actionFlag) SELECT t.idIsolation,t.idLand,t.Photo,t.datecreated,t.datemodified,t.syncFlag,t.isolationDistance,t.timeIsolation,t.barrierIsolation,t.duration,t.actualDistance,t.previousCrop,t.borderRows,t.side,t.variety,t.area,t.dosC,t.dotC,t.dofC,t.dohC,t.diffAtFlow,t.actionFlag  FROM Isolation_Temp t left join Isolation o on o.idIsolation=t.idIsolation";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Isolation_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("IsolationDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+}

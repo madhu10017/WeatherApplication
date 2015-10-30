@@ -1,0 +1,392 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.UnloadingDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class UnloadingDAO implements DAO {
+
+	private static UnloadingDAO unloadingDAO;
+
+	private UnloadingDAO() {
+
+	}
+
+	public static UnloadingDAO getInstance() {
+		if (unloadingDAO == null)
+			unloadingDAO = new UnloadingDAO();
+
+		return unloadingDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Unloading(idUnloading,idDispatch,weighingType,totalWeight,discripency,photo,weightReceived,idRemarks,time,createdTime,modifiedTime,syncFlag,description,got)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				UnloadingDTO dto = (UnloadingDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdDispatch());
+				stmt.bindString(count++, dto.getWeighingType());
+				stmt.bindString(count++, dto.getTotalWeight());
+				stmt.bindString(count++, dto.getDiscripency());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getWeightReceived());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getTime());
+				stmt.bindString(count++, dto.getCreatedTime());
+				stmt.bindString(count++, dto.getModifiedTime());
+				stmt.bindString(count++, dto.getSyncFlag());
+				stmt.bindString(count++, dto.getDescription());
+				stmt.bindString(count++, dto.getGot());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		UnloadingDTO dtoObj = (UnloadingDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Unloading WHERE idUnloading = '"
+							+ dtoObj.getIdUnloading() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			UnloadingDTO dtoObj = (UnloadingDTO) dto;
+			String whereCls = "idUnloading = '" + dtoObj.getIdUnloading() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("Unloading", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("UnloadingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Unloading", null);
+			if (cursor.moveToFirst()) {
+				do {
+					UnloadingDTO dto = new UnloadingDTO();
+					dto.setIdUnloading(cursor.getString(count++));
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setWeighingType(cursor.getString(count++));
+					dto.setTotalWeight(cursor.getString(count++));
+					dto.setDiscripency(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setWeightReceived(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setTime(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setDescription(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Unloading WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					UnloadingDTO dto = new UnloadingDTO();
+					dto.setIdUnloading(cursor.getString(count++));
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setWeighingType(cursor.getString(count++));
+					dto.setTotalWeight(cursor.getString(count++));
+					dto.setDiscripency(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setWeightReceived(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setTime(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setDescription(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<UnloadingDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idUnloading,idDispatch,weighingType,totalWeight,discripency,photo,weightReceived,idRemarks,time,createdTime,modifiedTime,syncFlag,description,got)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (UnloadingDTO dto : list) {
+				stmt.bindString(count++, dto.getIdUnloading());
+				stmt.bindString(count++, dto.getIdDispatch());
+				stmt.bindString(count++, dto.getWeighingType());
+				stmt.bindString(count++, dto.getTotalWeight());
+				stmt.bindString(count++, dto.getDiscripency() == null ? "":dto.getDiscripency());
+				stmt.bindString(count++, dto.getPhoto() == null ? "":dto.getPhoto());
+				stmt.bindString(count++, dto.getWeightReceived() == null ? "":dto.getWeightReceived());
+				stmt.bindString(count++, dto.getIdRemarks() == null ? "":dto.getIdRemarks());
+				stmt.bindString(count++, dto.getTime() == null ? "":dto.getTime());
+				
+				if(dto.getCreatedTime() != null)
+					stmt.bindString(count++, dto.getCreatedTime());
+				else
+					stmt.bindString(count++, "");
+				
+				if(dto.getModifiedTime() != null)
+					stmt.bindString(count++, dto.getModifiedTime());
+				else
+					stmt.bindString(count++, "");
+				
+				stmt.bindString(count++, dto.getSyncFlag() == null ? "1":dto.getSyncFlag());
+				stmt.bindString(count++, dto.getDescription() == null ? "":dto.getDescription());
+				stmt.bindString(count++, dto.getGot() == null ? "":dto.getGot());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<UnloadingDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<UnloadingDTO> instList = new ArrayList<UnloadingDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Unloading where syncFlag='0'", null); //missing sync flag for table
+			if (cursor.moveToFirst()) {
+				do {
+					UnloadingDTO dto = new UnloadingDTO();
+					dto.setIdUnloading(cursor.getString(count++));
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setWeighingType(cursor.getString(count++));
+					dto.setTotalWeight(cursor.getString(count++));
+					dto.setDiscripency(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setWeightReceived(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setTime(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setDescription(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Unloading  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("UnloadingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<UnloadingDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<UnloadingDTO> instList = new ArrayList<UnloadingDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Unloading", null); //missing sync flag for table
+			if (cursor.moveToFirst()) {
+				do {
+					UnloadingDTO dto = new UnloadingDTO();
+					dto.setIdUnloading(cursor.getString(count++));
+					dto.setIdDispatch(cursor.getString(count++));
+					dto.setWeighingType(cursor.getString(count++));
+					dto.setTotalWeight(cursor.getString(count++));
+					dto.setDiscripency(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setWeightReceived(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setTime(cursor.getString(count++));
+					dto.setCreatedTime(cursor.getString(count++));
+					dto.setModifiedTime(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					dto.setDescription(cursor.getString(count++));
+					dto.setGot(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Unloading(idUnloading,idDispatch,weighingType,totalWeight,discripency,photo,weightReceived,idRemarks,time,createdTime,modifiedTime,syncFlag,description,got) SELECT t.idUnloading,t.idDispatch,t.weighingType,t.totalWeight,t.discripency,t.photo,t.weightReceived,t.idRemarks,t.time,t.createdTime,t.modifiedTime,t.syncFlag,t.description,t.got  FROM Unloading_Temp t left join Unloading o on o.idUnloading=t.idUnloading";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM Unloading_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("UnloadingDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+
+}

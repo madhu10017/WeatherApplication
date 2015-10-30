@@ -1,0 +1,31 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class DiseasesDTO implements DTO {
+ 
+	private String idDisease;
+	private String name;
+	private String code;
+ 
+	public String getIdDisease() {
+		return idDisease;
+	}
+	public void setIdDisease(String idDisease) {
+		this.idDisease = idDisease;
+	 }
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+}
+

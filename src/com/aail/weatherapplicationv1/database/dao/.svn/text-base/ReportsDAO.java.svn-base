@@ -1,0 +1,1144 @@
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+import android.util.Log;
+
+import com.bayer.efm.hsp.R;
+import com.bayer.efm.hsp.database.dto.CropProgressDTO;
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.QualityGradeDTO;
+import com.bayer.efm.hsp.database.dto.SeedDetailDTO;
+import com.bayer.efm.hsp.database.dto.SeedReportsDTO;
+import com.bayer.efm.hsp.database.dto.YieldDeviationDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+import com.bayer.efm.hsp.utils.Utils;
+
+public final class ReportsDAO implements DAO 
+{
+
+	private static ReportsDAO reportsDAO;
+
+	private ReportsDAO() {
+
+	}
+
+	public static ReportsDAO getInstance() 
+	{
+		if (reportsDAO == null)
+			reportsDAO = new ReportsDAO();
+
+		return reportsDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		
+		return false;
+	}
+
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		
+		return false;
+	}
+	public List<DTO> getAgronomicalRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode) {
+		
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			String whrStmt = " where  v.idVillage =  '"+ village + "'";;
+			
+			if(farmer != null)
+				whrStmt +=  " and g.idGrower = '" + farmer + "'";
+			
+			if(Organizer != null)
+				whrStmt +=  " and o.idorganizer= '"+Organizer+"'";
+			
+			if(hybridCode != null)
+				whrStmt +=  " and h.code = '"+hybridCode +"'";
+			String query = "select o.name OrganizerName, v.name VillageName, g.farmerName FarmerName, g.idGrower, g.code GrowerCode, " 
+                           +"l.code LandCode, l.idLand, h.code HybridCode, h.mask HybridMaskCode, ccs.type Sowing, cct.type Transplantation, " 
+                           +"(select ccp.type   from PPI pp  left join "
+                           +"PPIAgronomical acp on pp.idPPI=acp.idPPI left join "
+                           +"CommonCondition ccp on acp.idAgronomicalCondition=ccp.idCommonconditionName where pp.idLand = l.idLand  order by acp.date desc limit 1) PPI,"
+                           +" ccf.type Flowering, cch.type Harvesting,( select dd.gradeQuality from Dispatch dd where dd.idLand = l.idLand group by dd.idLand order by dd.dateofDispatch desc limit 1) as grade  from Village v inner join "
+                           +"Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower inner join "
+                           +" FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS inner join "
+                           +"Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid left join "
+                           +"Sowing s on s.idLand=l.idLand left join Transplantation t on t.idLand=l.idLand left join "
+                           +"PPI p on p.idLand=l.idLand left  join Flowering f on f.idLand=l.idLand left join "
+                           +"Harvesting h on h.idLand=l.idLand left join Dispatch d on d.idLand=l.idLand left join "
+                           +"CommonCondition ccs on ccs.idCommonconditionName=s.idAgronomicalCondition left join "
+                           +"CommonCondition cct on cct.idCommonconditionName=t.idAgronomicalCondition left join "
+                           +"CommonCondition ccf on ccf.idCommonconditionName=f.idAgronomicalCondition left join CommonCondition cch on cch.idCommonconditionName=h.idAgronomicalCondition "
+                   		   + whrStmt
+			               +" group by l.idLand, g.idGrower,  h.code";
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					QualityGradeDTO dto = new QualityGradeDTO();
+					dto.setOrgName(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerCode(cursor.getString(count++));
+
+					dto.setLandCode(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					
+					dto.setHybridMask(cursor.getString(count++));
+					dto.setSowing(cursor.getString(count++));
+					
+					dto.setTransPlantation(cursor.getString(count++));
+
+					dto.setPpi(cursor.getString(count++));
+					dto.setFlowering(cursor.getString(count++));
+
+					dto.setHarvesting(cursor.getString(count++));
+					dto.setDispatch(cursor.getString(count++));
+
+                  
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+    public HashMap<String, List<QualityGradeDTO>> getAgronomicalSeedRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode) {
+		
+		HashMap<String, List<QualityGradeDTO>> qualitySeedList = new HashMap<String, List<QualityGradeDTO>>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			
+			String whrStmt = " where  ";;
+			if(village !=null)
+				whrStmt += " v.idVillage =  '"+ village + "' and";
+			if(farmer != null)
+				whrStmt +=  "  g.idGrower = '" + farmer + "'  and";
+			if(Organizer != null)
+				whrStmt +=  " o.idorganizer= '"+Organizer+"'  and";
+			if(hybridCode != null && hybridCode != "All")
+				whrStmt +=  " h.code = '"+hybridCode +"'";
+			
+			
+			
+			if(whrStmt.trim().endsWith("and"))
+				whrStmt = whrStmt.substring(0, whrStmt.length() - 3);
+			
+			if((village == null && farmer == null && Organizer == null) && (hybridCode == null || hybridCode == "All") )
+				whrStmt = " ";
+			
+			String grpStmt1 = " group by l.idLand ";
+			
+				if(hybridCode == "All" )
+					grpStmt1 += " , h.code ";
+				
+				
+					grpStmt1 += " , h.seedType ";
+				
+					String grpStmt2 = " group by ";
+					
+					if(hybridCode == "All" )
+						grpStmt2 += "  a.code,  ";	
+					
+					grpStmt2 += "  a.seedType ";
+					
+					
+  String query = " select * from (select  seedType,code, "
+		         +" sum(ifnull((select sum(ifnull(rr.availableQtyWithGrower, 0)) Qty from FSReceviedbyFarmer rr  "
+		          +" inner join  FSReceivedbyFPS fps1 on fps1.idFSReceivedbyFPS=rr.idFSReceviedbyFPS  inner join "
+		          +" Hybrid h1 on fps1.idHybrid = h1.idHybrid  where rr.idLand=a.idLand and h1.code = a.code "
+		          +" and h1.seedType = a.seedType), 0))  from (select l.idLand,h.code,h.seedType,h.idHybrid  "
+		          +" from  Village v inner join Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower"
+		          +" inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on   "
+		          +" fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on "
+		          +" rr.idReceviedbyFarmer=r.idReceviedbyFarmer  left join Organizer o on o.idOrganizer=r.idOrganizer "
+		          +" inner join Hybrid h on h.idHybrid=fps.idHybrid "+whrStmt +grpStmt1  +" ) "
+		          +" as a  "
+		          +grpStmt2+" ) b " ;		
+		
+			cursor = dbObject.rawQuery(query, null);
+			
+			if (cursor.moveToFirst()) {
+				
+				do {
+					QualityGradeDTO dto = new QualityGradeDTO();
+					dto.setSeedType(cursor.getString(count++));
+					
+					dto.setHybridCode(cursor.getString(count++));
+					dto.setSeedQty(cursor.getString(count++));
+				
+
+          List<QualityGradeDTO> instList = new ArrayList<QualityGradeDTO>();
+					
+					
+					
+					if(hybridCode != null )
+					{
+					if(qualitySeedList.containsKey(dto.getHybridCode()))
+					{
+						instList  = qualitySeedList.get(dto.getHybridCode());
+						instList.add(dto);
+						qualitySeedList.put(dto.getHybridCode(), instList);
+					}else
+					{
+						instList.add(dto);
+						qualitySeedList.put(dto.getHybridCode(), instList);
+					}
+					}
+				else
+					{
+					
+					if(qualitySeedList.size() == 0)
+					{
+						instList.add(dto);
+						qualitySeedList.put("seedtype", instList);
+					}
+						else
+						{
+							instList  = qualitySeedList.get("seedtype");
+						     instList.add(dto); 
+						     qualitySeedList.put("seedtype", instList);
+						}
+					}
+						
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return qualitySeedList;
+	}
+    public HashMap<String, HashMap<String, List<QualityGradeDTO>>> getAgronomicalSummaryRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode) {
+	
+	HashMap<String, HashMap<String, List<QualityGradeDTO>>> qualitySummaryList = new HashMap<String, HashMap<String,List<QualityGradeDTO>>>();
+	
+	Cursor cursor = null;
+	int count	= 0;
+	try {
+		String whrStmt = " where  ";;
+		if(village !=null)
+			whrStmt += " v.idVillage =  '"+ village + "' and";
+		if(farmer != null)
+			whrStmt +=  "  g.idGrower = '" + farmer + "'  and";
+		if(Organizer != null)
+			whrStmt +=  " o.idorganizer= '"+Organizer+"'  and";
+		if(hybridCode != null && hybridCode != "All")
+			whrStmt +=  " h.code = '"+hybridCode +"'";
+		
+		
+		
+		if(whrStmt.trim().endsWith("and"))
+			whrStmt = whrStmt.substring(0, whrStmt.length() - 3);
+		
+		if((village == null && farmer == null && Organizer == null) && (hybridCode == null || hybridCode == "All") )
+			whrStmt = " ";
+		
+		String grpStmt1 = " ";
+		if(hybridCode == "All" )
+			grpStmt1 += " , h.code  ";
+		
+		String grpStmt = " ";
+		if(hybridCode == "All" )
+			grpStmt += "  a.code , ";
+		
+		String stmt = " (select l.idLand,h.code,h.seedType,h.idHybrid  from  Village v inner join Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower  inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on   fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer  left join Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid "+whrStmt+"  group by  l.idLand "+grpStmt1+" ) ";
+		
+		String query = "select * from (select * from (select ccs.type ,sum(sowingAcres) Acre,a.code , 'S'  stage from "
+				       +stmt+"  as a  left join   sowing  s on s.idLand = a.idLand inner join CommonCondition ccs on  ccs.idCommonconditionName=s.idAgronomicalCondition  group by "+grpStmt +" ccs.type )b  union "
+                       +" select * from (select cct.type,sum(transplantationAcres) Acre ,a.code, 'T'  stage from "
+				       +stmt +" as a  left join   Transplantation  t on t.idLand = a.idLand inner join CommonCondition cct "
+				       +" on  cct.idCommonconditionName=t.idAgronomicalCondition   group by "+grpStmt +"  cct.type )b union "
+                       +" select * from(select ccp.type,sum(standingAcerage) Acre,a.code, 'P'  stage from "
+				       +stmt +"  as a left join  PPI p on p.idLand = a.idLand left join (select  idPPI,idAgronomicalCondition,max(date) from PPIAgronomical "
+				       +" group by idPPI ) acp  on p.idPPI = acp.idPPI left join CommonCondition ccp on "
+				       + " acp.idAgronomicalCondition=ccp.idCommonconditionName  group by "+grpStmt +" ccp.type ) union "
+				       +" select * from (select ccf.type,sum(standingAcerage) Acre,a.code, 'F'  stage from "
+				       + stmt +" as a  left join   Flowering  f on f.idLand = a.idLand inner join CommonCondition ccf on  ccf.idCommonconditionName=f.idAgronomicalCondition "
+				       + " group by "+grpStmt +" ccf.type  )b  union select * from (select cch.type,sum(harvestingAcres) Acre,a.code, 'H'  stage from  "
+				       +stmt +" as a  left join   Harvesting  h on h.idLand = a.idLand inner join CommonCondition cch on  cch.idCommonconditionName=h.idAgronomicalCondition "
+				       +" group by "+grpStmt +" cch.type )b union select * from (select d.gradeQuality,sum(dispatchAcres) Acre,a.code, 'D'  stage from "+stmt +" as a  left join   Dispatch  d on d.idLand = a.idLand   group by "+grpStmt+" d.gradeQuality )b) k order by stage";
+		cursor = dbObject.rawQuery(query, null);
+		if (cursor.moveToFirst()) {
+			 
+			do {
+				QualityGradeDTO dto = new QualityGradeDTO();
+				dto.setAgroType(cursor.getString(count++));
+				try {
+					dto.setTotalAcre(CommonMethods.getRoundedVal(cursor.getDouble(count++))+"");
+
+				} catch (Exception e) {
+					dto.setTotalAcre("");
+				}
+				dto.setHybridCode(cursor.getString(count++));
+				dto.setStage(cursor.getString(count++));
+				
+				HashMap<String, List<QualityGradeDTO>>  summaryList = new HashMap<String, List<QualityGradeDTO>>();
+				List<QualityGradeDTO>  list = new ArrayList<QualityGradeDTO>();
+				if(hybridCode != null )
+				{
+				if(qualitySummaryList.containsKey(dto.getHybridCode()))
+				{
+					summaryList  = qualitySummaryList.get(dto.getHybridCode());
+					
+					
+					if(summaryList.containsKey(dto.getStage()))
+					{
+						list = summaryList.get(dto.getStage());
+						list.add(dto);
+						 summaryList.put(dto.getStage().trim(),list);
+					}else
+					{
+						 list.add(dto);
+						 summaryList.put(dto.getStage().trim(),list);
+					}
+					qualitySummaryList.put(dto.getHybridCode(),summaryList);
+					
+				}else
+				{
+					 list.add(dto);
+					 summaryList.put(dto.getStage().trim(),list);
+					 qualitySummaryList.put(dto.getHybridCode(),summaryList);
+					
+				}
+				}else
+				{
+					if(qualitySummaryList.size() == 0)
+					{
+						 list.add(dto);
+						 summaryList.put(dto.getStage().trim(),list);
+						 qualitySummaryList.put("seedtype",summaryList);
+						
+					}
+						else
+						{
+							summaryList  = qualitySummaryList.get("seedtype");
+							
+							if(summaryList.containsKey(dto.getStage()))
+							{
+								list = summaryList.get(dto.getStage().trim());
+								list.add(dto);
+								 summaryList.put(dto.getStage().trim(),list);
+							}else
+							{
+								list.add(dto);
+								summaryList.put(dto.getStage().trim(),list);
+							}
+							qualitySummaryList.put("seedtype",summaryList);
+						}
+				}
+				count	= 0;
+
+			} while (cursor.moveToNext());
+		}
+	} catch (Exception e) {
+		Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+	} finally {
+		if (cursor != null && !cursor.isClosed())
+			cursor.close();
+
+		dbObject.close();
+	}
+
+	return qualitySummaryList;
+}
+
+    
+ public List<DTO> getYieldDeviationRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			String whrStmt = " where  v.idVillage =  '"+ village + "'";;
+			
+			if(farmer != null)
+				whrStmt +=  " and g.idGrower = '" + farmer + "'";
+			
+			if(Organizer != null)
+				whrStmt +=  " and o.idorganizer= '"+Organizer+"'";
+			
+			if(hybridCode != null)
+				whrStmt +=  " and h.code = '"+hybridCode +"'";
+			
+			
+			String query = "select a.*,d.dispatchQty, d.dispatchBags , h.yeildEstimation Harvesting,f.yeildEstimation Flowering, p.yeildEstimation PPI,"
+					       + " t.yeildEstimation Transplantation, s.yieldEstimation Sowing " 
+					       +" from (select o.name OrganizerName, v.name VillageName, g.farmerName FarmerName,"
+					       +" g.idGrower, g.code GrowerCode, l.code LandCode, l.idLand IdLand, h.code HybridCode, "
+					       +" h.mask HybridMaskCode  from Village v inner join Grower g on g.idVillage = v.idVillage inner join "
+					       +" Land l on l.idGrower=g.idGrower inner join FSReceviedbyFarmer r on r.idGrower=g.idGrower and "
+					       +" r.idLand = l.idLand  inner join FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS "
+					       +" inner join Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid "
+					       +whrStmt+ ") as a left join Sowing s on s.idLand=a.idLand left join Transplantation t "
+					       +" on t.idLand=a.idLand left join PPI p on p.idLand=a.idLand left  join Flowering f on f.idLand=a.idLand left join "
+					       +" Harvesting h on h.idLand=a.idLand left join (select sum(ifnull(d.quantity,0)) dispatchQty , sum(ifnull(d.noOfBags,0)) dispatchBags "
+					       +" ,idLand from Dispatch d group by idLand) d  on  d.idLand = a.idLand "
+					       +" group by a.idLand, a.idGrower, a.VillageName";
+		
+				
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					YieldDeviationDTO dto = new YieldDeviationDTO();
+					dto.setOrgName(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerCode(cursor.getString(count++));
+					dto.setLandCode(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+                    dto.setHybridCode(cursor.getString(count++));
+					dto.setHybridMask(cursor.getString(count++));
+					dto.setDispatch(cursor.getDouble(count++)+"/"+cursor.getDouble(count++));
+					dto.setHarvestYield(cursor.getString(count++));
+					dto.setFloweringYield(cursor.getString(count++));
+
+					dto.setPpiYield(cursor.getString(count++));
+
+					dto.setTransplantYield(cursor.getString(count++));
+
+					dto.setSowingYield(cursor.getString(count++));
+					
+
+                  
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("CommonConditionDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+		
+	}
+    public  List<DTO> getYieldDevSummaryRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode)
+	{
+		
+		 List<DTO> instList =new ArrayList<DTO>();
+
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			
+			String whrStmt = " where  ";;
+			if(village !=null)
+				whrStmt += " v.idVillage =  '"+ village + "' and";
+			if(farmer != null)
+				whrStmt +=  "  g.idGrower = '" + farmer + "'  and";
+			if(Organizer != null)
+				whrStmt +=  " o.idorganizer= '"+Organizer+"'  and";
+			if(hybridCode != null && hybridCode != "All")
+				whrStmt +=  " h.code = '"+hybridCode +"'";
+			
+			if(whrStmt.trim().endsWith("and"))
+				whrStmt = whrStmt.substring(0, whrStmt.length() - 3);
+			
+			if(village == null && farmer == null && Organizer == null && (hybridCode == null || hybridCode == "All" ))
+				whrStmt = " ";
+			
+			
+			String grpStmt1 = " group by l.idLand ";
+			
+				if(hybridCode == "All" )
+					grpStmt1 += " , h.code ";
+				
+				
+					String grpStmt2 = " ";
+					
+					if(hybridCode == "All" )
+						grpStmt2 += "  group by a.code  ";	
+						
+					
+					String query = " select * from (select code,sum(s.yieldEstimation) SYield,"
+					    	+" sum(t.yeildEstimation) TYield,sum(f.yeildEstimation) FYield,"
+					    	+" sum(p1.yeildEstimation) PYield,sum(h1.yeildEstimation) HYield,"
+					    	+" sum(d.dispatchQty) DQty,sum(d.dispatchBags) DBags "
+					    	+"  from (select l.idLand,h.code,h.seedType,h.idHybrid  from "
+					    	+" Village v inner join Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower "
+					    	+" inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on  "
+					    	+" fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer "
+					    	+" left join Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid "
+					    	+ whrStmt + grpStmt1+" ) as a left join Sowing s on s.idLand = a.idLand left join Transplantation t "
+					    	+" on t.idLand = a.idLand left join Flowering f on f.idLand = a.idLand left join PPI p1 on p1.idLand = a.idLand "
+					    	+" left join Harvesting h1 on h1.idLand = a.idLand left join ( select *, sum(quantity) dispatchQty,sum(noOfBags) dispatchBags from Dispatch d group by idLand ) d on d.idLand = a.idLand  "
+					    	+ grpStmt2+ " ) b " ;			
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					
+					YieldDeviationDTO dto = new YieldDeviationDTO();
+                    dto.setHybridCode(cursor.getString(count++));
+                	dto.setSowingYield(cursor.getDouble(count++)+"");
+                	dto.setTransplantYield(cursor.getDouble(count++)+"");
+                	dto.setFloweringYield(cursor.getDouble(count++)+"");
+                	dto.setPpiYield(cursor.getDouble(count++)+"");
+                	dto.setHarvestYield(cursor.getDouble(count++)+"");
+                	dto.setDispatchQty(cursor.getDouble(count++)+"");
+                	dto.setDispatchBags(cursor.getDouble(count++)+"");
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+		
+	}
+	public HashMap<String, List<CropProgressDTO>> getCropProgressRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode,String stage)
+	{
+		
+		HashMap<String, List<CropProgressDTO>> cropProgressList = new HashMap<String, List<CropProgressDTO>>();
+
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			String whrStmt = " where  v.idVillage =  '"+ village + "'";;
+			
+			if(farmer != null)
+				whrStmt +=  " and g.idGrower = '" + farmer + "'";
+			
+			if(Organizer != null)
+				whrStmt +=  " and o.idorganizer= '"+Organizer+"'";
+			
+			if(hybridCode != null)
+				whrStmt +=  " and h.code = '"+hybridCode +"'";
+			
+			
+			String stageType = "";
+			
+			if(stage != null )
+				stageType = "where "+stage + " <> ''"; 
+			
+			String query  = "select * from( select o.name OrganizerName, v.name VillageName, g.farmerName FarmerName,g.fatherName fatherName, g.idGrower IdGrower,  g.code GrowerCode,l.lotNo, l.code LandCode, l.idLand IdLand, "
+                            +"h.code HybridCode, h.mask HybridMaskCode, h.seedType,(select sum(ifnull(rr.availableQtyWithGrower, 0))  from FSReceviedbyFarmer rr   inner join " 
+                            +" FSReceivedbyFPS fps1 on fps1.idFSReceivedbyFPS=rr.idFSReceviedbyFPS where rr.idLand=l.idLand and fps1.idHybrid = h.idHybrid) QTY, "
+                            +"s.sowingAcres SAcre, s.yieldEstimation SYield, t.transplantationAcres TAcre, t.yeildEstimation TYield, " 
+                            +"p.standingAcerage PAcre, p.yeildEstimation PYield, f.standingAcerage FAcre, f.yeildEstimation FYield, " 
+                            +"h.harvestingAcres HAcre, h.yeildEstimation HYield, (select sum(ifnull(dd.dispatchAcres, 0))  from Dispatch dd where dd.idLand=l.idLand) DAcre from "
+                            +"Village v inner join Grower g on g.idVillage = v.idVillage inner join "
+                            +"Land l on l.idGrower=g.idGrower inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join "
+                            +"FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join "
+                            +"FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer left join Organizer o on o.idOrganizer=r.idOrganizer inner join "
+                            +"Hybrid h on h.idHybrid=fps.idHybrid left join Sowing s on s.idLand=l.idLand left join "
+                            +"Transplantation t on t.idLand=l.idLand left join PPI p on p.idLand=l.idLand left  join "
+                            +"Flowering f on f.idLand=l.idLand left join Harvesting h on h.idLand=l.idLand left join Dispatch d on d.idLand=l.idLand "
+                            +whrStmt 
+                            +" group by l.idLand, g.idGrower, h.seedType, h.code)a "+stageType;
+			
+			cursor = dbObject.rawQuery(query, null);
+
+			if (cursor.moveToFirst()) {
+				
+				do {
+					
+					CropProgressDTO dto = new CropProgressDTO();
+					
+					dto.setOrgName(cursor.getString(count++));
+					dto.setVillageName(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setFatherName(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerCode(cursor.getString(count++));
+					dto.setLotNum(cursor.getString(count++));
+					dto.setLandCode(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					dto.setHybridMask(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setSeedQty(cursor.getString(count++));
+					
+					dto.setSowingAcre(cursor.getString(count++));
+					dto.setSowingYield(cursor.getString(count++));
+					
+					dto.setTransplantAcre(cursor.getString(count++));
+					dto.setTransplantYield(cursor.getString(count++));
+					
+					dto.setPpiAcre(cursor.getString(count++));
+					dto.setPpiYield(cursor.getString(count++));
+					dto.setFloweringAcre(cursor.getString(count++));
+					
+					dto.setFloweringYield(cursor.getString(count++));
+					dto.setHarvestingAcre(cursor.getString(count++));
+					dto.setHarvestingYield(cursor.getString(count++));
+					dto.setDispatchAcre(cursor.getDouble(count++)+"");
+					List<CropProgressDTO> instList = new ArrayList<CropProgressDTO>();
+
+					if(cropProgressList.containsKey(dto.getLandCode()))
+					{
+						instList  = cropProgressList.get(dto.getLandCode());
+						instList.add(dto);
+						cropProgressList.put(dto.getLandCode(), instList);
+					}else
+					{
+						instList.add(dto);
+						cropProgressList.put(dto.getLandCode(), instList);
+					}
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return cropProgressList;
+		
+	}
+	
+	public HashMap<String, List<CropProgressDTO>> getCropProgSummarySeedRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode,String stage)
+	{
+		
+		HashMap<String, List<CropProgressDTO>> cropProgressList = new HashMap<String, List<CropProgressDTO>>();
+
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			
+			String whrStmt = " where  ";;
+			if(village !=null)
+				whrStmt += " v.idVillage =  '"+ village + "' and";
+			if(farmer != null)
+				whrStmt +=  "  g.idGrower = '" + farmer + "'  and";
+			if(Organizer != null)
+				whrStmt +=  " o.idorganizer= '"+Organizer+"'  and";
+			if(hybridCode != null && hybridCode != "All")
+				whrStmt +=  " h.code = '"+hybridCode +"'";
+			
+			
+			
+			if(whrStmt.trim().endsWith("and"))
+				whrStmt = whrStmt.substring(0, whrStmt.length() - 3);
+			
+			if((village == null && farmer == null && Organizer == null) && (hybridCode == null || hybridCode == "All") )
+				whrStmt = " ";
+			
+			
+			String stageType = "";
+			
+			 
+			if(stage != null )
+				stageType = "where "+stage + " <> ''"; 
+			
+			String grpStmt1 = " group by l.idLand ";
+			
+				if(hybridCode == "All" )
+					grpStmt1 += " , h.code ";
+				
+				
+					grpStmt1 += " , h.seedType ";
+				
+					String grpStmt2 = " group by ";
+					
+					if(hybridCode == "All" )
+						grpStmt2 += "  a.code,  ";	
+					
+					grpStmt2 += "  a.seedType ";
+					
+					String stagestmt = "",stagestmtCond = "";
+					
+					if(stage == "SAcre")
+					{
+						stagestmt = " sum(s.sowingAcres) SAcre ,";
+						stagestmtCond = " left join Sowing s on s.idLand = a.idLand ";
+						stage = " s.sowingAcres ";
+					}
+					if(stage != null  && stage.equalsIgnoreCase("TAcre"))
+					{
+						stagestmt = " sum(ifnull(t.transplantationAcres,0)) TAcre , ";
+						stagestmtCond = " left join Transplantation t on t.idLand = a.idLand ";
+						
+						stage = " t.transplantationAcres ";
+					}
+					
+					if(stage != null  && stage.equalsIgnoreCase("PAcre"))
+					{
+						stagestmt = " sum(p1.standingAcerage) PAcre , ";
+						stagestmtCond = " left join  PPI p1 on p1.idLand = a.idLand ";
+						stage = " p1.standingAcerage ";
+						
+					}
+					if(stage != null  &&stage.equalsIgnoreCase("FAcre"))
+					{
+						stagestmt = " sum(f.standingAcerage) FAcre , ";
+						stagestmtCond = " left join Flowering f on f.idLand = a.idLand ";
+						stage = " f.standingAcerage ";
+					}
+					if(stage != null  && stage.equalsIgnoreCase("HAcre"))
+					{
+						stagestmt = " sum(h1.harvestingAcres) HAcre , ";
+						stagestmtCond = " left join Harvesting h1 on h1.idLand = a.idLand ";
+						stage = " h1.harvestingAcres ";
+					}
+					if(stage != null  && stage.equalsIgnoreCase("DAcre"))
+					{
+						stagestmt = " sum(d.dispatchAcres) DAcre , ";
+						stagestmtCond = " left join Dispatch d on d.idLand = a.idLand ";
+						stage = " d.dispatchAcres ";
+						
+					}
+					if(stage != null )
+						stageType = " where "+stage + " <> '' "; 
+					
+  String query = " select * from (select  seedType,code, "
+		          +stagestmt+" sum(ifnull((select sum(ifnull(rr.availableQtyWithGrower, 0)) Qty from FSReceviedbyFarmer rr  "
+		          +" inner join  FSReceivedbyFPS fps1 on fps1.idFSReceivedbyFPS=rr.idFSReceviedbyFPS  inner join "
+		          +" Hybrid h1 on fps1.idHybrid = h1.idHybrid  where rr.idLand=a.idLand and h1.code = a.code "
+		          +" and h1.seedType = a.seedType), 0))  from (select l.idLand,h.code,h.seedType,h.idHybrid  "
+		          +" from  Village v inner join Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower"
+		          +" inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on   "
+		          +" fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on "
+		          +" rr.idReceviedbyFarmer=r.idReceviedbyFarmer  left join Organizer o on o.idOrganizer=r.idOrganizer "
+		          +" inner join Hybrid h on h.idHybrid=fps.idHybrid "+whrStmt +grpStmt1  +" ) "
+		          +" as a  "+stagestmtCond+stageType 
+		          +grpStmt2+" ) b " ;		
+			
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					
+					CropProgressDTO dto = new CropProgressDTO();
+					
+					dto.setSeedType(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					if(!"".equals(stagestmt))
+							count++;
+					
+					 dto.setSeedQty(cursor.getString(count++));
+					
+					
+					List<CropProgressDTO> instList = new ArrayList<CropProgressDTO>();
+					
+					
+					
+					if(hybridCode != null )
+					{
+					if(cropProgressList.containsKey(dto.getHybridCode()))
+					{
+						instList  = cropProgressList.get(dto.getHybridCode());
+						instList.add(dto);
+						cropProgressList.put(dto.getHybridCode(), instList);
+					}else
+					{
+						instList.add(dto);
+						cropProgressList.put(dto.getHybridCode(), instList);
+					}
+					}
+				else
+					{
+					
+					if(cropProgressList.size() == 0)
+					{
+						instList.add(dto);
+						cropProgressList.put("seedtype", instList);
+					}
+						else
+						{
+							instList  = cropProgressList.get("seedtype");
+						     instList.add(dto); 
+						  cropProgressList.put("seedtype", instList);
+						}
+					}
+						
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return cropProgressList;
+		
+	}
+	public List<CropProgressDTO> getCropProgressSummaryRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode,String stage)
+	{
+		
+		 List<CropProgressDTO> cropProgressList =new ArrayList<CropProgressDTO>();
+
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			
+			String whrStmt = " where  ";;
+			if(village !=null)
+				whrStmt += " v.idVillage =  '"+ village + "' and";
+			if(farmer != null)
+				whrStmt +=  "  g.idGrower = '" + farmer + "'  and";
+			if(Organizer != null)
+				whrStmt +=  " o.idorganizer= '"+Organizer+"'  and";
+			if(hybridCode != null && hybridCode != "All")
+				whrStmt +=  " h.code = '"+hybridCode +"'";
+			
+			
+			
+			if(whrStmt.trim().endsWith("and"))
+				whrStmt = whrStmt.substring(0, whrStmt.length() - 3);
+			
+			if((village == null && farmer == null && Organizer == null) && (hybridCode == null || hybridCode == "All") )
+				whrStmt = " ";
+			
+			
+			String stageType = "";
+			
+			 
+			if(stage == "SAcre")
+				stage = " s.sowingAcres ";
+			if(stage != null  && stage.equalsIgnoreCase("TAcre"))
+				stage = " t.transplantationAcres ";
+			
+			if(stage != null  && stage.equalsIgnoreCase("PAcre"))
+				stage = " p1.standingAcerage ";
+				
+			if(stage != null  &&stage.equalsIgnoreCase("FAcre"))
+				stage = " f.standingAcerage ";
+			if(stage != null  && stage.equalsIgnoreCase("HAcre"))
+				stage = " h1.harvestingAcres ";
+			if(stage != null  && stage.equalsIgnoreCase("DAcre"))
+				stage = " d.dispatchAcres ";
+			 
+			
+			if(stage != null )
+				stageType = " where "+stage + " <> '' "; 
+			
+			String grpStmt1 = " group by l.idLand ";
+			
+				if(hybridCode == "All" )
+					grpStmt1 += " , h.code ";
+				
+				
+					//grpStmt1 += " , h.seedType ";
+				
+					String grpStmt2 = " ";
+					
+					if(hybridCode == "All" )
+						grpStmt2 += "  group by a.code  ";	
+					
+					//grpStmt2 += "  a.seedType ";
+					
+  String query = " select * from (select  seedType,code,sum(s.yieldEstimation) SYield,sum(s.sowingAcres) SAcre,"
+		    	+" sum(t.yeildEstimation) TYield,sum(t.transplantationAcres) TAcre,sum(f.yeildEstimation) FYield,sum(f.standingAcerage) FAcre,"
+		    	+" sum(p1.yeildEstimation) PYield,sum(p1.standingAcerage) PAcre ,sum(h1.yeildEstimation) HYield,"
+		    	+" sum(h1.harvestingAcres) HAcre,sum(d.dacres) DAcre"
+		    	+"  from (select l.idLand,h.code,h.seedType,h.idHybrid  from "
+		    	+" Village v inner join Grower g on g.idVillage = v.idVillage inner join Land l on l.idGrower=g.idGrower "
+		    	+" inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join FSReceivedbyFPS fps on  "
+		    	+" fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer "
+		    	+" left join Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid "
+		    	+ whrStmt + grpStmt1+" ) as a left join Sowing s on s.idLand = a.idLand left join Transplantation t "
+		    	+" on t.idLand = a.idLand left join Flowering f on f.idLand = a.idLand left join PPI p1 on p1.idLand = a.idLand "
+		    	+" left join Harvesting h1 on h1.idLand = a.idLand left join (select *, sum(dispatchAcres) dacres from Dispatch d group by idLand ) d on d.idLand = a.idLand  "
+		    	+stageType+ grpStmt2 +" ) b " ;		
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				
+				do {
+					
+					CropProgressDTO dto = new CropProgressDTO();
+					
+					//dto.setOrgName(cursor.getString(count++));
+					//dto.setVillageName(cursor.getString(count++));
+				//	dto.setFarmerName(cursor.getString(count++));
+					//dto.setIdGrower(cursor.getString(count++));
+					//dto.setFarmerCode(cursor.getString(count++));
+				//	dto.setLandCode(cursor.getString(count++));
+				//	dto.setIdLand(cursor.getString(count++));
+					
+				//	dto.setHybridMask(cursor.getString(count++));
+					
+					dto.setSeedType(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					
+					dto.setSowingYield(cursor.getDouble(count++)+"");
+					dto.setSowingAcre(cursor.getDouble(count++)+"");
+					
+					dto.setTransplantYield(cursor.getDouble(count++)+"");
+					dto.setTransplantAcre(cursor.getDouble(count++)+"");
+					dto.setFloweringYield(cursor.getDouble(count++)+"");
+					dto.setFloweringAcre(cursor.getDouble(count++)+"");
+				
+					dto.setPpiYield(cursor.getDouble(count++)+"");
+					dto.setPpiAcre(cursor.getDouble(count++)+"");
+					
+					dto.setHarvestingYield(cursor.getDouble(count++)+"");
+					dto.setHarvestingAcre(cursor.getDouble(count++)+"");
+					
+				
+					dto.setDispatchAcre(cursor.getDouble(count++)+"");
+					
+					cropProgressList.add(dto);
+						
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return cropProgressList;
+		
+	}
+	
+	public HashMap<String, List<SeedReportsDTO>> getSeedDistributionRecords(SQLiteDatabase dbObject,String village,String farmer,String Organizer,String hybridCode,String batchNo)
+	{
+		HashMap<String, List<SeedReportsDTO>> seedMapList = new HashMap<String, List<SeedReportsDTO>>();
+		
+	
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			String whrStmt = " where  v.idVillage =  '"+ village + "'";;
+			
+			if(farmer != null)
+				whrStmt +=  " and g.idGrower = '" + farmer + "'";
+			
+			if(Organizer != null)
+				whrStmt +=  " and o.idorganizer= '"+Organizer+"'";
+			
+			if(hybridCode != null)
+				whrStmt +=  " and h.code = '"+hybridCode +"'";
+			if(batchNo != null)
+				whrStmt +=  " and fps.batchNo  = '"+batchNo +"'";
+			
+			
+//			String query  = "Select v.name VillageName, g.farmerName FarmerName, g.idGrower IdGrower, g.code GrowerCode, l.code LandCode, l.idLand IdLand, " 
+//                            +" o.name OrganizerName, h.code HybridCode, h.mask HybridMaskCode,  h.seedType, " 
+//                            +" fps.batchNo BatchNo, sum(ifnull(r.qty, 0)) AllocatedQty, sum(ifnull(rr.qty, 0)) ReturnedQty, sum(ifnull(r.availableQtyWithGrower, 0)) QtyWithGrower "
+//                            +" from village v inner join Grower g on g.idVillage = v.idVillage inner join "
+//                            +" Land l on l.idGrower=g.idGrower inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join "
+//                            +" FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer inner join "
+//                            +" Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid "
+//                            + whrStmt
+//                            +" group by v.name, g.farmerName, g.idGrower, l.code, o.name, h.code, h.mask,  h.seedType, fps.batchNo ";
+			
+			String query  = "Select v.name VillageName, g.farmerName FarmerName, g.idGrower IdGrower, g.code GrowerCode, "
+					+ "l.code LandCode, l.idLand IdLand,  o.name OrganizerName, h.code HybridCode, h.mask HybridMaskCode,  "
+					+ "h.seedType,fps.batchNo BatchNo, (select sum(ifnull(rr.qty, 0)) || '/' || sum(ifnull(rr.availableQtyWithGrower, 0)) "
+					+ "from FSReceviedbyFarmer  rr  inner join FSReceivedbyFPS fps1 on fps1.idFSReceivedbyFPS=rr.idFSReceviedbyFPS   "
+					+ " where rr.idLand = l.idLand and  fps1.idHybrid=h.idHybrid and fps1.batchNo = fps.batchNo  group by rr.idLand, fps1.batchNo) AllocatedQty, "
+					+ "sum(ifnull(rr.qty, 0)) ReturnedQty, sum(ifnull(r.availableQtyWithGrower, 0)) QtyWithGrower "
+					+ "from village v inner join Grower g on g.idVillage = v.idVillage inner join "
+					+ "Land l on l.idGrower=g.idGrower inner join FSReceviedbyFarmer r on r.idLand=l.idLand inner join "
+					+ "FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=r.idFSReceviedbyFPS left join "
+					+ "FSReturnbyFarmer rr on rr.idReceviedbyFarmer=r.idReceviedbyFarmer inner join "
+					+ "Organizer o on o.idOrganizer=r.idOrganizer inner join Hybrid h on h.idHybrid=fps.idHybrid"
+					+ whrStmt
+					+" group by v.name, g.farmerName, g.idGrower, l.code, o.name, h.code, h.mask, fps.batchNo ";
+			
+			cursor = dbObject.rawQuery(query, null);
+			
+
+			if (cursor.moveToFirst()) {
+				
+				do {
+					
+					List<SeedReportsDTO> instList = new ArrayList<SeedReportsDTO>();
+					SeedReportsDTO dto = new SeedReportsDTO();
+					
+					dto.setVillageName(cursor.getString(count++));
+					dto.setFarmerName(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setFarmerCode(cursor.getString(count++));
+					dto.setLandCode(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setOrgName(cursor.getString(count++));
+					dto.setHybridCode(cursor.getString(count++));
+					dto.setHybridMask(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					
+					dto.setAllocatedQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+					
+					dto.setQtyWithGrower(cursor.getString(count++));
+					
+                  
+					
+					if(seedMapList.containsKey(dto.getLandCode()))
+					{
+						instList  = seedMapList.get(dto.getLandCode());
+						instList.add(dto);
+					    seedMapList.put(dto.getLandCode(), instList);
+					}else
+					{
+						instList.add(dto);
+					    seedMapList.put(dto.getLandCode(), instList);
+					}
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getSeedDistributionRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return seedMapList;
+		
+	}
+	public List<DTO> getSeedDetailRecords(SQLiteDatabase dbObject,String hybrid,String batchNo)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+
+	
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			String whrStmt = "";
+			
+		
+			if(hybrid != null)
+				whrStmt +=  " where h.code = '"+hybrid +"'";
+			
+			if(hybrid == null && batchNo != null)
+				whrStmt +=  " where fps.batchNo  = '"+batchNo +"'";
+			else
+			  if(batchNo != null)
+				whrStmt +=  " and fps.batchNo  = '"+batchNo +"'";
+			
+			
+			
+			String query  = "Select h.code HybridCode, h.mask HybridMaskCode,  h.seedType,  fps.batchNo BatchNo, " 
+                            +" sum(ifnull(fps.qty, 0)) ReceivedQty, sum(ifnull(fps.qtyToGrowers, 0)) AllocatedQty, " 
+                            +" sum(ifnull(fps.qtyFromGrowers, 0)) ReturnedQty from FSReceivedbyFPS fps inner join "
+                            +" Hybrid h on h.idHybrid=fps.idHybrid  "
+                            + whrStmt+" group by  h.code, h.mask,  h.seedType, fps.batchNo ";
+			
+			
+			cursor = dbObject.rawQuery(query, null);
+			
+			
+			if (cursor.moveToFirst()) {
+				
+				do {
+					SeedDetailDTO dto = new SeedDetailDTO();
+					
+
+					
+					dto.setParentCode(cursor.getString(count++));
+					dto.setParentMask(cursor.getString(count++));
+					
+					dto.setSeedType(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setReceivedQty(cursor.getString(count++));
+					dto.setAllocatedQty(cursor.getString(count++));
+					dto.setReturnQty(cursor.getString(count++));
+
+					
+						instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("ReportsDAO  -- getSeedDistributionRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+		
+	}
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObj) {
+		return null;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObj,String columnName, String columnValue) {
+		return null;
+	}
+	
+}
+

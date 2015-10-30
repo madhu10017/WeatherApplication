@@ -1,0 +1,24 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class SoilTypeDTO implements DTO {
+ 
+	private String idSoilType;
+	private String type;
+ 
+	public String getIdSoilType() {
+		return idSoilType;
+	}
+	public void setIdSoilType(String idSoilType) {
+		this.idSoilType = idSoilType;
+	 }
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	 }
+}
+

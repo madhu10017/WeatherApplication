@@ -1,0 +1,90 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+public class AllocatedSeedDTO implements DTO{
+	
+	private String idGrower;
+	private String idHybrid;
+	private String seedType;
+	private String batchNo;
+	private String qty;
+	private String acerage;
+	
+	private String idReceivedbyFarmer;
+	
+	private String allocatedQty;
+	private String allocatedAcerage;
+	
+	private String returnedQty;
+	private String returnedAcerage;
+	
+	
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String idGrower) {
+		this.idGrower = idGrower;
+	}
+	public String getIdHybrid() {
+		return idHybrid;
+	}
+	public void setIdHybrid(String idHybrid) {
+		this.idHybrid = idHybrid;
+	}
+	public String getSeedType() {
+		return seedType;
+	}
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	}
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	}
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	}
+	public String getIdReceivedbyFarmer() {
+		return idReceivedbyFarmer;
+	}
+	public void setIdReceivedbyFarmer(String idReceivedbyFarmer) {
+		this.idReceivedbyFarmer = idReceivedbyFarmer;
+	}
+	public String getAllocatedQty() {
+		return allocatedQty;
+	}
+	public void setAllocatedQty(String allocatedQty) {
+		this.allocatedQty = allocatedQty;
+	}
+	public String getAllocatedAcerage() {
+		return allocatedAcerage;
+	}
+	public void setAllocatedAcerage(String allocatedAcerage) {
+		this.allocatedAcerage = allocatedAcerage;
+	}
+	public String getReturnedQty() {
+		return returnedQty;
+	}
+	public void setReturnedQty(String returnedQty) {
+		this.returnedQty = returnedQty;
+	}
+	public String getReturnedAcerage() {
+		return returnedAcerage;
+	}
+	public void setReturnedAcerage(String returnedAcerage) {
+		this.returnedAcerage = returnedAcerage;
+	}
+}

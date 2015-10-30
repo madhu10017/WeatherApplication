@@ -1,0 +1,77 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+/**
+ * @author KiranKala
+ *
+ */
+public class AllocatedSeedListDTO implements DTO {
+	
+	private String idFSReceivedbyFPS;
+	private String batchNo;
+	private String availableQty;
+	private String acerage;
+	private String seedType;
+	private String qtyToGrowers;
+	private String idReceivedbyFarmer;
+	
+	private String idGrower;
+	private String idSownFSReturn;
+	
+	public String getIdFSReceivedbyFPS() {
+		return idFSReceivedbyFPS;
+	}
+	public void setIdFSReceivedbyFPS(String idFSReceivedbyFPS) {
+		this.idFSReceivedbyFPS = idFSReceivedbyFPS;
+	}
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+	public String getAvailableQty() {
+		return availableQty;
+	}
+	public void setAvailableQty(String availableQty) {
+		this.availableQty = availableQty;
+	}
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	}
+	public String getSeedType() {
+		return seedType;
+	}
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	}
+	public String getQtyToGrowers() {
+		return qtyToGrowers;
+	}
+	public void setQtyToGrowers(String qtyToGrowers) {
+		this.qtyToGrowers = qtyToGrowers;
+	}
+	public String getIdReceivedbyFarmer() {
+		return idReceivedbyFarmer;
+	}
+	public void setIdReceivedbyFarmer(String idReceivedbyFarmer) {
+		this.idReceivedbyFarmer = idReceivedbyFarmer;
+	}
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String idGrower) {
+		this.idGrower = idGrower;
+	}
+	public String getIdSownFSReturn() {
+		return idSownFSReturn;
+	}
+	public void setIdSownFSReturn(String idSownFSReturn) {
+		this.idSownFSReturn = idSownFSReturn;
+	}
+}

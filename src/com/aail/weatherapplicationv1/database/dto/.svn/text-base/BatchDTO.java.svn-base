@@ -1,0 +1,27 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class BatchDTO implements DTO {
+ 
+	private String idBatch;
+	private String idHybrid;
+	
+	
+	public String getIdBatch() {
+		return idBatch;
+	}
+	public void setIdBatch(String idBatch) {
+		this.idBatch = idBatch;
+	}
+	public String getIdHybrid() {
+		return idHybrid;
+	}
+	public void setIdHybrid(String idHybrid) {
+		this.idHybrid = idHybrid;
+	}
+ 
+	
+}
+

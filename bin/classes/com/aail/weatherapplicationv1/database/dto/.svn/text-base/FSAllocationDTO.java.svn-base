@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class FSAllocationDTO implements DTO {
+ 
+	private String idFSReceivedbyFPS;
+	private String batchNo;
+	private String qty;
+	private String yieldperAcre;
+	private String acerage;
+	private String qtyToGrowers;
+	private String qtyFromGrowers;
+	private String dateRecevied;
+	private String seedType;
+ 
+	public String getIdFSReceivedbyFPS() {
+		return idFSReceivedbyFPS;
+	}
+	public void setIdFSReceivedbyFPS(String idFSReceivedbyFPS) {
+		this.idFSReceivedbyFPS = idFSReceivedbyFPS;
+	 }
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getYieldperAcre() {
+		return yieldperAcre;
+	}
+	public void setYieldperAcre(String yieldperAcre) {
+		this.yieldperAcre = yieldperAcre;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getQtyToGrowers() {
+		return qtyToGrowers;
+	}
+	public void setQtyToGrowers(String qtyToGrowers) {
+		this.qtyToGrowers = qtyToGrowers;
+	 }
+	public String getQtyFromGrowers() {
+		return qtyFromGrowers;
+	}
+	public void setQtyFromGrowers(String qtyFromGrowers) {
+		this.qtyFromGrowers = qtyFromGrowers;
+	 }
+	public String getDateRecevied() {
+		return dateRecevied;
+	}
+	public void setDateRecevied(String dateRecevied) {
+		this.dateRecevied = dateRecevied;
+	 }
+	public String getSeedType() {
+		return seedType;
+	}
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	}
+}
+

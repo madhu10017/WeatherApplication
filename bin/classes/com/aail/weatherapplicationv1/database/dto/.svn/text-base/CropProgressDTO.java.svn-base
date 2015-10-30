@@ -1,0 +1,223 @@
+package com.bayer.efm.hsp.database.dto;
+
+
+public class CropProgressDTO implements DTO {
+	    
+		private String orgName;
+		private String villageName;
+		private String farmerCode;
+		private String farmerName;
+		private String fatherName;
+		private String lotNum;
+		private String idLand;
+		private String landCode;
+		public String getFatherName() {
+			return fatherName;
+		}
+		public void setFatherName(String fatherName) {
+			this.fatherName = fatherName;
+		}
+		public String getLotNum() {
+			return lotNum;
+		}
+		public void setLotNum(String lotNum) {
+			this.lotNum = lotNum;
+		}
+		private String hybridMask;
+		private String hybridCode;
+		private String seedDistributedMale;
+		private String seedDistributedFemale;
+		private String sowingAcre;
+		private String sowingYield;
+		private String transplantAcre;
+		private String transplantYield;
+		private String ppiAcre;
+		private String ppiYield;
+		private String floweringAcre;
+		private String floweringYield;
+		private String harvestingAcre;
+		private String harvestingYield;
+		private String dispatchAcre;
+		private String dispatchYield;
+		private String idGrower;
+		private String seedType;
+		private String seedQty;
+		
+		
+		private String seedQtyMale;
+		private String seedQtyFeMale;
+		
+		public String getSeedQtyMale() {
+			return seedQtyMale;
+		}
+		public void setSeedQtyMale(String seedQtyMale) {
+			this.seedQtyMale = seedQtyMale;
+		}
+		public String getSeedQtyFeMale() {
+			return seedQtyFeMale;
+		}
+		public void setSeedQtyFeMale(String seedQtyFeMale) {
+			this.seedQtyFeMale = seedQtyFeMale;
+		}
+		
+		
+		
+		
+		
+		public String getSeedType() {
+			return seedType;
+		}
+		public void setSeedType(String seedType) {
+			this.seedType = seedType;
+		}
+		public String getSeedQty() {
+			return seedQty;
+		}
+		public void setSeedQty(String seedQty) {
+			this.seedQty = seedQty;
+		}
+		
+		
+		public String getIdLand() {
+			return idLand;
+		}
+		public void setIdLand(String idLand) {
+			this.idLand = idLand;
+		}
+		public String getHybridMask() {
+			return hybridMask;
+		}
+		public void setHybridMask(String hybridMask) {
+			this.hybridMask = hybridMask;
+		}
+		public String getHybridCode() {
+			return hybridCode;
+		}
+		public void setHybridCode(String hybridCode) {
+			this.hybridCode = hybridCode;
+		}
+		public String getIdGrower() {
+			return idGrower;
+		}
+		public void setIdGrower(String idGrower) {
+			this.idGrower = idGrower;
+		}
+		
+		public String getOrgName() {
+			return orgName;
+		}
+		public void setOrgName(String orgName) {
+			this.orgName = orgName;
+		}
+		
+		public String getSeedDistributedMale() {
+			return seedDistributedMale;
+		}
+		public void setSeedDistributedMale(String seedDistributedMale) {
+			this.seedDistributedMale = seedDistributedMale;
+		}
+		public String getSeedDistributedFemale() {
+			return seedDistributedFemale;
+		}
+		public void setSeedDistributedFemale(String seedDistributedFemale) {
+			this.seedDistributedFemale = seedDistributedFemale;
+		}
+		public String getSowingAcre() {
+			return sowingAcre;
+		}
+		public void setSowingAcre(String sowingAcre) {
+			this.sowingAcre = sowingAcre;
+		}
+		public String getSowingYield() {
+			return sowingYield;
+		}
+		public void setSowingYield(String sowingYield) {
+			this.sowingYield = sowingYield;
+		}
+		public String getTransplantAcre() {
+			return transplantAcre;
+		}
+		public void setTransplantAcre(String transplantAcre) {
+			this.transplantAcre = transplantAcre;
+		}
+		public String getTransplantYield() {
+			return transplantYield;
+		}
+		public void setTransplantYield(String transplantYield) {
+			this.transplantYield = transplantYield;
+		}
+		public String getPpiAcre() {
+			return ppiAcre;
+		}
+		public void setPpiAcre(String ppiAcre) {
+			this.ppiAcre = ppiAcre;
+		}
+		public String getPpiYield() {
+			return ppiYield;
+		}
+		public void setPpiYield(String ppiYield) {
+			this.ppiYield = ppiYield;
+		}
+		public String getFloweringAcre() {
+			return floweringAcre;
+		}
+		public void setFloweringAcre(String floweringAcre) {
+			this.floweringAcre = floweringAcre;
+		}
+		public String getFloweringYield() {
+			return floweringYield;
+		}
+		public void setFloweringYield(String floweringYield) {
+			this.floweringYield = floweringYield;
+		}
+		public String getHarvestingAcre() {
+			return harvestingAcre;
+		}
+		public void setHarvestingAcre(String harvestingAcre) {
+			this.harvestingAcre = harvestingAcre;
+		}
+		public String getHarvestingYield() {
+			return harvestingYield;
+		}
+		public void setHarvestingYield(String harvestingYield) {
+			this.harvestingYield = harvestingYield;
+		}
+		public String getDispatchAcre() {
+			return dispatchAcre;
+		}
+		public void setDispatchAcre(String dispatchAcre) {
+			this.dispatchAcre = dispatchAcre;
+		}
+		public String getDispatchYield() {
+			return dispatchYield;
+		}
+		public void setDispatchYield(String dispatchYield) {
+			this.dispatchYield = dispatchYield;
+		}
+		
+		public String getVillageName() {
+			return villageName;
+		}
+		public void setVillageName(String villageName) {
+			this.villageName = villageName;
+		}
+		public String getFarmerCode() {
+			return farmerCode;
+		}
+		public void setFarmerCode(String farmerCode) {
+			this.farmerCode = farmerCode;
+		}
+		public String getFarmerName() {
+			return farmerName;
+		}
+		public void setFarmerName(String farmerName) {
+			this.farmerName = farmerName;
+		}
+		public String getLandCode() {
+			return landCode;
+		}
+		public void setLandCode(String landCode) {
+			this.landCode = landCode;
+		}
+		
+}

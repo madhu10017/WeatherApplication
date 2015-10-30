@@ -1,0 +1,188 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class CurrentStageDTO implements DTO
+{
+	private String idStandardDates;
+	private String idZone;
+	private String idHybrid;
+	private String hybridCode;
+	private String batchNo;
+	private String idStageFrom;
+	private String idStageTo;
+	private String seedTypeFrom;
+	private String seedTypeTo;
+	private String standardDays;
+	private String sequence;
+	private String idLand;
+	private String landCode;
+	private String lotNo;
+	private String latLong;
+	private String idVillage;
+	private String villageName;
+	private String stageFrom;
+	private String stageTo;
+	private String dateFrom;
+	private String dateTo;
+	private String idGrower;
+	private String farmerName;
+	private String fatherName;
+	
+	private boolean missing;
+	private String  stage;
+	public String getIDStandardDates() {
+		return idStandardDates;
+	}
+	public void setIDStandardDates(String iDStandardDates) {
+		this.idStandardDates = iDStandardDates;
+	}
+	public String getIDZone() {
+		return idZone;
+	}
+	public void setIDZone(String iDZone) {
+		this.idZone = iDZone;
+	}
+	public String getIDHybrid() {
+		return idHybrid;
+	}
+	public void setIDHybrid(String iDHybrid) {
+		this.idHybrid = iDHybrid;
+	}
+	public String getHybridCode() {
+		return hybridCode;
+	}
+	public void setHybridCode(String hybridCode) {
+		this.hybridCode = hybridCode;
+	}
+	public String getBatchNo() {
+		return batchNo;
+	}
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+	public String getIDStageFrom() {
+		return idStageFrom;
+	}
+	public void setIDStageFrom(String iDStageFrom) {
+		this.idStageFrom = iDStageFrom;
+	}
+	public String getIDStageTo() {
+		return idStageTo;
+	}
+	public void setIDStageTo(String iDStageTo) {
+		this.idStageTo = iDStageTo;
+	}
+	public String getSeedTypeFrom() {
+		return seedTypeFrom;
+	}
+	public void setSeedTypeFrom(String seedTypeFrom) {
+		this.seedTypeFrom = seedTypeFrom;
+	}
+	public String getSeedTypeTo() {
+		return seedTypeTo;
+	}
+	public void setSeedTypeTo(String seedTypeTo) {
+		this.seedTypeTo = seedTypeTo;
+	}
+	public String getStandardDays() {
+		return standardDays;
+	}
+	public void setStandardDays(String standardDays) {
+		this.standardDays = standardDays;
+	}
+	public String getSequence() {
+		return sequence;
+	}
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getLandCode() {
+		return landCode;
+	}
+	public void setLandCode(String landCode) {
+		this.landCode = landCode;
+	}
+	public String getLotNo() {
+		return lotNo;
+	}
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+	public String getLatLong() {
+		return latLong;
+	}
+	public void setLatLong(String latLong) {
+		this.latLong = latLong;
+	}
+	public String getIdVillage() {
+		return idVillage;
+	}
+	public void setIdVillage(String idVillage) {
+		this.idVillage = idVillage;
+	}
+	public String getVillageName() {
+		return villageName;
+	}
+	public void setVillageName(String villageName) {
+		this.villageName = villageName;
+	}
+	public String getStageFrom() {
+		return stageFrom;
+	}
+	public void setStageFrom(String stageFrom) {
+		this.stageFrom = stageFrom;
+	}
+	public String getStageTo() {
+		return stageTo;
+	}
+	public void setStageTo(String stageTo) {
+		this.stageTo = stageTo;
+	}
+	public String getDateFrom() {
+		return dateFrom;
+	}
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+	public String getDateTo() {
+		return dateTo;
+	}
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String idGrower) {
+		this.idGrower = idGrower;
+	}
+	public String getFarmerName() {
+		return farmerName;
+	}
+	public void setFarmerName(String farmerName) {
+		this.farmerName = farmerName;
+	}
+	public String getFatherName() {
+		return fatherName;
+	}
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+	public boolean isMissing() {
+		return missing;
+	}
+	public void setMissing(boolean missing) {
+		this.missing = missing;
+	}
+	public String getStage() {
+		return stage;
+	}
+	public void setStage(String stage) {
+		this.stage = stage;
+	}	
+}

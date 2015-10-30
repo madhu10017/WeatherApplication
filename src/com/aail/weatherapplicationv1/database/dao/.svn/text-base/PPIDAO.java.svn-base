@@ -1,0 +1,478 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.PPIDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class PPIDAO implements DAO 
+{
+
+	private static PPIDAO ppiDAO;
+
+	private PPIDAO() {
+
+	}
+
+	public static PPIDAO getInstance() 
+	{
+		if (ppiDAO == null)
+			ppiDAO = new PPIDAO();
+
+		return ppiDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO PPI(idPPI,idLand,dopMale,dopFemale,idAgronomicalCondition,idRemarks,otherRemarks,photo,yeildEstimation,nicking,standingAcerage,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,parentalSynchrony)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+				PPIDTO dto = (PPIDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDopMale());
+				stmt.bindString(count++, dto.getDopFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getNicking());
+				stmt.bindString(count++, dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion());
+				stmt.bindLong(count++, dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindString(count++, dto.getParentalSynchrony());
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	
+	
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		PPIDTO dtoObj = (PPIDTO) dto;
+		try 
+		{
+			dbObject.compileStatement(
+					"DELETE FROM PPI WHERE idPPI = '" + dtoObj.getIdPPI() + "'")
+					.execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try 
+		{
+			PPIDTO dtoObj = (PPIDTO) dto;
+			
+			String whereCls = "idLand = '" + dtoObj.getIdLand() + "'";
+			
+			ContentValues cValues = new ContentValues();
+			cValues.put("dopMale",dtoObj.getDopMale());
+			cValues.put("dopFemale", dtoObj.getDopFemale());
+			cValues.put("idAgronomicalCondition", dtoObj.getIdAgronomicalCondition());
+			cValues.put("idRemarks", dtoObj.getIdRemarks());
+			cValues.put("otherRemarks", dtoObj.getOtherRemarks());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("yeildEstimation",dtoObj.getYeildEstimation());
+			cValues.put("nicking ", dtoObj.getNicking());
+			cValues.put("standingAcerage",dtoObj.getStandingAcerage());
+			//cValues.put("dateCreated", dtoObj.getDateCreated());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("dateCompletion", dtoObj.getDateCompletion());
+			cValues.put("maleFlag", dtoObj.getMaleFlag());
+			cValues.put("femaleFlag", dtoObj.getFemaleFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("parentalSynchrony", dtoObj.getParentalSynchrony());
+			
+			dbObject.update("PPI", cValues, whereCls, null);
+
+			return true;		} catch (SQLException e) {
+			Log.e("PPIDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM PPI", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					PPIDTO dto = new PPIDTO();
+					dto.setIdPPI(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDopMale(cursor.getString(count++));
+					dto.setDopFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	
+	public String getPPIAcres(SQLiteDatabase dbObject, String idLand)
+	 {
+	  String standingAcres = "";
+	  
+	  Cursor cursor = null;
+	  try {
+		  String qry = "SELECT standingAcerage FROM PPI where idLand='"+idLand+"'";
+	   cursor = dbObject.rawQuery(qry, null);
+	   if (cursor.moveToFirst()) {
+	    do {
+	    	standingAcres = cursor.getString(0);
+
+	    } while (cursor.moveToNext());
+	   }
+	  } catch (Exception e) {
+	   Log.e("HarvestingDAO  -- getHarvestAcres", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+
+	  return standingAcres;
+	 }
+	
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) 
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM PPI WHERE " + columnName
+					+ " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					PPIDTO dto = new PPIDTO();
+					dto.setIdPPI(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDopMale(cursor.getString(count++));
+					dto.setDopFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<PPIDTO> list,String tablename) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idPPI,idLand,dopMale,dopFemale,idAgronomicalCondition,idRemarks,otherRemarks,photo,yeildEstimation,nicking,standingAcerage,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,parentalSynchrony)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (PPIDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdPPI());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDopMale()				== null ? "" : dto.getDopMale());
+				stmt.bindString(count++, dto.getDopFemale()				== null ? "" : dto.getDopFemale());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition()== null ? "" : dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getIdRemarks()				== null ? "" : dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks()			== null ? "" : dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getPhoto()					== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation()		== null ? "" : dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getNicking()				== null ? "" : dto.getNicking());
+				stmt.bindString(count++, dto.getStandingAcerage()		== null ? "" : dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getDateCreated()			== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()			== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion()		== null ? "" : dto.getDateCompletion());
+				stmt.bindLong(count++, dto.getMaleFlag()				== null ? 0 : dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag()				== null ? 0 : dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag()				== null ? 1 : dto.getSyncFlag());
+				stmt.bindString(count++, dto.getParentalSynchrony()		== null ? "" : dto.getParentalSynchrony());
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	
+	public List<PPIDTO> getTransactionalData(SQLiteDatabase dbObject) 
+	{
+		List<PPIDTO> instList = new ArrayList<PPIDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM PPI where syncFlag='0'", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					PPIDTO dto = new PPIDTO();
+					dto.setIdPPI(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDopMale(cursor.getString(count++));
+					dto.setDopFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+					
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  PPI  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("PPIDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<PPIDTO> getCompleteData(SQLiteDatabase dbObject) 
+	{
+		List<PPIDTO> instList = new ArrayList<PPIDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM PPI", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					PPIDTO dto = new PPIDTO();
+					dto.setIdPPI(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDopMale(cursor.getString(count++));
+					dto.setDopFemale(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setNicking(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+					
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- getCompleteData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO PPI(idPPI,idLand,dopMale,dopFemale,idAgronomicalCondition,idRemarks,otherRemarks,photo,yeildEstimation,nicking,standingAcerage,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,parentalSynchrony) SELECT t.idPPI,t.idLand,t.dopMale,t.dopFemale,t.idAgronomicalCondition,t.idRemarks,t.otherRemarks,t.photo,t.yeildEstimation,t.nicking,t.standingAcerage,t.dateCreated,t.dateModified,t.dateCompletion,t.maleFlag,t.femaleFlag,t.syncFlag,t.parentalSynchrony  FROM PPI_Temp t left join PPI o on o.idPPI=t.idPPI";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM PPI_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("PPIDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+}

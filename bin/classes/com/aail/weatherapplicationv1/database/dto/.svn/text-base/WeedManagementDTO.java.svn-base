@@ -1,0 +1,96 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+
+ 
+public class WeedManagementDTO implements DTO 
+{
+	private String Idweedmanagement;
+	private String idWeedType;
+	private String idWeedicide;
+	private String quantity;
+	private String weedManagementDate;
+	private String idLand;
+	private String idStages;
+	@SerializedName("photo")
+	private String Photo;
+	private String Datecreated;
+	private String Datemodified;
+	private Integer syncFlag;
+	private Integer actionFlag;
+	public String getIdweedmanagement() {
+		return Idweedmanagement;
+	}
+	public void setIdweedmanagement(String idweedmanagement) {
+		Idweedmanagement = idweedmanagement;
+	}
+	public String getIdWeedType() {
+		return idWeedType;
+	}
+	public void setIdWeedType(String idWeedType) {
+		this.idWeedType = idWeedType;
+	}
+	public String getIdWeedicide() {
+		return idWeedicide;
+	}
+	public void setIdWeedicide(String idWeedicide) {
+		this.idWeedicide = idWeedicide;
+	}
+	public String getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+	public String getWeedManagementDate() {
+		return weedManagementDate;
+	}
+	public void setWeedManagementDate(String weedManagementDate) {
+		this.weedManagementDate = weedManagementDate;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	}
+	public String getPhoto() {
+		return Photo;
+	}
+	public void setPhoto(String photo) {
+		Photo = photo;
+	}
+	public String getDatecreated() {
+		return Datecreated;
+	}
+	public void setDatecreated(String datecreated) {
+		Datecreated = datecreated;
+	}
+	public String getDatemodified() {
+		return Datemodified;
+	}
+	public void setDatemodified(String datemodified) {
+		Datemodified = datemodified;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+}

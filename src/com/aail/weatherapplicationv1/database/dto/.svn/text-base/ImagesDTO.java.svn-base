@@ -1,0 +1,31 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+
+public class ImagesDTO {
+
+	private String path;
+	private String 	entity;
+	private String rowId;
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getEntity() {
+		return entity;
+	}
+	public void setEntity(String entity) {
+		this.entity = entity;
+	}
+	public String getRowId() {
+		return rowId;
+	}
+	public void setRowId(String rowId) {
+		this.rowId = rowId;
+	}
+	
+	
+}

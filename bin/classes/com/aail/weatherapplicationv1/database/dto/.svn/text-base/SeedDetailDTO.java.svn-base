@@ -1,0 +1,81 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class SeedDetailDTO implements DTO {
+
+
+	private String parentMask;
+	private String parentCode;
+	private String seedType;
+	private String  batchNo;
+	private String  allocatedQty;
+	private String  availableQty;
+	private String  receivedQty;
+	private String  returnQty;
+	
+
+	public String getParentMask() {
+		return parentMask;
+	}
+
+	public void setParentMask(String parentMask) {
+		this.parentMask = parentMask;
+	}
+
+	public String getParentCode() {
+		return parentCode;
+	}
+
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
+
+	public String getSeedType() {
+		return seedType;
+	}
+
+	public void setSeedType(String seedType) {
+		this.seedType = seedType;
+	}
+
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+
+	public String getAllocatedQty() {
+		return allocatedQty;
+	}
+
+	public void setAllocatedQty(String allocatedQty) {
+		this.allocatedQty = allocatedQty;
+	}
+
+	public String getAvailableQty() {
+		return availableQty;
+	}
+
+	public void setAvailableQty(String availableQty) {
+		this.availableQty = availableQty;
+	}
+
+	public String getReceivedQty() {
+		return receivedQty;
+	}
+
+	public void setReceivedQty(String receivedQty) {
+		this.receivedQty = receivedQty;
+	}
+
+	public String getReturnQty() {
+		return returnQty;
+	}
+
+	public void setReturnQty(String returnQty) {
+		this.returnQty = returnQty;
+	}
+
+
+}

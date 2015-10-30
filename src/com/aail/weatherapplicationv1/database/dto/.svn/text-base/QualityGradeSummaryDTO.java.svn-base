@@ -1,0 +1,166 @@
+package com.bayer.efm.hsp.database.dto;
+
+
+public class QualityGradeSummaryDTO implements DTO {
+	    
+	private String hybridCode;
+	private String seedmale;
+	private String seedFemale;
+	private String sowingGood;
+
+	private String sowingAvg;
+	private String sowingPoor;
+	
+	private String transGood;
+	
+	private String transAvg;
+	private String transPoor;
+	
+	private String ppiGood;
+	private String ppiAvg;
+	private String ppiPoor;
+	
+	private String floweringGood;
+	private String floweingAvg;
+	private String floweringPoor;
+	
+	
+	private String harvestGood;
+	private String harvestAvg;
+	private String harvestPoor;
+	
+	
+	private String disGradeA;
+	private String disGradeB;
+	private String disGradeC;
+	
+	public String getSeedmale() {
+		return seedmale;
+	}
+	public void setSeedmale(String seedmale) {
+		this.seedmale = seedmale;
+	}
+	public String getSeedFemale() {
+		return seedFemale;
+	}
+	public void setSeedFemale(String seedFemale) {
+		this.seedFemale = seedFemale;
+	}
+	public String getSowingGood() {
+		return sowingGood;
+	}
+	public void setSowingGood(String sowingGood) {
+		this.sowingGood = sowingGood;
+	}
+	public String getSowingAvg() {
+		return sowingAvg;
+	}
+	public void setSowingAvg(String sowingAvg) {
+		this.sowingAvg = sowingAvg;
+	}
+	public String getSowingPoor() {
+		return sowingPoor;
+	}
+	public void setSowingPoor(String sowingPoor) {
+		this.sowingPoor = sowingPoor;
+	}
+	public String getTransGood() {
+		return transGood;
+	}
+	public void setTransGood(String transGood) {
+		this.transGood = transGood;
+	}
+	public String getTransAvg() {
+		return transAvg;
+	}
+	public void setTransAvg(String transAvg) {
+		this.transAvg = transAvg;
+	}
+	public String getTransPoor() {
+		return transPoor;
+	}
+	public void setTransPoor(String transPoor) {
+		this.transPoor = transPoor;
+	}
+	public String getPpiGood() {
+		return ppiGood;
+	}
+	public void setPpiGood(String ppiGood) {
+		this.ppiGood = ppiGood;
+	}
+	public String getPpiAvg() {
+		return ppiAvg;
+	}
+	public void setPpiAvg(String ppiAvg) {
+		this.ppiAvg = ppiAvg;
+	}
+	public String getPpiPoor() {
+		return ppiPoor;
+	}
+	public void setPpiPoor(String ppiPoor) {
+		this.ppiPoor = ppiPoor;
+	}
+	public String getFloweringGood() {
+		return floweringGood;
+	}
+	public void setFloweringGood(String floweringGood) {
+		this.floweringGood = floweringGood;
+	}
+	public String getFloweingAvg() {
+		return floweingAvg;
+	}
+	public void setFloweingAvg(String floweingAvg) {
+		this.floweingAvg = floweingAvg;
+	}
+	public String getFloweringPoor() {
+		return floweringPoor;
+	}
+	public void setFloweringPoor(String floweringPoor) {
+		this.floweringPoor = floweringPoor;
+	}
+	public String getHarvestGood() {
+		return harvestGood;
+	}
+	public void setHarvestGood(String harvestGood) {
+		this.harvestGood = harvestGood;
+	}
+	public String getHarvestAvg() {
+		return harvestAvg;
+	}
+	public void setHarvestAvg(String harvestAvg) {
+		this.harvestAvg = harvestAvg;
+	}
+	public String getHarvestPoor() {
+		return harvestPoor;
+	}
+	public void setHarvestPoor(String harvestPoor) {
+		this.harvestPoor = harvestPoor;
+	}
+	public String getDisGradeA() {
+		return disGradeA;
+	}
+	public void setDisGradeA(String disGradeA) {
+		this.disGradeA = disGradeA;
+	}
+	public String getDisGradeB() {
+		return disGradeB;
+	}
+	public void setDisGradeB(String disGradeB) {
+		this.disGradeB = disGradeB;
+	}
+	public String getDisGradeC() {
+		return disGradeC;
+	}
+	public void setDisGradeC(String disGradeC) {
+		this.disGradeC = disGradeC;
+	}
+	
+	public String getHybridCode() {
+		return hybridCode;
+	}
+	public void setHybridCode(String hybridCode) {
+		this.hybridCode = hybridCode;
+	}
+		
+		
+}

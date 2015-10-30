@@ -1,0 +1,156 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class GrowerDTO implements DTO {
+ 
+	private String idGrower;
+	private String farmerName;
+	private String fatherName;
+	private String age;
+	private String dob;
+	private String bankAccountNo;
+	private String bankName;
+	private String ifscCode;
+	private String aadhaarCardNo;
+	private String contactNo;
+	private String photo;
+	private String code;
+	private String farmerFlag;
+	private String dateCreated;
+	private String dateModified;
+	private String thumbImpression;
+	private String signature1;
+	private String signature2;
+	private String signature3;
+	private String idVillage;
+	private Integer status;
+ 
+	public String getIdGrower() {
+		return idGrower;
+	}
+	public void setIdGrower(String idGrower) {
+		this.idGrower = idGrower;
+	 }
+	public String getFarmerName() {
+		return farmerName;
+	}
+	public void setFarmerName(String farmerName) {
+		this.farmerName = farmerName;
+	 }
+	public String getFatherName() {
+		return fatherName;
+	}
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	 }
+	public String getAge() {
+		return age;
+	}
+	public void setAge(String age) {
+		this.age = age;
+	 }
+	public String getDob() {
+		return dob;
+	}
+	public void setDob(String dob) {
+		this.dob = dob;
+	 }
+	public String getBankAccountNo() {
+		return bankAccountNo;
+	}
+	public void setBankAccountNo(String bankAccountNo) {
+		this.bankAccountNo = bankAccountNo;
+	 }
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	 }
+	public String getIfscCode() {
+		return ifscCode;
+	}
+	public void setIfscCode(String ifscCode) {
+		this.ifscCode = ifscCode;
+	 }
+	public String getAadhaarCardNo() {
+		return aadhaarCardNo;
+	}
+	public void setAadhaarCardNo(String aadhaarCardNo) {
+		this.aadhaarCardNo = aadhaarCardNo;
+	 }
+	public String getContactNo() {
+		return contactNo;
+	}
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
+	 }
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	 }
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	 }
+	public String getFarmerFlag() {
+		return farmerFlag;
+	}
+	public void setFarmerFlag(String farmerFlag) {
+		this.farmerFlag = farmerFlag;
+	 }
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	 }
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	 }
+	public String getThumbImpression() {
+		return thumbImpression;
+	}
+	public void setThumbImpression(String thumbImpression) {
+		this.thumbImpression = thumbImpression;
+	 }
+	public String getSignature1() {
+		return signature1;
+	}
+	public void setSignature1(String signature1) {
+		this.signature1 = signature1;
+	 }
+	public String getSignature2() {
+		return signature2;
+	}
+	public void setSignature2(String signature2) {
+		this.signature2 = signature2;
+	 }
+	public String getSignature3() {
+		return signature3;
+	}
+	public void setSignature3(String signature3) {
+		this.signature3 = signature3;
+	 }
+	public String getIdVillage() {
+		return idVillage;
+	}
+	public void setIdVillage(String idVillage) {
+		this.idVillage = idVillage;
+	 }
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+}

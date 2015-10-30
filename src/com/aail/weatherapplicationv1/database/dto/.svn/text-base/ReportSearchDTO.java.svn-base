@@ -1,0 +1,76 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class ReportSearchDTO implements DTO {
+	private String village,farmer,organizer,hybrid,stages;
+	
+	private int  villagePos,farmerPos,organizerPos;
+
+	public String getVillage() {
+		return village;
+	}
+
+	public void setVillage(String village) {
+		this.village = village;
+	}
+
+	public String getFarmer() {
+		return farmer;
+	}
+
+	public void setFarmer(String farmer) {
+		this.farmer = farmer;
+	}
+
+	public String getOrganizer() {
+		return organizer;
+	}
+
+	public void setOrganizer(String organizer) {
+		this.organizer = organizer;
+	}
+
+	public String getHybrid() {
+		return hybrid;
+	}
+
+	public void setHybrid(String hybrid) {
+		this.hybrid = hybrid;
+	}
+
+	public String getStages() {
+		return stages;
+	}
+
+	public void setStages(String stages) {
+		this.stages = stages;
+	}
+
+	public int getVillagePos() {
+		return villagePos;
+	}
+
+	public void setVillagePos(int villagePos) {
+		this.villagePos = villagePos;
+	}
+
+	public int getFarmerPos() {
+		return farmerPos;
+	}
+
+	public void setFarmerPos(int farmerPos) {
+		this.farmerPos = farmerPos;
+	}
+
+	public int getOrganizerPos() {
+		return organizerPos;
+	}
+
+	public void setOrganizerPos(int organizerPos) {
+		this.organizerPos = organizerPos;
+	}
+	
+	
+	
+	
+	
+}

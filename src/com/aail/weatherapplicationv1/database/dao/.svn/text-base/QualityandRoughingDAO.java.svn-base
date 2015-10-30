@@ -1,0 +1,422 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.QualityandRoughingDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class QualityandRoughingDAO implements DAO
+{
+
+	private static QualityandRoughingDAO qualityandroughingDAO;
+
+	private QualityandRoughingDAO() {
+
+	}
+
+	public static QualityandRoughingDAO getInstance() 
+	{
+		if (qualityandroughingDAO == null)
+			qualityandroughingDAO = new QualityandRoughingDAO();
+
+		return qualityandroughingDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list)
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO QualityandRoughing(idQualityandRoughing, idQRMapping,atbootLeaf,pre50perFlow,post50perFlow,afterSeedSetting,total,roughingType,dateCreated,dateModified,actionFlag,syncFlag,photo)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+
+				QualityandRoughingDTO dto = (QualityandRoughingDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdQRMapping());
+				stmt.bindString(count++, dto.getAtbootLeaf());
+				stmt.bindString(count++, dto.getPre50perFlow());
+				stmt.bindString(count++, dto.getPost50perFlow());
+				stmt.bindString(count++, dto.getAfterSeedSetting());
+				stmt.bindString(count++, dto.getTotal());
+				stmt.bindString(count++, dto.getRoughingType());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindLong(count++, dto.getActionFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindString(count++, dto.getPhoto());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto)
+	{
+		QualityandRoughingDTO dtoObj = (QualityandRoughingDTO) dto;
+		try 
+		{
+			dbObject.compileStatement(
+					"DELETE FROM QualityandRoughing WHERE idQualityandRoughing = '"
+							+ dtoObj.getIdQualityandRoughing() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto)
+	{
+		try 
+		{
+			QualityandRoughingDTO dtoObj = (QualityandRoughingDTO) dto;
+			String whereCls = "idQualityandRoughing = '"+ dtoObj.getIdQualityandRoughing() + "'";
+			
+			ContentValues cValues = new ContentValues();
+			
+			cValues.put("idQRMapping", dtoObj.getIdQRMapping());
+			cValues.put("atbootLeaf", dtoObj.getAtbootLeaf());
+			cValues.put("pre50perFlow", dtoObj.getPre50perFlow());
+			cValues.put("post50perFlow", dtoObj.getPost50perFlow());
+			cValues.put("afterSeedSetting", dtoObj.getAfterSeedSetting());
+			cValues.put("total", dtoObj.getTotal());
+			cValues.put("roughingType", dtoObj.getRoughingType());
+			//cValues.put("dateCreated", dtoObj.getDateCreated());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("actionFlag", dtoObj.getActionFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("photo", dtoObj.getPhoto());
+			
+			dbObject.update("QualityandRoughing", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("QualityandRoughingDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject
+					.rawQuery("SELECT * FROM QualityandRoughing", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					QualityandRoughingDTO dto = new QualityandRoughingDTO();
+					dto.setIdQualityandRoughing(cursor.getString(count++));
+					dto.setIdQRMapping(cursor.getString(count++));
+					dto.setAtbootLeaf(cursor.getString(count++));
+					dto.setPre50perFlow(cursor.getString(count++));
+					dto.setPost50perFlow(cursor.getString(count++));
+					dto.setAfterSeedSetting(cursor.getString(count++));
+					dto.setTotal(cursor.getString(count++));
+					dto.setRoughingType(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPhoto(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) 
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery(
+					"SELECT * FROM QualityandRoughing WHERE " + columnName
+							+ " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					QualityandRoughingDTO dto = new QualityandRoughingDTO();
+					dto.setIdQualityandRoughing(cursor.getString(count++));
+					dto.setIdQRMapping(cursor.getString(count++));
+					dto.setAtbootLeaf(cursor.getString(count++));
+					dto.setPre50perFlow(cursor.getString(count++));
+					dto.setPost50perFlow(cursor.getString(count++));
+					dto.setAfterSeedSetting(cursor.getString(count++));
+					dto.setTotal(cursor.getString(count++));
+					dto.setRoughingType(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPhoto(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- getRecordsWithValues",
+					e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<QualityandRoughingDTO> list,String tablename)
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idQualityandRoughing, idQRMapping,atbootLeaf,pre50perFlow,post50perFlow,afterSeedSetting,total,roughingType,dateCreated,dateModified,actionFlag,syncFlag,photo)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (QualityandRoughingDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdQualityandRoughing());
+				stmt.bindString(count++, dto.getIdQRMapping()		== null ? "" : dto.getIdQRMapping());
+				stmt.bindString(count++, dto.getAtbootLeaf()		== null ? "" : dto.getAtbootLeaf());
+				stmt.bindString(count++, dto.getPre50perFlow()		== null ? "" : dto.getPre50perFlow());
+				stmt.bindString(count++, dto.getPost50perFlow()		== null ? "" : dto.getPost50perFlow());
+				stmt.bindString(count++, dto.getAfterSeedSetting()	== null ? "" : dto.getAfterSeedSetting());
+				stmt.bindString(count++, dto.getTotal()				== null ? "" : dto.getTotal());
+				stmt.bindString(count++, dto.getRoughingType()		== null ? "" : dto.getRoughingType());
+				stmt.bindString(count++, dto.getDateCreated()		== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()		== null ? "" : dto.getDateModified());
+				stmt.bindLong(count++, dto.getActionFlag()			== null ? 1 : dto.getActionFlag());
+				stmt.bindLong(count++, dto.getSyncFlag()			== null ? 1 : dto.getSyncFlag());
+				stmt.bindString(count++, dto.getPhoto()				== null ? "" : dto.getPhoto());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<QualityandRoughingDTO> getTransactionalData(SQLiteDatabase dbObject) 
+	{
+		List<QualityandRoughingDTO> instList = new ArrayList<QualityandRoughingDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject
+					.rawQuery("SELECT * FROM QualityandRoughing where syncFlag='0'", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					QualityandRoughingDTO dto = new QualityandRoughingDTO();
+					dto.setIdQualityandRoughing(cursor.getString(count++));
+					dto.setIdQRMapping(cursor.getString(count++));
+					dto.setAtbootLeaf(cursor.getString(count++));
+					dto.setPre50perFlow(cursor.getString(count++));
+					dto.setPost50perFlow(cursor.getString(count++));
+					dto.setAfterSeedSetting(cursor.getString(count++));
+					dto.setTotal(cursor.getString(count++));
+					dto.setRoughingType(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPhoto(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  QualityandRoughing  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("QualityandRoughingDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<QualityandRoughingDTO> getCompleteData(SQLiteDatabase dbObject) 
+	{
+		List<QualityandRoughingDTO> instList = new ArrayList<QualityandRoughingDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject
+					.rawQuery("SELECT * FROM QualityandRoughing", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					QualityandRoughingDTO dto = new QualityandRoughingDTO();
+					dto.setIdQualityandRoughing(cursor.getString(count++));
+					dto.setIdQRMapping(cursor.getString(count++));
+					dto.setAtbootLeaf(cursor.getString(count++));
+					dto.setPre50perFlow(cursor.getString(count++));
+					dto.setPost50perFlow(cursor.getString(count++));
+					dto.setAfterSeedSetting(cursor.getString(count++));
+					dto.setTotal(cursor.getString(count++));
+					dto.setRoughingType(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setActionFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPhoto(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO QualityandRoughing(idQualityandRoughing, idQRMapping,atbootLeaf,pre50perFlow,post50perFlow,afterSeedSetting,total,roughingType,dateCreated,dateModified,actionFlag,syncFlag,photo) SELECT t.idQualityandRoughing, t.idQRMapping,t.atbootLeaf,t.pre50perFlow,t.post50perFlow,t.afterSeedSetting,t.total,t.roughingType,t.dateCreated,t.dateModified,t.actionFlag,t.syncFlag,t.photo  FROM QualityandRoughing_Temp t left join QualityandRoughing o on o.idQualityandRoughing=t.idQualityandRoughing";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM QualityandRoughing_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("QualityandRoughingDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

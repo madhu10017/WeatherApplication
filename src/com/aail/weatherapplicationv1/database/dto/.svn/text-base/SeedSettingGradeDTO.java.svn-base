@@ -1,0 +1,19 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class SeedSettingGradeDTO implements DTO
+{
+	private String idSeedSettingGrade;
+	private String name;
+	public String getIdSeedSettingGrade() {
+		return idSeedSettingGrade;
+	}
+	public void setIdSeedSettingGrade(String idSeedSettingGrade) {
+		this.idSeedSettingGrade = idSeedSettingGrade;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+}

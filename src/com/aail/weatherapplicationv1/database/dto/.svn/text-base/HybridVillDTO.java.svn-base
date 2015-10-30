@@ -1,0 +1,41 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class HybridVillDTO implements DTO
+{
+ private String code;
+
+ private Integer idFSReceivedbyFarmer,idFSReceivedbyFPS,idHybrid;
+
+public String getCode() {
+	return code;
+}
+
+public void setCode(String hybridCode) {
+	this.code = hybridCode;
+}
+
+public Integer getIdFSReceivedbyFarmer() {
+	return idFSReceivedbyFarmer;
+}
+
+public void setIdFSReceivedbyFarmer(Integer idFSReceivedbyFarmer) {
+	this.idFSReceivedbyFarmer = idFSReceivedbyFarmer;
+}
+
+public Integer getIdFSReceivedbyFPS() {
+	return idFSReceivedbyFPS;
+}
+
+public void setIdFSReceivedbyFPS(Integer idFSReceivedbyFPS) {
+	this.idFSReceivedbyFPS = idFSReceivedbyFPS;
+}
+
+public Integer getIdHybrid() {
+	return idHybrid;
+}
+
+public void setIdHybrid(Integer idHybrid) {
+	this.idHybrid = idHybrid;
+}
+
+}

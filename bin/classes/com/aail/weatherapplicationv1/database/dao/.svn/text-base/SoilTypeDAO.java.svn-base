@@ -1,0 +1,297 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.SoilTypeDTO;
+
+public class SoilTypeDAO implements DAO
+{
+
+	private static SoilTypeDAO soiltypeDAO;
+
+	private SoilTypeDAO() {
+
+	}
+
+	public static SoilTypeDAO getInstance() 
+	{
+		if (soiltypeDAO == null)
+			soiltypeDAO = new SoilTypeDAO();
+
+		return soiltypeDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO SoilType(idSoilType,type)VALUES (?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+
+				SoilTypeDTO dto = (SoilTypeDTO) items;
+				stmt.bindString(count++, dto.getIdSoilType());
+				stmt.bindString(count++, dto.getType());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) 
+	{
+		SoilTypeDTO dtoObj = (SoilTypeDTO) dto;
+		try
+		{
+			dbObject.compileStatement(
+					"DELETE FROM SoilType WHERE idSoilType = '"
+							+ dtoObj.getIdSoilType() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto)
+	{
+		try 
+		{
+			SoilTypeDTO dtoObj = (SoilTypeDTO) dto;
+			String whereCls = "idSoilType = '" + dtoObj.getIdSoilType() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("SoilType", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("SoilTypeDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) 
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SoilType", null);
+			if (cursor.moveToFirst())
+			{
+				do
+				{
+					SoilTypeDTO dto = new SoilTypeDTO();
+					dto.setIdSoilType(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) 
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SoilType WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SoilTypeDTO dto = new SoilTypeDTO();
+					dto.setIdSoilType(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<SoilTypeDTO> list,String tablename) 
+	{
+		try 
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idSoilType,type)VALUES (?,?)");
+			int count = 1;
+
+			for (SoilTypeDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdSoilType());
+				stmt.bindString(count++, dto.getType());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+
+			String query ="UPDATE  SoilType o set o.type=t.type from SoilType_Temp t where o.idSoilType=t.idSoilType";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("MandalDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO SoilType(idSoilType,type) SELECT t.idSoilType,t.type  FROM SoilType_Temp t left join SoilType o on o.idSoilType=t.idSoilType";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- insert", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM SoilType_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<SoilTypeDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<SoilTypeDTO> instList = new ArrayList<SoilTypeDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM SoilType ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					SoilTypeDTO dto = new SoilTypeDTO();
+					dto.setIdSoilType(cursor.getString(count++));
+					dto.setType(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SoilTypeDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

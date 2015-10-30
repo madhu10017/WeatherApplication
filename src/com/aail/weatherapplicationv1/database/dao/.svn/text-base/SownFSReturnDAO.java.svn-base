@@ -1,0 +1,642 @@
+/**
+ *    // this DAO
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.AllocatedSeedDTO;
+import com.bayer.efm.hsp.database.dto.AllocatedSeedListDTO;
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FSAllocationDTO;
+import com.bayer.efm.hsp.database.dto.SownFSReturnDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class SownFSReturnDAO implements DAO 
+{
+
+	private static SownFSReturnDAO sownfsreturnDAO;
+
+	private SownFSReturnDAO() {
+
+	}
+
+	public static SownFSReturnDAO getInstance() 
+	{
+		if (sownfsreturnDAO == null)
+			sownfsreturnDAO = new SownFSReturnDAO();
+
+		return sownfsreturnDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list)
+	{
+		try
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO SownFSReturn(idSownFSReturn,idLand,qty,acerage,dateReturn,modifiedDate,qtyIssued,destroyDate,idReceivedbyFarmer,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) 
+			{
+
+				SownFSReturnDTO dto = (SownFSReturnDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getDateReturn());
+				stmt.bindString(count++, dto.getModifiedDate());
+				stmt.bindString(count++, dto.getQtyIssued());
+				stmt.bindString(count++, dto.getDestroyDate());
+				stmt.bindString(count++, dto.getIdReceivedbyFarmer());
+				stmt.bindString(count++, "0");
+				
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto)
+	{
+		SownFSReturnDTO dtoObj = (SownFSReturnDTO) dto;
+		try 
+		{
+			dbObject.compileStatement(
+					"DELETE FROM SownFSReturn WHERE idSownFSReturn = '"
+							+ dtoObj.getIdSownFSReturn() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try
+		{
+			SownFSReturnDTO dtoObj = (SownFSReturnDTO) dto;
+			String whereCls = "idSownFSReturn = '" + dtoObj.getIdSownFSReturn()
+					+ "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("SownFSReturn", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("SownFSReturnDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject)
+	{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSReturn", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSReturnDTO dto = new SownFSReturnDTO();
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturn(cursor.getString(count++));
+					dto.setModifiedDate(cursor.getString(count++));
+					dto.setQtyIssued(cursor.getString(count++));
+					dto.setDestroyDate(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) 
+			{
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSReturn WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSReturnDTO dto = new SownFSReturnDTO();
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturn(cursor.getString(count++));
+					dto.setModifiedDate(cursor.getString(count++));
+					dto.setQtyIssued(cursor.getString(count++));
+					dto.setDestroyDate(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	public List<DTO> getAvailableFS(SQLiteDatabase dbObject, String selectedHybrid) {
+		List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+		String query		= "select h.idHybrid,h.code,h.seedType,fps.batchNo,fr.qty,fr.acerage from SownFSReturn from	inner join FSReceviedbyFarmer rf on rf.idReceviedbyFarmer= fr.idFSReceviedbyFarmer inner join FSReceivedbyFPS fps on fps.idFSReceivedbyFPS=rf.idFSReceviedbyFPS	inner join Hybrid h on h.idHybrid=fps.idHybrid where fps.idhybrid='"+selectedHybrid+"'";
+
+
+		
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					FSAllocationDTO dto = new FSAllocationDTO();
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setYieldperAcre(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					dto.setQtyFromGrowers(cursor.getString(count++));
+					dto.setDateRecevied(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					
+					instList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getAllocatedDataTotal(SQLiteDatabase dbObject, String idGrower, String idHybrid)
+	{
+		List<DTO> allocatedList 	= new ArrayList<DTO>();
+		Cursor cursor 				= null;
+		
+		String query = "select a.idGrower,a.idhybrid,a.seedType,a.batchNo,sum(Qty) [Qty],sum(Acreage) [Acreage] " +
+				"from (select g.idGrower,g.idhybrid,g.seedType,g.batchNo,(ReceivedQty)-(IFNULL(ReturnedQty,0)+IFNULL(SownReturnedQty,0)) [Qty], " +
+				"(ReceivedAcres)-(IFNULL(ReturnedAcres,0)+IFNULL(SownReturnedAcres,0)) [Acreage]  " +
+				"from (SELECT g.idGrower,h.idhybrid,h.seedType,r.batchNo,sum(g.qty) [ReceivedQty],sum(g.acerage) [ReceivedAcres] " +
+				"FROM FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h " +
+				"WHERE g.idFSReceviedbyFPS = r.idFSReceivedbyFPS " +
+				"AND r.idHybrid = h.idHybrid " +
+				"group by g.idGrower,h.idhybrid,r.batchNo)g " +
+				"left join (SELECT g.idGrower,h.idhybrid,r.batchNo, sum(rf.qty) [ReturnedQty],sum(rf.acerage) [ReturnedAcres] " +
+				"FROM FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h,FSReturnbyFarmer rf " +
+				"WHERE g.idFSReceviedbyFPS = r.idFSReceivedbyFPS " +
+				"AND r.idHybrid = h.idHybrid " +
+				"AND rf.idReceviedbyFarmer=g.idReceviedbyFarmer " +
+				"group by g.idGrower,h.idhybrid,r.batchNo)rf  on rf.batchNo=g.batchNo " +
+				"left join (SELECT g.idGrower,h.idhybrid,r.batchNo, sum(sr.qty) [SownReturnedQty],sum(sr.acerage) [SownReturnedAcres] " +
+				"FROM FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h,SownFSReturn sr " +
+				"WHERE g.idFSReceviedbyFPS = r.idFSReceivedbyFPS " +
+				"AND r.idHybrid = h.idHybrid " +
+				"AND sr.idReceivedbyFarmer=g.idReceviedbyFarmer " +
+				"group by g.idGrower,h.idhybrid,r.batchNo)sr on sr.batchNo=g.batchNo " +
+				"where g.idGrower='"+idGrower+"' and g.idhybrid ='"+idHybrid+"' " +
+				"union all " +
+				"SELECT L.idGrower,h.idhybrid,h.seedType,r.batchNo, sum(SI.qty) [Qty],sum(SI.acerage) [Acreage] " +
+				"FROM SownFSIssue SI,Land L,FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h,SownFSReturn sr " +
+				"WHERE  L.idLand=SI.idLand AND SI.idSownFSReturn=sr.idSownFSReturn " +
+				"AND g.idFSReceviedbyFPS = r.idFSReceivedbyFPS " +
+				"AND r.idHybrid = h.idHybrid " +
+				"AND sr.idReceivedbyFarmer=g.idReceviedbyFarmer " +
+				"and L.idGrower='"+idGrower+"' and r.idhybrid ='"+idHybrid+"' " +
+				"group by L.idGrower,h.idhybrid,r.batchNo)a group by a.idGrower,a.idhybrid,a.batchNo";
+
+		
+		
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					
+					AllocatedSeedDTO dto = new AllocatedSeedDTO();	
+					
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					
+					allocatedList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getAllocatedDataTotal", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return allocatedList;
+	}
+	
+	public List<DTO> getAllocatedData(SQLiteDatabase dbObject, String idGrower, String idHybrid)
+	{
+		List<DTO> allocatedList 	= new ArrayList<DTO>();
+		Cursor cursor 				= null;
+		
+		String query = "select g.idGrower,g.idhybrid,g.idReceviedbyFarmer,g.batchNo,ReceivedQty-ifnull(ReturnedQty,0) [Qty], ReceivedAcres- ifnull(ReturnedAcres,0) [Acreage] from (SELECT g.idGrower,h.idhybrid,g.idFSReceviedbyFPS ,g.idReceviedbyFarmer,r.batchNo,sum(g.qty) [ReceivedQty],sum(g.acerage) [ReceivedAcres] FROM FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h WHERE g.idFSReceviedbyFPS = r.idFSReceivedbyFPS AND r.idHybrid = h.idHybrid group by g.idGrower,h.idhybrid,g.idFSReceviedbyFPS,g.idReceviedbyFarmer,r.batchNo )g left join (SELECT g.idGrower,h.idhybrid,g.idFSReceviedbyFPS,g.idReceviedbyFarmer,r.batchNo,sum(rf.qty) [ReturnedQty],sum(rf.acerage) [ReturnedAcres] FROM FSReceviedbyFarmer g,FSReceivedbyFPS r,Hybrid h,FSReturnbyFarmer rf WHERE g.idFSReceviedbyFPS = r.idFSReceivedbyFPS AND r.idHybrid = h.idHybrid AND rf.idReceviedbyFarmer=g.idReceviedbyFarmer group by g.idGrower,h.idhybrid,g.idFSReceviedbyFPS,g.idReceviedbyFarmer,r.batchNo)rf  on rf.idReceviedbyFarmer=g.idReceviedbyFarmer where g.idGrower='"+idGrower+"' and g.idhybrid ='"+idHybrid+"' order by g.batchNo,Qty";
+
+		
+		
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+					
+					AllocatedSeedDTO dto = new AllocatedSeedDTO();	
+					
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setIdReceivedbyFarmer(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					
+					allocatedList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getAllocatedData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return allocatedList;
+	}
+	
+	public List<DTO> getAvailableSownSeed(SQLiteDatabase dbObject, String hybridCode) {
+		List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+		String query		= "SELECT g.idGrower,h.idhybrid,h.seedType, r.batchNo, (sum(ifnull(sr.qty, 0)) -  sum(ifnull(si.qty, 0))) [qty], (sum(sr.acerage) - sum(ifnull(si.acerage, 0))) [SownReturnedAcres],sum(ifnull(si.qty, 0)) [TotalAllocatedQty], sum(ifnull(si.acerage, 0))[TotalAllocatedAcerage] FROM FSReceviedbyFarmer g inner join FSReceivedbyFPS r on g.idFSReceviedbyFPS = r.idFSReceivedbyFPS inner join Hybrid h on r.idHybrid = h.idHybrid inner join SownFSReturn sr on sr.idReceivedbyFarmer=g.idReceviedbyFarmer left join (select si.idSownFSReturn, sum(ifnull(si.qty, 0)) [qty], sum(ifnull(si.acerage, 0)) [acerage] from SownFSReturn sr inner join SownFSIssue si on si.idSownFSReturn = sr.idSownFSReturn group by si.idSownFSReturn)si on si.idSownFSReturn = sr.idSownFSReturn WHERE h.code ='"+hybridCode+"' and (sr.destroyDate is null or ltrim(rtrim(sr.destroyDate)) = '') group by h.code,h.seedType,r.batchNo order by h.seedType "; 		
+		int count			= 0;
+		
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+
+					AllocatedSeedDTO dto	= new AllocatedSeedDTO();
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					
+					dto.setAllocatedQty(cursor.getString(count++));
+					dto.setAllocatedAcerage(cursor.getString(count++));
+					
+					instList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getAvailableSownSeed", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getAvailableSownSeedByBatches(SQLiteDatabase dbObject, String hybridCode) {
+		List<DTO> instList 	= new ArrayList<DTO>();
+		Cursor cursor 		= null;
+		
+//		String query		= "SELECT idFSReceviedbyFPS,idReceivedbyFarmer,g.idGrower,h.idhybrid,r.batchNo, (sum(ifnull(sr.qty, 0)) -  sum(ifnull(si.qty, 0))) [qty], (sum(sr.acerage) - sum(ifnull(si.acerage, 0))) [SownReturnedAcres] FROM FSReceviedbyFarmer g inner join FSReceivedbyFPS r on g.idFSReceviedbyFPS = r.idFSReceivedbyFPS inner join Hybrid h on r.idHybrid = h.idHybrid inner join SownFSReturn sr on sr.idReceivedbyFarmer=g.idReceviedbyFarmer left join (select si.idSownFSReturn, sum(ifnull(si.qty, 0)) [qty], sum(ifnull(si.acerage, 0)) [acerage] from SownFSReturn sr inner join SownFSIssue si on si.idSownFSReturn = sr.idSownFSReturn group by si.idSownFSReturn)si on si.idSownFSReturn = sr.idSownFSReturn WHERE h.idhybrid ="+idHybrid+" group by h.idhybrid,r.batchNo,idReceivedbyFarmer,idFSReceviedbyFPS";
+		String query		= "SELECT sr.idSownFSReturn, idFSReceviedbyFPS,idReceivedbyFarmer,g.idGrower,r.batchNo, (sum(ifnull(sr.qty, 0)) -  sum(ifnull(si.qty, 0))) [qty], (sum(sr.acerage) - sum(ifnull(si.acerage, 0))) [SownReturnedAcres],qtyToGrowers FROM FSReceviedbyFarmer g inner join FSReceivedbyFPS r on g.idFSReceviedbyFPS = r.idFSReceivedbyFPS inner join Hybrid h on r.idHybrid = h.idHybrid inner join SownFSReturn sr on sr.idReceivedbyFarmer=g.idReceviedbyFarmer left join (select si.idSownFSReturn, sum(ifnull(si.qty, 0)) [qty], sum(ifnull(si.acerage, 0)) [acerage] from SownFSReturn sr inner join SownFSIssue si on si.idSownFSReturn = sr.idSownFSReturn group by si.idSownFSReturn)si on si.idSownFSReturn = sr.idSownFSReturn WHERE h.code='"+hybridCode+"' and (sr.destroyDate is null or ltrim(rtrim(sr.destroyDate)) = '') group by h.idhybrid,r.batchNo,idReceivedbyFarmer,idFSReceviedbyFPS"; 		
+		int count			= 0;
+		try {
+			cursor = dbObject.rawQuery(query, null);
+			if (cursor.moveToFirst()) {
+				do {
+
+					AllocatedSeedListDTO dto	= new AllocatedSeedListDTO();
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setIdFSReceivedbyFPS(cursor.getString(count++));
+					dto.setIdReceivedbyFarmer(cursor.getString(count++));
+					dto.setIdGrower(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setAvailableQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setQtyToGrowers(cursor.getString(count++));
+					
+					
+					/*AllocatedSeedDTO dto	= new AllocatedSeedDTO();
+					dto.setIdGrower(cursor.getInt(count++));
+					dto.setIdHybrid(cursor.getInt(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setBatchNo(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));*/
+					
+					instList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getAvailableSownSeedByBatches", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<SownFSReturnDTO> list,String tablename)
+	{
+		try
+		{
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idSownFSReturn,idLand,qty,acerage,dateReturn,modifiedDate,qtyIssued,destroyDate,idReceivedbyFarmer,syncFlag)VALUES (?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+
+			for (SownFSReturnDTO dto : list) 
+			{
+				stmt.bindString(count++, dto.getIdSownFSReturn());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getQty());
+				stmt.bindString(count++, dto.getAcerage());
+				stmt.bindString(count++, dto.getDateReturn());
+				stmt.bindString(count++, dto.getModifiedDate() 	== null ? "" :dto.getModifiedDate());
+				stmt.bindString(count++, dto.getQtyIssued()		== null ? "" :dto.getQtyIssued());
+				stmt.bindString(count++, dto.getDestroyDate()	== null ? "" :dto.getDestroyDate());
+				stmt.bindString(count++, dto.getIdReceivedbyFarmer());
+				stmt.bindString(count++, "1");
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<SownFSReturnDTO> getTransactionalData(SQLiteDatabase dbObject)
+	{
+		List<SownFSReturnDTO> instList = new ArrayList<SownFSReturnDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSReturn where syncFlag='0'", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSReturnDTO dto = new SownFSReturnDTO();
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturn(cursor.getString(count++));
+					dto.setModifiedDate(cursor.getString(count++));
+					dto.setQtyIssued(cursor.getString(count++));
+					dto.setDestroyDate(cursor.getString(count++));
+					dto.setIdReceivedbyFarmer(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  SownFSReturn  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("SownFSReturnDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<SownFSReturnDTO> getCompleteData(SQLiteDatabase dbObject)
+	{
+		List<SownFSReturnDTO> instList = new ArrayList<SownFSReturnDTO>();
+		Cursor cursor = null;
+		
+		int count	= 0;
+		
+		try 
+		{
+			cursor = dbObject.rawQuery("SELECT * FROM SownFSReturn", null);
+			if (cursor.moveToFirst()) 
+			{
+				do 
+				{
+					SownFSReturnDTO dto = new SownFSReturnDTO();
+					dto.setIdSownFSReturn(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setQty(cursor.getString(count++));
+					dto.setAcerage(cursor.getString(count++));
+					dto.setDateReturn(cursor.getString(count++));
+					dto.setModifiedDate(cursor.getString(count++));
+					dto.setQtyIssued(cursor.getString(count++));
+					dto.setDestroyDate(cursor.getString(count++));
+					dto.setIdReceivedbyFarmer(cursor.getString(count++));
+					dto.setSyncFlag(cursor.getString(count++));
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+public boolean updateDestroyDate(SQLiteDatabase dbObject, DTO dto) 
+	{
+		try
+		{
+			SownFSReturnDTO dtoObj = (SownFSReturnDTO) dto;
+			String whereCls = "idSownFSReturn = '" + dtoObj.getIdSownFSReturn()	+ "'";
+
+			ContentValues cValues = new ContentValues();
+			cValues.put("destroyDate", dtoObj.getDestroyDate());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			dbObject.update("SownFSReturn", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("SownFSReturnDAO  -- updateDestroyDate", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO SownFSReturn(idSownFSReturn,idLand,qty,acerage,dateReturn,modifiedDate,qtyIssued,destroyDate,idReceivedbyFarmer,syncFlag) SELECT t.idSownFSReturn,t.idLand,t.qty,t.acerage,t.dateReturn,t.modifiedDate,t.qtyIssued,t.destroyDate,t.idReceivedbyFarmer,t.syncFlag  FROM SownFSReturn_Temp t left join SownFSReturn o on o.idSownFSReturn=t.idSownFSReturn";
+			dbObject.execSQL(query);
+	 
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM SownFSReturn_Temp";
+			dbObject.execSQL(query);
+	 
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("SownFSReturnDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+}

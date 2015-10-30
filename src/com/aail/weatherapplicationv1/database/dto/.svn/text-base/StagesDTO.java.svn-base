@@ -1,0 +1,24 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class StagesDTO implements DTO {
+ 
+	private String idStages;
+	private String names;
+ 
+	public String getIdStages() {
+		return idStages;
+	}
+	public void setIdStages(String idStages) {
+		this.idStages = idStages;
+	 }
+	public String getNames() {
+		return names;
+	}
+	public void setNames(String names) {
+		this.names = names;
+	 }
+}
+

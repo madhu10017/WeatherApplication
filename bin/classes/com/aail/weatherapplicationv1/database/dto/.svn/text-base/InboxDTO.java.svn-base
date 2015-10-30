@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class InboxDTO implements DTO {
+ 
+	private String idInbox;
+	private String title;
+	private String message;
+	private String dateReceived;
+	private String sender;
+ 
+	public String getIdInbox() {
+		return idInbox;
+	}
+	public void setIdInbox(String idInbox) {
+		this.idInbox = idInbox;
+	 }
+	public String getDateReceived() {
+		return dateReceived;
+	}
+	public void setDateReceived(String dateReceived) {
+		this.dateReceived = dateReceived;
+	 }
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	 }
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+}
+

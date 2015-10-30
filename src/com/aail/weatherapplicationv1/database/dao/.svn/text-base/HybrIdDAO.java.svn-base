@@ -1,0 +1,566 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.HybrIdDTO;
+
+public class HybrIdDAO implements DAO {
+
+	private static HybrIdDAO hybridDAO;
+
+	private HybrIdDAO() {
+
+	}
+
+	public static HybrIdDAO getInstance() {
+		if (hybridDAO == null)
+			hybridDAO = new HybrIdDAO();
+
+		return hybridDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO HybrId(idHybrid,code,seedType,mask,idCrop)VALUES (?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+
+				HybrIdDTO dto = (HybrIdDTO) items;
+				stmt.bindString(count++, dto.getIdHybrid());
+				stmt.bindString(count++, dto.getCode());
+				stmt.bindString(count++, dto.getSeedType());
+				stmt.bindString(count++, dto.getMask());
+				stmt.bindString(count++, dto.getIdCrop());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		HybrIdDTO dtoObj = (HybrIdDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM HybrId WHERE idHybrid = '"
+							+ dtoObj.getIdHybrid() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			HybrIdDTO dtoObj = (HybrIdDTO) dto;
+			String whereCls = "idHybrid = '" + dtoObj.getIdHybrid() + "'";
+
+			ContentValues cValues = new ContentValues();
+			dbObject.update("HybrId", cValues, whereCls, null);
+
+			return true;
+		} catch (SQLException e) {
+			Log.e("HybrIdDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HybrId where idHybrid in (select idHybrid from fsreceivedbyfps) group by code", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HybrId WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	
+	public List<DTO> getRecordsByVillage(SQLiteDatabase dbObject, int villageId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select * from Hybrid where idHybrid IN (select idHybrid from FSReceivedbyFPS where idFSReceivedbyFPS IN (select idFSReceviedbyFPS from FSReceviedbyFarmer where idGrower IN (select idGrower from Grower where idVillage='"+villageId+"')))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsByVillage", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByVillageAndFarmer(SQLiteDatabase dbObject, int villageId, int farmerId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select * from Hybrid where idHybrid IN (select idHybrid from FSReceivedbyFPS where idFSReceivedbyFPS IN (select idFSReceviedbyFPS from FSReceviedbyFarmer where idGrower ='"+farmerId+"' and idGrower IN (select idGrower from Grower where idVillage='"+villageId+"')))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsByVillageAndFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByFarmer(SQLiteDatabase dbObject, int farmerId) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select * from Hybrid where idHybrid IN (select idHybrid from FSReceivedbyFPS where idFSReceivedbyFPS IN (select idFSReceviedbyFPS from FSReceviedbyFarmer where idGrower ='"+farmerId+"'))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsByFarmer", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByFarmerAndLot(SQLiteDatabase dbObject, int farmerId, int lot) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select * from Hybrid where idHybrid IN(select idHybrid from FSReceivedbyFPS where idFSReceivedbyFPS IN (select idFSReceviedbyFPS from FSReceviedbyFarmer where idGrower='"+farmerId+"' and idGrower IN (select idGrower from Land where idLand='"+lot+"')))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsByFarmerAndLot", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public List<DTO> getRecordsByLot(SQLiteDatabase dbObject, int lot) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select * from Hybrid where idHybrid IN(select idHybrid from FSReceivedbyFPS where idFSReceivedbyFPS IN (select idFSReceviedbyFPS from FSReceviedbyFarmer where  idGrower IN (select idGrower from Land where idLand='"+lot+"')))";
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecordsByLot", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	//**************************************************************************
+	public List<DTO> getFilteredHybrids(SQLiteDatabase dbObject, String villageId, String farmerId, String lotNo) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+
+		int count = 0;
+
+		try {
+			String qry	= "select  distinct a.idHybrid, a.Hybrid, a.seedType, a.mask, a.idCrop from Village V inner join Grower G on V.IDVillage = G.IDVillage left join Land L on L.IDGrower = G.IDGrower left join (select a.IDGrower,h.idHybrid,h.code [Hybrid], h.seedType, h.mask, h.idCrop from FSReceviedbyFarmer a inner join FSReceivedbyFPS b on b.idFSReceivedbyFPS=a.idFSReceviedbyFPS inner join Hybrid h on h.idHybrid=b.idHybrid)a on a.IDGrower=G.IDGrower";
+			String where = "";
+			
+			if(villageId != null && !"".equals(villageId))
+				where += " where V.IDVillage in "+villageId;
+			
+			if(!"0".equals(lotNo))
+			{
+				if("".equals(where))
+					where += " where L.idLand='"+lotNo+"'";
+				else
+					where += " and L.idLand='"+lotNo+"'";
+			}
+			
+			if(farmerId != null &&  !"".equals(farmerId))
+			{
+				if("".equals(where))
+					where += " where G.IDGrower in "+farmerId;
+				else
+					where += " and G.IDGrower in "+farmerId;
+			}
+			
+			
+			cursor = dbObject.rawQuery(qry+where, null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+
+					instList.add(dto);
+
+					count = 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getFilteredHybrids", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<HybrIdDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idHybrid,code,seedType,mask,idCrop)VALUES (?,?,?,?,?)");
+
+			int count = 1;
+
+			for (HybrIdDTO dto : list) {
+
+				stmt.bindString(count++, dto.getIdHybrid());
+				stmt.bindString(count++, dto.getCode());
+				stmt.bindString(count++, dto.getSeedType());
+				stmt.bindString(count++, dto.getMask());
+				stmt.bindString(count++, dto.getIdCrop());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public String getIdHybridByCode(SQLiteDatabase dbObject, String code) {
+		String idHybrid = null;
+		Cursor cursor = null;
+
+		try {
+			String qry	= "SELECT idHybrid FROM HybrId WHERE code ='"+code + "'";
+			
+			
+			cursor = dbObject.rawQuery(qry, null);
+			if (cursor.moveToFirst()) {
+				do {
+					idHybrid = cursor.getString(0);
+					
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getFilteredHybrids", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return idHybrid;
+	}
+	public boolean updatePartialData(SQLiteDatabase dbObject) {
+		try {
+			//idHybrid,code,seedType,mask,idCrop
+			String query ="UPDATE  HybrId o set o.code=t.code,o.seedType=t.seedType,o.mask=t.mask,o.idCrop=t.idCrop from HybrId_Temp t where o.idHybrid=t.idHybrid";
+			Cursor cu = dbObject.rawQuery(query,null);
+			cu.moveToFirst();
+			cu.close();     
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("HybrIdDAO  -- updatePartial", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO HybrId(idHybrid,code,seedType,mask,idCrop) SELECT t.idHybrid,t.code,t.seedType,t.mask,t.idCrop  FROM HybrId_Temp t left join HybrId o on o.idHybrid=t.idHybrid";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE   FROM HybrId_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+	
+	public List<HybrIdDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<HybrIdDTO> instList = new ArrayList<HybrIdDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM HybrId ", null);
+			if (cursor.moveToFirst()) {
+				do {
+					HybrIdDTO dto = new HybrIdDTO();
+					dto.setIdHybrid(cursor.getString(count++));
+					dto.setCode(cursor.getString(count++));
+					dto.setSeedType(cursor.getString(count++));
+					dto.setMask(cursor.getString(count++));
+					dto.setIdCrop(cursor.getString(count++));
+					
+					
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("HybrIdDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+}

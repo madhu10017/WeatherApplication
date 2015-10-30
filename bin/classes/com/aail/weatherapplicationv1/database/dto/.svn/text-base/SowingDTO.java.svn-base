@@ -1,0 +1,121 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class SowingDTO implements DTO {
+ 
+	private String idSowing;
+	private String idLand;
+	private String dosMale;
+	private String dosFemale;
+	private String idRemarks;
+	private String otherRemarks;
+	private String idAgronomicalCondition;
+	private String sowingAcres;
+	private String yieldEstimation;
+	private String photo;
+	private String dateCreated;
+	private String dateModified;
+	private String dateCompletion;
+	private Integer maleFlag;
+	private Integer femaleFlag;
+	private Integer syncFlag;
+	
+	public String getIdSowing() {
+		return idSowing;
+	}
+	public void setIdSowing(String idSowing) {
+		this.idSowing = idSowing;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getDosMale() {
+		return dosMale;
+	}
+	public void setDosMale(String dosMale) {
+		this.dosMale = dosMale;
+	}
+	public String getDosFemale() {
+		return dosFemale;
+	}
+	public void setDosFemale(String dosFemale) {
+		this.dosFemale = dosFemale;
+	}
+	public String getIdRemarks() {
+		return idRemarks;
+	}
+	public void setIdRemarks(String idRemarks) {
+		this.idRemarks = idRemarks;
+	}
+	public String getOtherRemarks() {
+		return otherRemarks;
+	}
+	public void setOtherRemarks(String otherRemarks) {
+		this.otherRemarks = otherRemarks;
+	}
+	public String getIdAgronomicalCondition() {
+		return idAgronomicalCondition;
+	}
+	public void setIdAgronomicalCondition(String idAgronomicalCondition) {
+		this.idAgronomicalCondition = idAgronomicalCondition;
+	}
+	public String getSowingAcres() {
+		return sowingAcres;
+	}
+	public void setSowingAcres(String sowingAcres) {
+		this.sowingAcres = sowingAcres;
+	}
+	public String getYieldEstimation() {
+		return yieldEstimation;
+	}
+	public void setYieldEstimation(String yieldEstimation) {
+		this.yieldEstimation = yieldEstimation;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	public String getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public String getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(String dateModified) {
+		this.dateModified = dateModified;
+	}
+	public String getDateCompletion() {
+		return dateCompletion;
+	}
+	public void setDateCompletion(String dateCompletion) {
+		this.dateCompletion = dateCompletion;
+	}
+	public Integer getMaleFlag() {
+		return maleFlag;
+	}
+	public void setMaleFlag(Integer maleFlag) {
+		this.maleFlag = maleFlag;
+	}
+	public Integer getFemaleFlag() {
+		return femaleFlag;
+	}
+	public void setFemaleFlag(Integer femaleFlag) {
+		this.femaleFlag = femaleFlag;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}

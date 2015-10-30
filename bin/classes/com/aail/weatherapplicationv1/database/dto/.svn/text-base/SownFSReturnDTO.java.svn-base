@@ -1,0 +1,80 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dto;
+ 
+public class SownFSReturnDTO implements DTO {
+ 
+	private String idSownFSReturn;
+	private String idLand;
+	private String qty;
+	private String acerage;
+	private String dateReturn;
+	private String modifiedDate;
+	private String qtyIssued;
+	private String destroyDate;
+	private String idReceivedbyFarmer;
+	private String syncFlag;
+	
+	public String getIdSownFSReturn() {
+		return idSownFSReturn;
+	}
+	public void setIdSownFSReturn(String idSownFSReturn) {
+		this.idSownFSReturn = idSownFSReturn;
+	 }
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	 }
+	public String getQty() {
+		return qty;
+	}
+	public void setQty(String qty) {
+		this.qty = qty;
+	 }
+	public String getAcerage() {
+		return acerage;
+	}
+	public void setAcerage(String acerage) {
+		this.acerage = acerage;
+	 }
+	public String getDateReturn() {
+		return dateReturn;
+	}
+	public void setDateReturn(String dateReturn) {
+		this.dateReturn = dateReturn;
+	 }
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	 }
+	public String getQtyIssued() {
+		return qtyIssued;
+	}
+	public void setQtyIssued(String qtyIssued) {
+		this.qtyIssued = qtyIssued;
+	 }
+	public String getDestroyDate() {
+		return destroyDate;
+	}
+	public void setDestroyDate(String destroyDate) {
+		this.destroyDate = destroyDate;
+	 }
+	public String getIdReceivedbyFarmer() {
+		return idReceivedbyFarmer;
+	}
+	public void setIdReceivedbyFarmer(String idReceivedbyFarmer) {
+		this.idReceivedbyFarmer = idReceivedbyFarmer;
+	}
+	public String getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(String syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+}
+

@@ -1,0 +1,544 @@
+/**
+ * 
+ */
+package com.bayer.efm.hsp.database.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
+import android.content.ContentValues;
+import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
+import android.util.Log;
+
+import com.bayer.efm.hsp.database.dto.DTO;
+import com.bayer.efm.hsp.database.dto.FloweringDTO;
+import com.bayer.efm.hsp.utils.CommonMethods;
+
+public class FloweringDAO implements DAO {
+
+	private static FloweringDAO floweringDAO;
+
+	private FloweringDAO() {
+
+	}
+
+	public static FloweringDAO getInstance() {
+		if (floweringDAO == null)
+			floweringDAO = new FloweringDAO();
+
+		return floweringDAO;
+	}
+
+	@Override
+	public boolean insert(SQLiteDatabase dbObject, List<DTO> list) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO Flowering(idFlowering,idLand,dofMale,dofFemale,idRemarks,otherRemarks,idAgronomicalCondition,floweringAcres,photo,yeildEstimation,standingAcerage,pollenDays,idccseedSetting,idccPollen,ga1,ga2,gaAdditional,gaMale,ga1Dose,ga2Dose,gaAdditionalDose,gaMaleDose,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,pollinationStartDate,pollinationEndDate,idSeedSettingGrade,parentalSynchrony)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			int count = 1;
+
+			for (DTO items : list) {
+				
+				FloweringDTO dto = (FloweringDTO) items;
+				stmt.bindString(count++, CommonMethods.getUUID());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDofMale());
+				stmt.bindString(count++, dto.getDofFemale());
+				stmt.bindString(count++, dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getFloweringAcres());
+				stmt.bindString(count++, dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getPollenDays());
+				stmt.bindString(count++, dto.getIdccseedSetting());
+				stmt.bindString(count++, dto.getIdccPollen());
+				stmt.bindString(count++, dto.getGa1());
+				stmt.bindString(count++, dto.getGa2());
+				stmt.bindString(count++, dto.getGaAdditional());
+				stmt.bindString(count++, dto.getGaMale());
+				stmt.bindString(count++, dto.getGa1Dose());
+				stmt.bindString(count++, dto.getGa2Dose());
+				stmt.bindString(count++, dto.getGaAdditionalDose());
+				stmt.bindString(count++, dto.getGaMaleDose());
+				stmt.bindString(count++, dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion());
+				stmt.bindLong(count++, dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag());
+				stmt.bindString(count++, dto.getPollinationStartDate());
+				stmt.bindString(count++, dto.getPollinationEndDate());
+				stmt.bindString(count++, dto.getIdSeedSettingGrade());
+				stmt.bindString(count++, dto.getParentalSynchrony());
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- insert", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delete(SQLiteDatabase dbObject, DTO dto) {
+		FloweringDTO dtoObj = (FloweringDTO) dto;
+		try {
+			dbObject.compileStatement(
+					"DELETE FROM Flowering WHERE idFlowering = '"
+							+ dtoObj.getIdFlowering() + "'").execute();
+
+			return true;
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- delete", e.getMessage());
+		}
+
+		finally {
+			dbObject.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(SQLiteDatabase dbObject, DTO dto) {
+		try {
+			FloweringDTO dtoObj = (FloweringDTO) dto;
+			String whereCls = "idLand = '" + dtoObj.getIdLand()+ "'";
+			
+			ContentValues cValues = new ContentValues();
+			cValues.put("dofMale",dtoObj.getDofMale());
+			cValues.put("dofFemale", dtoObj.getDofFemale());
+			cValues.put("idRemarks", dtoObj.getIdRemarks());
+			cValues.put("otherRemarks", dtoObj.getOtherRemarks());
+			cValues.put("idAgronomicalCondition", dtoObj.getIdAgronomicalCondition());
+			cValues.put("floweringAcres", dtoObj.getFloweringAcres());
+			cValues.put("photo", dtoObj.getPhoto());
+			cValues.put("yeildEstimation", dtoObj.getYeildEstimation());
+			cValues.put("standingAcerage", dtoObj.getStandingAcerage());
+			cValues.put("pollenDays", dtoObj.getPollenDays());
+			cValues.put("idccseedSetting", dtoObj.getIdccseedSetting());
+			cValues.put("idccPollen", dtoObj.getIdccPollen());
+			cValues.put("ga1", dtoObj.getGa1());
+			cValues.put("ga2", dtoObj.getGa2());
+			cValues.put("gaAdditional", dtoObj.getGaAdditional());
+			cValues.put("gaMale", dtoObj.getGaMale());
+			cValues.put("ga1Dose", dtoObj.getGa1Dose());
+			cValues.put("ga2Dose", dtoObj.getGa2Dose());
+			cValues.put("gaAdditionalDose", dtoObj.getGaAdditionalDose());
+			cValues.put("gaMaleDose", dtoObj.getGaMaleDose());
+			cValues.put("dateModified", dtoObj.getDateModified());
+			cValues.put("dateCompletion", dtoObj.getDateCompletion());
+			cValues.put("maleFlag", dtoObj.getMaleFlag());
+			cValues.put("femaleFlag", dtoObj.getFemaleFlag());
+			cValues.put("syncFlag", dtoObj.getSyncFlag());
+			cValues.put("pollinationStartDate",dtoObj.getPollinationStartDate());
+			cValues.put("pollinationEndDate",dtoObj.getPollinationEndDate());
+			cValues.put("idSeedSettingGrade",dtoObj.getIdSeedSettingGrade());
+			cValues.put("parentalSynchrony",dtoObj.getParentalSynchrony());
+			
+			
+			dbObject.update("Flowering", cValues, whereCls, null);
+			return true;
+		} catch (SQLException e) {
+			Log.e("FloweringDAO  -- update", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public String getFloweringAcres(SQLiteDatabase dbObject, String idLand)
+	 {
+	  String standingAcres = "";
+	  
+	  Cursor cursor = null;
+	  try {
+		  String qry = "SELECT standingAcerage FROM Flowering where idLand='"+idLand+"'";
+	   cursor = dbObject.rawQuery(qry, null);
+	   if (cursor.moveToFirst()) {
+	    do {
+	    	standingAcres = cursor.getString(0);
+
+	    } while (cursor.moveToNext());
+	   }
+	  } catch (Exception e) {
+	   Log.e("HarvestingDAO  -- getHarvestAcres", e.getMessage());
+	  } finally {
+	   if (cursor != null && !cursor.isClosed())
+	    cursor.close();
+
+	   dbObject.close();
+	  }
+
+	  return standingAcres;
+	 }
+
+	@Override
+	public List<DTO> getRecords(SQLiteDatabase dbObject) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Flowering", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FloweringDTO dto = new FloweringDTO();
+					dto.setIdFlowering(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDofMale(cursor.getString(count++));
+					dto.setDofFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setFloweringAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setPollenDays(cursor.getString(count++));
+					dto.setIdccseedSetting(cursor.getString(count++));
+					dto.setIdccPollen(cursor.getString(count++));
+					dto.setGa1(cursor.getString(count++));
+					dto.setGa2(cursor.getString(count++));
+					dto.setGaAdditional(cursor.getString(count++));
+					dto.setGaMale(cursor.getString(count++));
+					dto.setGa1Dose(cursor.getString(count++));
+					dto.setGa2Dose(cursor.getString(count++));
+					dto.setGaAdditionalDose(cursor.getString(count++));
+					dto.setGaMaleDose(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPollinationStartDate(cursor.getString(count++));
+					dto.setPollinationEndDate(cursor.getString(count++));
+					dto.setIdSeedSettingGrade(cursor.getString(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+
+	@Override
+	public List<DTO> getRecordsWithValues(SQLiteDatabase dbObject,
+			String columnName, String columnValue) {
+		List<DTO> instList = new ArrayList<DTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Flowering WHERE "
+					+ columnName + " = '" + columnValue + "'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FloweringDTO dto = new FloweringDTO();
+					dto.setIdFlowering(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDofMale(cursor.getString(count++));
+					dto.setDofFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setFloweringAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setPollenDays(cursor.getString(count++));
+					dto.setIdccseedSetting(cursor.getString(count++));
+					dto.setIdccPollen(cursor.getString(count++));
+					dto.setGa1(cursor.getString(count++));
+					dto.setGa2(cursor.getString(count++));
+					dto.setGaAdditional(cursor.getString(count++));
+					dto.setGaMale(cursor.getString(count++));
+					dto.setGa1Dose(cursor.getString(count++));
+					dto.setGa2Dose(cursor.getString(count++));
+					dto.setGaAdditionalDose(cursor.getString(count++));
+					dto.setGaMaleDose(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPollinationStartDate(cursor.getString(count++));
+					dto.setPollinationEndDate(cursor.getString(count++));
+					dto.setIdSeedSettingGrade(cursor.getString(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+
+					instList.add(dto);
+					count	= 0;
+					
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- getRecordsWithValues", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertAll(SQLiteDatabase dbObject, List<FloweringDTO> list,String tablename) {
+		try {
+			dbObject.beginTransaction();
+			SQLiteStatement stmt = dbObject
+					.compileStatement("INSERT INTO "+tablename+"(idFlowering,idLand,dofMale,dofFemale,idRemarks,otherRemarks,idAgronomicalCondition,floweringAcres,photo,yeildEstimation,standingAcerage,pollenDays,idccseedSetting,idccPollen,ga1,ga2,gaAdditional,gaMale,ga1Dose,ga2Dose,gaAdditionalDose,gaMaleDose,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,pollinationStartDate,pollinationEndDate,idSeedSettingGrade,parentalSynchrony)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			int count = 1;
+			
+			for (FloweringDTO dto : list) 
+			{
+				
+				stmt.bindString(count++, dto.getIdFlowering());
+				stmt.bindString(count++, dto.getIdLand());
+				stmt.bindString(count++, dto.getDofMale()					== null ? "" : dto.getDofMale());
+				stmt.bindString(count++, dto.getDofFemale()					== null ? "" : dto.getDofFemale());
+				stmt.bindString(count++, dto.getIdRemarks()					== null ? "" : dto.getIdRemarks());
+				stmt.bindString(count++, dto.getOtherRemarks()				== null ? "" : dto.getOtherRemarks());
+				stmt.bindString(count++, dto.getIdAgronomicalCondition()	== null ? "" : dto.getIdAgronomicalCondition());
+				stmt.bindString(count++, dto.getFloweringAcres()			== null ? "" : dto.getFloweringAcres());
+				stmt.bindString(count++, dto.getPhoto()						== null ? "" : dto.getPhoto());
+				stmt.bindString(count++, dto.getYeildEstimation()			== null ? "" : dto.getYeildEstimation());
+				stmt.bindString(count++, dto.getStandingAcerage()			== null ? "" : dto.getStandingAcerage());
+				stmt.bindString(count++, dto.getPollenDays()				== null ? "" : dto.getPollenDays());
+				stmt.bindString(count++, dto.getIdccseedSetting()			== null ? "" : dto.getIdccseedSetting());
+				stmt.bindString(count++, dto.getIdccPollen()				== null ? "" : dto.getIdccPollen());
+				stmt.bindString(count++, dto.getGa1()						== null ? "" : dto.getGa1());
+				stmt.bindString(count++, dto.getGa2()						== null ? "" : dto.getGa2());
+				stmt.bindString(count++, dto.getGaAdditional()				== null ? "" : dto.getGaAdditional());
+				stmt.bindString(count++, dto.getGaMale()					== null ? "" : dto.getGaMale());
+				stmt.bindString(count++, dto.getGa1Dose()					== null ? "" : dto.getGa1Dose());
+				stmt.bindString(count++, dto.getGa2Dose()					== null ? "" : dto.getGa2Dose());
+				stmt.bindString(count++, dto.getGaAdditionalDose()			== null ? "" : dto.getGaAdditionalDose());
+				stmt.bindString(count++, dto.getGaMaleDose()				== null ? "" : dto.getGaMaleDose());
+				stmt.bindString(count++, dto.getDateCreated()				== null ? "" : dto.getDateCreated());
+				stmt.bindString(count++, dto.getDateModified()				== null ? "" : dto.getDateModified());
+				stmt.bindString(count++, dto.getDateCompletion()			== null ? "" : dto.getDateCompletion());
+				stmt.bindLong(count++, dto.getMaleFlag()					== null ? 0 : dto.getMaleFlag());
+				stmt.bindLong(count++, dto.getFemaleFlag()					== null ? 0 : dto.getFemaleFlag());
+				stmt.bindLong(count++, dto.getSyncFlag()					== null ? 1 : dto.getSyncFlag());
+				stmt.bindString(count++, dto.getPollinationStartDate()		== null ? "" : dto.getPollinationStartDate());
+				stmt.bindString(count++, dto.getPollinationEndDate()		== null ? "" : dto.getPollinationEndDate());
+				stmt.bindString(count++, dto.getIdSeedSettingGrade()		== null ? "" : dto.getIdSeedSettingGrade());
+				stmt.bindString(count++, dto.getParentalSynchrony()			== null ? "" : dto.getParentalSynchrony());
+				
+
+				count = 1;
+
+				stmt.executeInsert();
+			}
+
+			dbObject.setTransactionSuccessful();
+			return true;
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- insertAll", e.getMessage());
+		} finally {
+			dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<FloweringDTO> getTransactionalData(SQLiteDatabase dbObject) {
+		List<FloweringDTO> instList = new ArrayList<FloweringDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Flowering where syncFlag='0'", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FloweringDTO dto = new FloweringDTO();
+					dto.setIdFlowering(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDofMale(cursor.getString(count++));
+					dto.setDofFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setFloweringAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setPollenDays(cursor.getString(count++));
+					dto.setIdccseedSetting(cursor.getString(count++));
+					dto.setIdccPollen(cursor.getString(count++));
+					dto.setGa1(cursor.getString(count++));
+					dto.setGa2(cursor.getString(count++));
+					dto.setGaAdditional(cursor.getString(count++));
+					dto.setGaMale(cursor.getString(count++));
+					dto.setGa1Dose(cursor.getString(count++));
+					dto.setGa2Dose(cursor.getString(count++));
+					dto.setGaAdditionalDose(cursor.getString(count++));
+					dto.setGaMaleDose(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPollinationStartDate(cursor.getString(count++));
+					dto.setPollinationEndDate(cursor.getString(count++));
+					dto.setIdSeedSettingGrade(cursor.getString(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- getTransactionalData", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean updateTransactionalData(SQLiteDatabase dbObject)
+	{
+		try {
+
+			String query ="UPDATE  Flowering  set syncFlag='1'";
+			dbObject.execSQL(query);    
+			return true;
+			
+		} catch (SQLException e) {
+			Log.e("FloweringDAO  -- updateTransactionalData", e.getMessage());
+		} finally {
+			dbObject.close();
+		}
+		return false;
+	}
+	
+	public List<FloweringDTO> getCompleteData(SQLiteDatabase dbObject) {
+		List<FloweringDTO> instList = new ArrayList<FloweringDTO>();
+		Cursor cursor = null;
+		int count	= 0;
+		
+		try {
+			cursor = dbObject.rawQuery("SELECT * FROM Flowering", null);
+			if (cursor.moveToFirst()) {
+				do {
+					FloweringDTO dto = new FloweringDTO();
+					dto.setIdFlowering(cursor.getString(count++));
+					dto.setIdLand(cursor.getString(count++));
+					dto.setDofMale(cursor.getString(count++));
+					dto.setDofFemale(cursor.getString(count++));
+					dto.setIdRemarks(cursor.getString(count++));
+					dto.setOtherRemarks(cursor.getString(count++));
+					dto.setIdAgronomicalCondition(cursor.getString(count++));
+					dto.setFloweringAcres(cursor.getString(count++));
+					dto.setPhoto(cursor.getString(count++));
+					dto.setYeildEstimation(cursor.getString(count++));
+					dto.setStandingAcerage(cursor.getString(count++));
+					dto.setPollenDays(cursor.getString(count++));
+					dto.setIdccseedSetting(cursor.getString(count++));
+					dto.setIdccPollen(cursor.getString(count++));
+					dto.setGa1(cursor.getString(count++));
+					dto.setGa2(cursor.getString(count++));
+					dto.setGaAdditional(cursor.getString(count++));
+					dto.setGaMale(cursor.getString(count++));
+					dto.setGa1Dose(cursor.getString(count++));
+					dto.setGa2Dose(cursor.getString(count++));
+					dto.setGaAdditionalDose(cursor.getString(count++));
+					dto.setGaMaleDose(cursor.getString(count++));
+					dto.setDateCreated(cursor.getString(count++));
+					dto.setDateModified(cursor.getString(count++));
+					dto.setDateCompletion(cursor.getString(count++));
+					dto.setMaleFlag(cursor.getInt(count++));
+					dto.setFemaleFlag(cursor.getInt(count++));
+					dto.setSyncFlag(cursor.getInt(count++));
+					dto.setPollinationStartDate(cursor.getString(count++));
+					dto.setPollinationEndDate(cursor.getString(count++));
+					dto.setIdSeedSettingGrade(cursor.getString(count++));
+					dto.setParentalSynchrony(cursor.getString(count++));
+					
+
+					instList.add(dto);
+					
+					count	= 0;
+
+				} while (cursor.moveToNext());
+			}
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- getRecords", e.getMessage());
+		} finally {
+			if (cursor != null && !cursor.isClosed())
+				cursor.close();
+
+			dbObject.close();
+		}
+
+		return instList;
+	}
+	
+	public boolean insertPartialData(SQLiteDatabase dbObject) {
+		try {
+			String query ="INSERT OR REPLACE INTO Flowering(idFlowering,idLand,dofMale,dofFemale,idRemarks,otherRemarks,idAgronomicalCondition,floweringAcres,photo,yeildEstimation,standingAcerage,pollenDays,idccseedSetting,idccPollen,ga1,ga2,gaAdditional,gaMale,ga1Dose,ga2Dose,gaAdditionalDose,gaMaleDose,dateCreated,dateModified,dateCompletion,maleFlag,femaleFlag,syncFlag,pollinationStartDate,pollinationEndDate,idSeedSettingGrade,parentalSynchrony) SELECT t.idFlowering,t.idLand,t.dofMale,t.dofFemale,t.idRemarks,t.otherRemarks,t.idAgronomicalCondition,t.floweringAcres,t.photo,t.yeildEstimation,t.standingAcerage,t.pollenDays,t.idccseedSetting,t.idccPollen,t.ga1,t.ga2,t.gaAdditional,t.gaMale,t.ga1Dose,t.ga2Dose,t.gaAdditionalDose,t.gaMaleDose,t.dateCreated,t.dateModified,t.dateCompletion,t.maleFlag,t.femaleFlag,t.syncFlag,t.pollinationStartDate,t.pollinationEndDate,t.idSeedSettingGrade,t.parentalSynchrony  FROM Flowering_Temp t left join Flowering o on o.idFlowering=t.idFlowering";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- insertPartial", e.getMessage());
+		} finally {
+			//dbObject.endTransaction();
+			dbObject.close();
+		}
+		return false;
+	}
+	public boolean deleteAll(SQLiteDatabase dbObject) {
+		try {
+			String query ="DELETE FROM Flowering_Temp";
+			dbObject.execSQL(query);
+     
+		
+			return true;
+		} catch (Exception e) {
+			Log.e("FloweringDAO  -- deleteall", e.getMessage());
+		} finally {
+			
+			dbObject.close();
+		}
+		return false;
+		
+	}
+
+}

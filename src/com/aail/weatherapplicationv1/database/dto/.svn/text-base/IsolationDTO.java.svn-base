@@ -1,0 +1,162 @@
+package com.bayer.efm.hsp.database.dto;
+
+import com.google.gson.annotations.SerializedName;
+
+public class IsolationDTO implements DTO
+{
+	private String idIsolation;
+	private String idLand;
+	@SerializedName("photo")
+	private String  Photo;
+	private String datecreated;
+	private String datemodified;
+	private Integer syncFlag;
+	private String isolationDistance;
+	private String timeIsolation;
+	private String barrierIsolation;
+	private String duration;
+	private String actualDistance;
+	private String previousCrop;
+	private String borderRows;
+	private String side;
+	private String variety;
+	private String area;
+	private String dosC;
+	private String dotC;
+	private String dofC;
+	private String dohC;
+	private String diffAtFlow;
+	private Integer actionFlag;
+	public String getIdIsolation() {
+		return idIsolation;
+	}
+	public void setIdIsolation(String idIsolation) {
+		this.idIsolation = idIsolation;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getPhoto() {
+		return Photo;
+	}
+	public void setPhoto(String photo) {
+		Photo = photo;
+	}
+	public String getDatecreated() {
+		return datecreated;
+	}
+	public void setDatecreated(String datecreated) {
+		this.datecreated = datecreated;
+	}
+	public String getDatemodified() {
+		return datemodified;
+	}
+	public void setDatemodified(String datemodified) {
+		this.datemodified = datemodified;
+	}
+	public Integer getSyncFlag() {
+		return syncFlag;
+	}
+	public void setSyncFlag(Integer syncFlag) {
+		this.syncFlag = syncFlag;
+	}
+	public String getIsolationDistance() {
+		return isolationDistance;
+	}
+	public void setIsolationDistance(String isolationDistance) {
+		this.isolationDistance = isolationDistance;
+	}
+	public String getTimeIsolation() {
+		return timeIsolation;
+	}
+	public void setTimeIsolation(String timeIsolation) {
+		this.timeIsolation = timeIsolation;
+	}
+	public String getBarrierIsolation() {
+		return barrierIsolation;
+	}
+	public void setBarrierIsolation(String barrierIsolation) {
+		this.barrierIsolation = barrierIsolation;
+	}
+	public String getDuration() {
+		return duration;
+	}
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+	public String getActualDistance() {
+		return actualDistance;
+	}
+	public void setActualDistance(String actualDistance) {
+		this.actualDistance = actualDistance;
+	}
+	public String getPreviousCrop() {
+		return previousCrop;
+	}
+	public void setPreviousCrop(String previousCrop) {
+		this.previousCrop = previousCrop;
+	}
+	public String getBorderRows() {
+		return borderRows;
+	}
+	public void setBorderRows(String borderRows) {
+		this.borderRows = borderRows;
+	}
+	public String getSide() {
+		return side;
+	}
+	public void setSide(String side) {
+		this.side = side;
+	}
+	public String getVariety() {
+		return variety;
+	}
+	public void setVariety(String variety) {
+		this.variety = variety;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public String getDosC() {
+		return dosC;
+	}
+	public void setDosC(String dosC) {
+		this.dosC = dosC;
+	}
+	public String getDotC() {
+		return dotC;
+	}
+	public void setDotC(String dotC) {
+		this.dotC = dotC;
+	}
+	public String getDofC() {
+		return dofC;
+	}
+	public void setDofC(String dofC) {
+		this.dofC = dofC;
+	}
+	public String getDohC() {
+		return dohC;
+	}
+	public void setDohC(String dohC) {
+		this.dohC = dohC;
+	}
+	public String getDiffAtFlow() {
+		return diffAtFlow;
+	}
+	public void setDiffAtFlow(String diffAtFlow) {
+		this.diffAtFlow = diffAtFlow;
+	}
+	public Integer getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(Integer actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+}

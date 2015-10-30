@@ -1,0 +1,72 @@
+package com.bayer.efm.hsp.database.dto;
+
+public class DataNotSubDTO implements DTO
+{
+	private String farmerName;
+	private String idFarmer;
+	private String fatherName;
+	private String villageName;
+	private String idLand;
+	private String landCode;
+	private String lotNo;
+	private String hybridCode;
+	private String stage;
+	
+	
+	public String getIdFarmer() {
+		return idFarmer;
+	}
+	public void setIdFarmer(String idFarmer) {
+		this.idFarmer = idFarmer;
+	}
+	public String getFatherName() {
+		return fatherName;
+	}
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+	public String getIdLand() {
+		return idLand;
+	}
+	public void setIdLand(String idLand) {
+		this.idLand = idLand;
+	}
+	public String getFarmerName() {
+		return farmerName;
+	}
+	public void setFarmerName(String farmerName) {
+		this.farmerName = farmerName;
+	}
+	public String getVillageName() {
+		return villageName;
+	}
+	public void setVillageName(String villageName) {
+		this.villageName = villageName;
+	}
+	public String getLandCode() {
+		return landCode;
+	}
+	public void setLandCode(String landCode) {
+		this.landCode = landCode;
+	}
+	public String getLotNo() {
+		return lotNo;
+	}
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+	public String getHybridCode() {
+		return hybridCode;
+	}
+	public void setHybridCode(String hybridCode) {
+		this.hybridCode = hybridCode;
+	}
+	public String getStage() {
+		return stage;
+	}
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
+	
+	
+}

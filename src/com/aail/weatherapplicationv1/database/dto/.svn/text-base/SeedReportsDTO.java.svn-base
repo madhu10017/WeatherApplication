@@ -1,0 +1,120 @@
+package com.bayer.efm.hsp.database.dto;
+
+
+public class SeedReportsDTO implements DTO {
+	    
+		private String orgName;
+		private String villageName;
+		private String farmerCode;
+		private String farmerName;
+		private String idLand;
+		private String landCode;
+		private String hybridCode;
+		private String hybridMask;
+		private String seedType;
+		private String batchNo;
+		private String allocatedQty;
+		private String returnQty;
+		private String qtyWithGrower;
+		private String idGrower;
+		
+		
+		/*private String maleBatchNo;
+		
+		private String femaleBatchNo;
+		private String allocatedMale;
+		private String allocatedFemale;
+		private String returnedMale;
+		private String returnedFemale;
+		private String availablemale;
+		private String availableFemale;*/
+		
+		
+		
+		public String getSeedType() {
+			return seedType;
+		}
+		public void setSeedType(String seedType) {
+			this.seedType = seedType;
+		}
+		public String getBatchNo() {
+			return batchNo;
+		}
+		public void setBatchNo(String batchNo) {
+			this.batchNo = batchNo;
+		}
+		public String getAllocatedQty() {
+			return allocatedQty;
+		}
+		public void setAllocatedQty(String allocatedQty) {
+			this.allocatedQty = allocatedQty;
+		}
+		public String getReturnQty() {
+			return returnQty;
+		}
+		public void setReturnQty(String returnQty) {
+			this.returnQty = returnQty;
+		}
+		public String getQtyWithGrower() {
+			return qtyWithGrower;
+		}
+		public void setQtyWithGrower(String qtyWithGrower) {
+			this.qtyWithGrower = qtyWithGrower;
+		}
+		public String getOrgName() {
+			return orgName;
+		}
+		public void setOrgName(String orgName) {
+			this.orgName = orgName;
+		}
+		public String getVillageName() {
+			return villageName;
+		}
+		public void setVillageName(String villageName) {
+			this.villageName = villageName;
+		}
+		public String getFarmerCode() {
+			return farmerCode;
+		}
+		public void setFarmerCode(String farmerCode) {
+			this.farmerCode = farmerCode;
+		}
+		public String getFarmerName() {
+			return farmerName;
+		}
+		public void setFarmerName(String farmerName) {
+			this.farmerName = farmerName;
+		}
+		public String getLandCode() {
+			return landCode;
+		}
+		public void setLandCode(String landCode) {
+			this.landCode = landCode;
+		}
+		
+		public String getHybridCode() {
+			return hybridCode;
+		}
+		public void setHybridCode(String hybridCode) {
+			this.hybridCode = hybridCode;
+		}
+		public String getHybridMask() {
+			return hybridMask;
+		}
+		public void setHybridMask(String hybridMask) {
+			this.hybridMask = hybridMask;
+		}
+		
+		public String getIdLand() {
+			return idLand;
+		}
+		public void setIdLand(String idLand) {
+			this.idLand = idLand;
+		}
+		public String getIdGrower() {
+			return idGrower;
+		}
+		public void setIdGrower(String idGrower) {
+			this.idGrower = idGrower;
+		}
+}
